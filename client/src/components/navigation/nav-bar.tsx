@@ -1,98 +1,91 @@
 "use client";
 
 import Link from "next/link";
-import { JSX, SVGProps, useContext } from "react";
+import { useState, useContext } from "react";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import ThemeSwitch from "./ThemeSwitch";
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { AuthContext } from "@/context/auth-context";
-import logo from "@/images/logo.svg";
+import logo from "@/images/logo.jpg";
 
-export default function NavBar() {
+import {
+  Smartphone,
+  Car,
+  Plane,
+  Scissors,
+  Tv,
+  Wifi,
+  HeartPulse,
+  Refrigerator,
+  Shirt,
+  Wrench,
+  Sparkles,
+  Menu,
+  X,
+  ChevronDown,
+} from "lucide-react";
+
+const items = [
+  {
+    label: "تعرفه موبایل",
+    icon: Smartphone,
+    submenu: ["ایرانسل", "همراه اول", "رایتل"],
+  },
+  { label: "ماشین", icon: Car, submenu: ["خرید", "فروش", "اجاره"] },
+  {
+    label: "سفر",
+    icon: Plane,
+    submenu: ["تور داخلی", "تور خارجی", "بلیط هواپیما"],
+  },
+  {
+    label: "آرایشگر",
+    icon: Scissors,
+    submenu: ["زنانه", "مردانه", "رزرو آنلاین"],
+  },
+  { label: "تلویزیون", icon: Tv, submenu: ["ال‌جی", "سامسونگ", "سونی"] },
+  { label: "اینترنت", icon: Wifi, submenu: ["ADSL", "فیبر نوری", "وایرلس"] },
+  {
+    label: "دندانپزشکی",
+    icon: HeartPulse,
+    submenu: ["ترمیمی", "زیبایی", "ایمپلنت"],
+  },
+  {
+    label: "لوازم خانگی",
+    icon: Refrigerator,
+    submenu: ["یخچال", "لباسشویی", "اجاق گاز"],
+  },
+  {
+    label: "خیاطی",
+    icon: Shirt,
+    submenu: ["لباس مجلسی", "کت و شلوار", "دوخت سفارشی"],
+  },
+  {
+    label: "تعمیرات تلویزیون",
+    icon: Wrench,
+    submenu: ["LCD", "LED", "پلاسما"],
+  },
+  {
+    label: "نظافت منزل",
+    icon: Sparkles,
+    submenu: ["ساعتی", "روزانه", "هفتگی"],
+  },
+];
+
+export default function Header() {
   const auth = useContext(AuthContext);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white dark:border-gray-800 dark:bg-gray-950">
-      <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
+    <header className="w-full shadow-md rtl text-right">
+      {/* Header Top */}
+      <div className="bg-white p-4 flex justify-between items-center border-b">
         <Link href="#" className="flex items-center gap-2" prefetch={false}>
           <Image src={logo} alt="sth" width="30" />
-          <span className="sr-only">Sana Inc</span>
+          <span className="sr-only">Vadi</span>
         </Link>
-        {/* <Link href="#" className="flex items-center gap-2" prefetch={false}>
-          <MountainIcon className="h-6 w-6" />
-          <span className="sr-only">Sana Inc</span>
-        </Link> */}
-        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-          <Link
-            href="/"
-            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-            prefetch={false}
-          >
-            خانه
-          </Link>
-          <Link
-            href="/about"
-            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-            prefetch={false}
-          >
-            درباره ما
-          </Link>
-          {/* <Link
-            href="/patent-registration"
-            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-            prefetch={false}
-          >
-            ثبت اختراع
-          </Link> */}
-          <Link
-            href="/education"
-            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-            prefetch={false}
-          >
-            آموزش
-          </Link>
-          <Link
-            href="/research"
-            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-            prefetch={false}
-          >
-            پژوهش
-          </Link>
-          {/* <Link
-            href="/sales"
-            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-            prefetch={false}
-          >
-            فروش
-          </Link> */}
-        </nav>
+
         <div className="flex items-center gap-4">
-          <div className="hidden items-center gap-2 text-sm font-medium md:flex"></div>
-          {/* <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <SearchIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                <span className="sr-only">{t("navigation.search")}</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[300px] p-4">
-              <div className="relative">
-                <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  className="pl-8 w-full"
-                />
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu> */}
-          {/* <Toggle aria-label="Toggle dark mode" className="rounded-full">
-            <MoonIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-          </Toggle> */}
-          <ThemeSwitch />
           {!auth.isLoggedIn && (
             <>
               <Link href="/signup">
@@ -120,152 +113,65 @@ export default function NavBar() {
               </Button>
             </>
           )}
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full md:hidden"
-              >
-                <MenuIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                <span className="sr-only">Toggle navigation menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="md:hidden">
-              <div className="grid gap-4 p-4">
-                <Link
-                  href="/"
-                  className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  prefetch={false}
-                >
-                  خانه
-                </Link>
-                <Link
-                  href="/about"
-                  className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  prefetch={false}
-                >
-                  درباره ما
-                </Link>
-                <Link
-                  href="/education"
-                  className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  prefetch={false}
-                >
-                  آموزش
-                </Link>
-                <Link
-                  href="/research"
-                  className="text-sm font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                  prefetch={false}
-                >
-                  پژوهش
-                </Link>
-              </div>
-            </SheetContent>
-          </Sheet>
+          <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
+            {menuOpen ? <X /> : <Menu />}
+          </button>
         </div>
       </div>
+
+      {/* Desktop Menu */}
+      <div className="hidden md:block bg-white">
+        <ul className="flex justify-center gap-6 text-sm font-medium text-gray-700 py-2">
+          {items.map(({ label, icon: Icon, submenu }, idx) => (
+            <li key={idx} className="relative group">
+              <div className="flex items-center gap-1 cursor-pointer hover:text-blue-600 transition">
+                <Icon size={16} />
+                {label}
+                <ChevronDown size={14} />
+              </div>
+
+              <ul className="absolute hidden group-hover:block bg-white border rounded shadow-md z-20 mt-2 w-40 text-sm text-gray-700 text-right">
+                {submenu.map((item, i) => (
+                  <li
+                    key={i}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="md:hidden bg-white p-4">
+          <ul className="flex flex-col gap-4 text-sm font-medium text-gray-700">
+            {items.map(({ label, submenu }, idx) => (
+              <li key={idx}>
+                <details className="group">
+                  <summary className="flex justify-between items-center cursor-pointer">
+                    {label}
+                    <ChevronDown
+                      className="transition-transform group-open:rotate-180"
+                      size={16}
+                    />
+                  </summary>
+                  <ul className="mt-2 ps-4 text-sm text-gray-600">
+                    {submenu.map((item, i) => (
+                      <li key={i} className="py-1">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </header>
   );
 }
-
-function MenuIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  );
-}
-
-// function MoonIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-//     </svg>
-//   );
-// }
-
-// function MountainIcon(
-//   props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
-// ) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
-//     </svg>
-//   );
-// }
-
-// function PhoneIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-//     </svg>
-//   );
-// }
-
-// function SearchIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <circle cx="11" cy="11" r="8" />
-//       <path d="m21 21-4.3-4.3" />
-//     </svg>
-//   );
-// }

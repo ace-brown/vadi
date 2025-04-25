@@ -18,9 +18,8 @@ import "./globals.css";
 // });
 
 export const metadata: Metadata = {
-  title: "خیام سانا",
-  description:
-    "از اعتبارسنجی تا اجرا، ابزارها، راهنمایی‌ها و جامعه‌ای را که برای ساخت، راه‌اندازی و رشد کسب‌وکارتان نیاز دارید، در اختیار شما می‌گذاریم",
+  title: "ودی",
+  description: "مقایسه همه چیز",
 };
 
 export default async function LocaleLayout({
