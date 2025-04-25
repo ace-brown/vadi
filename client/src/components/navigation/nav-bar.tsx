@@ -80,7 +80,7 @@ export default function Header() {
     <header className="w-full shadow-md rtl text-right">
       {/* Header Top */}
       <div className="bg-white p-4 flex justify-between items-center border-b">
-        <Link href="#" className="flex items-center gap-2" prefetch={false}>
+        <Link href="/" className="flex items-center gap-2" prefetch={false}>
           <Image src={logo} alt="sth" width="30" />
           <span className="sr-only">Vadi</span>
         </Link>

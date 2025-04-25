@@ -77,7 +77,7 @@ export default function Footer() {
       </div>
       {/* Footer Bottom */}
       <div className="text-center text-[0.75rem] text-gray-500 mt-2">
-        کلیه حقوق این وبسایت متعلق به خیام سانا است.
+        کلیه حقوق این وبسایت متعلق به ودی است.
       </div>
     </footer>
   );
