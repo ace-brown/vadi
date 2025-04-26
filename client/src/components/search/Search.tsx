@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search as SearchIcon } from "lucide-react";
 import { SearchType } from "@/types";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 
 export const tariffs: SearchType[] = [
   { id: 1, name: "ایرانسل" },
@@ -15,7 +15,7 @@ export const tariffs: SearchType[] = [
 ];
 
 export default function Search() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
   function handleSubmit() {
@@ -23,10 +23,10 @@ export default function Search() {
       tariff.name.toLowerCase().includes(query.toLowerCase())
     );
 
-    router.push({
-      pathname: "/compare",
-      query: { results: JSON.stringify(results) },
-    });
+    // router.push({
+    //   pathname: "/compare",
+    //   query: { results: JSON.stringify(results) },
+    // });
   }
 
   return (

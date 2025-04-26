@@ -1,9 +1,7 @@
 import React from "react";
-import { useRouter } from "next/navigation";
 
 export default function ComparePage() {
-  const router = useRouter();
-  const { results } = router.query;
+  //   const { results } = router.query;
   let parsedData: { id: number; name: string }[] = [];
 
   if (typeof results == "string") {

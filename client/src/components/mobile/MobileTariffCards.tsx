@@ -1,4 +1,3 @@
-// components/MobileTariffCards.tsx
 import MobileTariffCard from "./MobileTariffCard";
 
 export default function MobileTariffCards() {

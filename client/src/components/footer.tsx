@@ -1,5 +1,5 @@
 import { FaTelegram, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -19,7 +19,7 @@ export default function Footer() {
             </Link>
           </li> */}
           <li>
-            <Link href="/contact" className="hover:text-gray-100">
+            <Link to="/contact" className="hover:text-gray-100">
               تماس
             </Link>
           </li>
@@ -29,12 +29,12 @@ export default function Footer() {
             </Link>
           </li> */}
           <li>
-            <Link href="/terms" className="hover:text-gray-100">
+            <Link to="/terms" className="hover:text-gray-100">
               قوانین
             </Link>
           </li>
           <li>
-            <Link href="/privacy" className="hover:text-gray-100">
+            <Link to="/privacy" className="hover:text-gray-100">
               حریم خصوصی
             </Link>
           </li>

@@ -6,7 +6,6 @@ import img3 from "@/images/travel/img-3.jpg";
 import img4 from "@/images/travel/img-4.jpg";
 import img5 from "@/images/travel/img-5.jpg";
 import img6 from "@/images/travel/img-6.jpg";
-import Image from "next/image";
 
 const dummyData = [
   { id: 1, title: "بندر عباس", image: img1 },
@@ -28,7 +27,7 @@ export default function Travel() {
             key={item.id}
             className="flex flex-col items-center p-4 space-y-4"
           >
-            <Image
+            <img
               src={item.image}
               alt={item.title}
               className="w-full h-32 object-cover rounded-xl"

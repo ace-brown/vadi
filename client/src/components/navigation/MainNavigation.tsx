@@ -1,9 +1,5 @@
-"use client";
-
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useState, useContext } from "react";
-import Image from "next/image";
-
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AuthContext } from "@/context/auth-context";
@@ -80,25 +76,25 @@ export default function Header() {
     <header className="w-full shadow-md rtl text-right">
       {/* Header Top */}
       <div className="bg-white p-4 flex justify-between items-center border-b">
-        <Link href="/" className="flex items-center gap-2" prefetch={false}>
-          <Image src={logo} alt="sth" width="30" />
+        <Link to="/" className="flex items-center gap-2">
+          <img src={logo} alt="sth" width="30" />
           <span className="sr-only">Vadi</span>
         </Link>
 
         <div className="flex items-center gap-4">
           {!auth.isLoggedIn && (
             <>
-              <Link href="/signup">
+              <Link to="/signup">
                 <Button>ثبت‌ نام</Button>
               </Link>
-              <Link href="/login">
+              <Link to="/login">
                 <Button>ورود</Button>
               </Link>
             </>
           )}
           {auth.isLoggedIn && (
             <>
-              <Link href="/dashboard">
+              <Link to="/dashboard">
                 <Avatar className="cursor-pointer">
                   <AvatarImage src="https://github.com/shadcn.png" />
                   <AvatarFallback>CN</AvatarFallback>
