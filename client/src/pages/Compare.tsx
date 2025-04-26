@@ -1,20 +1,15 @@
-import React from "react";
+import { useLocation } from "react-router-dom";
 
 export default function ComparePage() {
-  //   const { results } = router.query;
-  let parsedData: { id: number; name: string }[] = [];
-
-  if (typeof results == "string") {
-    try {
-      parsedData = JSON.parse(results);
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  let results: { id: number; name: string }[] = [];
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const resultsParams = searchParams.get("results");
+  results = resultsParams ? JSON.parse(resultsParams) : [];
   return (
     <div>
-      {parsedData.length > 0 ? (
-        parsedData.map((item) => {
+      {results.length > 0 ? (
+        results.map((item) => {
           return <div>{item.name}</div>;
         })
       ) : (

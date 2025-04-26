@@ -1,5 +1,4 @@
 import Header from "@/components/navigation/MainNavigation";
-import React from "react";
 
 export default function ErrorPage() {
   return (

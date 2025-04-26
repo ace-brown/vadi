@@ -1,11 +1,9 @@
-"use client";
-
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search as SearchIcon } from "lucide-react";
 import { SearchType } from "@/types";
-import { useNavigate } from "react-router-dom";
 
 export const tariffs: SearchType[] = [
   { id: 1, name: "ایرانسل" },
@@ -23,10 +21,9 @@ export default function Search() {
       tariff.name.toLowerCase().includes(query.toLowerCase())
     );
 
-    // router.push({
-    //   pathname: "/compare",
-    //   query: { results: JSON.stringify(results) },
-    // });
+    const searchParams = new URLSearchParams();
+    searchParams.set("results", JSON.stringify(results));
+    navigate(`/compare?${searchParams.toString()}`);
   }
 
   return (
