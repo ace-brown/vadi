@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import MobileDetailsSelect from "./mobile/MobileDetailsSelect";
 
 export default function ComparePage() {
   let results: { id: number; name: string }[] = [];
@@ -10,7 +11,7 @@ export default function ComparePage() {
     <div>
       {results.length > 0 ? (
         results.map((item) => {
-          return <div>{item.name}</div>;
+          return <MobileDetailsSelect />;
         })
       ) : (
         <p>No data found.</p>

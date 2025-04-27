@@ -4,10 +4,10 @@ import Travel from "@/components/travel/Travel";
 
 export default function HomePage() {
   return (
-    <>
+    <div className="w-[80%] mx-auto">
       <Search />
       <Travel />
       <MobileTariffCards />
-    </>
+    </div>
   );
 }
