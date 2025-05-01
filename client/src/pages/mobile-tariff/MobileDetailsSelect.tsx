@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function MobileDetailsSelect() {
+export default function MobileTariffDetailsSelectPage() {
   const [volume, setVolume] = useState(0);
   const [duration, setDuration] = useState(0);
   const navigate = useNavigate();

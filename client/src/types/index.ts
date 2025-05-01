@@ -1,6 +1,7 @@
 export interface SearchType {
   id: number;
   name: string;
+  type: "mobile" | "internet" | "barber";
 }
 
 export interface UserType {

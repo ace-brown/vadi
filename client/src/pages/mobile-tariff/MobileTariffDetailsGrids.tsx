@@ -1,9 +1,9 @@
-import SimCardInfo from "./SimCardInfo";
+import SimCardInfo from "../../components/mobile-tariff/SimCardInfo";
 import irancel from "@/images/logos/irancel-logo.png";
 import hamrahAval from "@/images/logos/hamrah-aval-logo.jpg";
 import rightel from "@/images/logos/rightel-logo.jpg";
 
-export default function MobileDetailsGrids() {
+export default function MobileTariffDetailsGridsPage() {
   const mobilePackages = [
     {
       type: "اعتباری",

@@ -6,10 +6,11 @@ import { Search as SearchIcon } from "lucide-react";
 import { SearchType } from "@/types";
 
 export const tariffs: SearchType[] = [
-  { id: 1, name: "ایرانسل" },
-  { id: 2, name: "همراه اول" },
-  { id: 3, name: "رایتل" },
-  { id: 4, name: "اسیاتک" },
+  { id: 1, name: "ایرانسل", type: "mobile" },
+  { id: 2, name: "همراه اول", type: "mobile" },
+  { id: 3, name: "رایتل", type: "mobile" },
+  { id: 4, name: "اسیاتک", type: "internet" },
+  { id: 5, name: "پیرایشگاه", type: "barber" },
 ];
 
 export default function Search() {
@@ -21,7 +22,11 @@ export default function Search() {
       tariff.name.toLowerCase().includes(query.toLowerCase())
     );
 
+    if (results.length === 0) return;
+
+    // Send the category/type of the first match
     const searchParams = new URLSearchParams();
+    searchParams.set("type", results[0].type);
     searchParams.set("results", JSON.stringify(results));
     navigate(`/compare?${searchParams.toString()}`);
   }
@@ -54,9 +59,6 @@ export default function Search() {
         ساختار کلی استفاده شده است.
       </p>
       <p>ایرانسل</p>
-      <button className="bg-primary text-primary-foreground px-4 py-2 rounded">
-        I should be dark!
-      </button>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import MobileTariffCards from "@/components/mobile/MobileTariffCards";
+import MobileTariffCards from "@/components/mobile-tariff/MobileTariffCards";
 import Search from "@/components/search/Search";
 import Travel from "@/components/travel/Travel";
 
