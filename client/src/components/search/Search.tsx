@@ -54,6 +54,9 @@ export default function Search() {
         ساختار کلی استفاده شده است.
       </p>
       <p>ایرانسل</p>
+      <button className="bg-primary text-primary-foreground px-4 py-2 rounded">
+        I should be dark!
+      </button>
     </div>
   );
 }

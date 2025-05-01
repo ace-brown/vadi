@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface SimCardInfoProps {
@@ -43,6 +44,7 @@ export default function SimCardInfo({
           <p className="text-gray-500">دقیقه بسته</p>
           <p className="font-semibold mt-1">{minutes}</p>
         </div>
+        <Button>سفارش</Button>
       </CardContent>
     </Card>
   );
