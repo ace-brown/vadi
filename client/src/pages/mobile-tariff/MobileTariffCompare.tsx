@@ -3,7 +3,10 @@ import irancel from "@/images/logos/irancel-logo.png";
 import hamrahAval from "@/images/logos/hamrah-aval-logo.jpg";
 import rightel from "@/images/logos/rightel-logo.jpg";
 import { useEffect, useState } from "react";
-import { persianToEnglishDigits } from "@/utils/helpers";
+import {
+  englishToPersianDigits,
+  persianToEnglishDigits,
+} from "@/utils/helpers";
 import { SimCardInfoType } from "@/types";
 import SimCardInfoSkeleton from "@/components/mobile-tariff/SimCardInfoSkeleton";
 
@@ -92,7 +95,8 @@ export default function MobileTariffComparePage() {
               className="w-full p-2"
             />
             <p className="text-sm mt-1 text-gray-600">
-              حداکثر قیمت: {maxPrice.toLocaleString()} تومان
+              حداکثر قیمت: {englishToPersianDigits(maxPrice.toLocaleString())}{" "}
+              تومان
             </p>
           </div>
         </div>
