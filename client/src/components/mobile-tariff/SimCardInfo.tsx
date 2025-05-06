@@ -1,14 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
-interface SimCardInfoProps {
-  type: string;
-  simPrice: string;
-  validity: string;
-  packagePrice: string;
-  minutes: string;
-  image: string;
-}
+import { SimCardInfoType } from "@/types";
 
 export default function SimCardInfo({
   type,
@@ -17,12 +9,12 @@ export default function SimCardInfo({
   packagePrice,
   minutes,
   image,
-}: SimCardInfoProps) {
+}: SimCardInfoType) {
   return (
-    <Card className="rounded shadow-lg p-6">
-      <CardContent className="grid grid-cols-4 gap-4 text-right">
-        <div className="row-span-2">
-          <img src={image} />
+    <Card className="rounded shadow-lg p-4">
+      <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-right">
+        <div className="sm:row-span-1 md:row-span-2">
+          <img src={image} className="w-[80px] sm:w-auto mx-auto" />
         </div>
         <div>
           <p className="text-gray-500">نوع سیمکارت</p>
@@ -44,7 +36,9 @@ export default function SimCardInfo({
           <p className="text-gray-500">دقیقه بسته</p>
           <p className="font-semibold mt-1">{minutes}</p>
         </div>
-        <Button>سفارش</Button>
+        <div className="sm:col-span-2 lg:col-span-1">
+          <Button className="w-full">سفارش</Button>
+        </div>
       </CardContent>
     </Card>
   );

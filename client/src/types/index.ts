@@ -23,3 +23,12 @@ export interface UserType {
     notifications?: boolean;
   };
 }
+
+export interface SimCardInfoType {
+  type: string;
+  simPrice: string;
+  validity: string;
+  packagePrice: string;
+  minutes: string;
+  image: string;
+}

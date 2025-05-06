@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import MobileDetailsSelect from "./mobile-tariff/MobileTariffDetailsSelect";
 import BarberDetailsSelectPage from "./barber/BarberDetailsSelect";
 import InternetDetailsSelectPage from "./internet/InternetDetailsSelect";
+import MobileTariffComparePage from "./mobile-tariff/MobileTariffCompare";
 
 export default function TerminalPage() {
   const location = useLocation();
@@ -13,7 +14,7 @@ export default function TerminalPage() {
   function renderComponent() {
     switch (type) {
       case "mobile":
-        return <MobileDetailsSelect />;
+        return <MobileTariffComparePage />;
       case "hair":
         return <BarberDetailsSelectPage />;
       case "internet":

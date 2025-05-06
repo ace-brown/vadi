@@ -120,10 +120,10 @@ export default function Header() {
         <ul className="flex justify-center gap-6 text-sm font-medium text-gray-700 py-2">
           {items.map(({ label, icon: Icon, submenu }, idx) => (
             <li key={idx} className="relative group">
-              <div className="flex items-center gap-1 cursor-pointer hover:text-blue-600 transition">
-                <Icon size={16} />
-                {label}
+              <div className="flex items-center gap-[2px] cursor-pointer hover:text-blue-600 transition">
                 <ChevronDown size={14} />
+                {label}
+                <Icon size={16} />
               </div>
 
               <ul className="absolute hidden group-hover:block bg-white border rounded shadow-md z-20 mt-2 w-40 text-sm text-gray-700 text-right">
