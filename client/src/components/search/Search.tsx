@@ -11,7 +11,7 @@ export const tariffs: SearchType[] = [
   { id: 2, name: "همراه اول", type: "mobile" },
   { id: 3, name: "رایتل", type: "mobile" },
   { id: 4, name: "اسیاتک", type: "internet" },
-  { id: 5, name: "پیرایشگاه", type: "barber" },
+  { id: 5, name: "آرایشگاه", type: "barber" },
 ];
 
 export default function Search() {
