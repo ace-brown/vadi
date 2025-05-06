@@ -2,12 +2,18 @@ import SimCardInfo from "@/components/mobile-tariff/SimCardInfo";
 import irancel from "@/images/logos/irancel-logo.png";
 import hamrahAval from "@/images/logos/hamrah-aval-logo.jpg";
 import rightel from "@/images/logos/rightel-logo.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { persianToEnglishDigits } from "@/utils/helpers";
+import { SimCardInfoType } from "@/types";
+import SimCardInfoSkeleton from "@/components/mobile-tariff/SimCardInfoSkeleton";
 
 export default function MobileTariffComparePage() {
   const [simTypeFilter, setSimTypeFilter] = useState("all");
-  const [maxPrice, setMaxPrice] = useState(1000000); // max value in toman
+  const [maxPrice, setMaxPrice] = useState(1000000);
+  const [isLoading, setIsLoading] = useState(true);
+  const [filteredPackages, setFilteredPackages] = useState<SimCardInfoType[]>(
+    []
+  );
 
   const mobilePackages = [
     {
@@ -36,19 +42,26 @@ export default function MobileTariffComparePage() {
     },
   ];
 
-  // Filter packages
-  let filteredPackages = mobilePackages.filter((pkg) => {
-    const rawPrice = Number(
-      persianToEnglishDigits(pkg.packagePrice).replace(/[^\d]/g, "")
-    );
+  useEffect(() => {
+    setIsLoading(true);
 
-    const matchesType =
-      simTypeFilter === "all" || pkg.type.includes(simTypeFilter);
+    const timer = setTimeout(() => {
+      const filteredData = mobilePackages.filter((pkg) => {
+        const rawPrice = Number(
+          persianToEnglishDigits(pkg.packagePrice).replace(/[^\d]/g, "")
+        );
+        const matchesType =
+          simTypeFilter === "all" || pkg.type.includes(simTypeFilter);
+        const matchesPrice = rawPrice <= maxPrice;
+        return matchesType && matchesPrice;
+      });
 
-    const matchesPrice = rawPrice <= maxPrice;
+      setFilteredPackages(filteredData);
+      setIsLoading(false);
+    }, 1000);
 
-    return matchesType && matchesPrice;
-  });
+    return () => clearTimeout(timer);
+  }, [simTypeFilter, maxPrice]);
 
   return (
     <div className="w-full mx-auto mt-8 p-4 grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -87,17 +100,11 @@ export default function MobileTariffComparePage() {
 
       {/* Card Column (80% width) */}
       <div className="lg:col-span-4 flex flex-col gap-6">
-        {filteredPackages.map((pkg, index) => (
-          <SimCardInfo
-            key={index}
-            type={pkg.type}
-            simPrice={pkg.simPrice}
-            validity={pkg.validity}
-            packagePrice={pkg.packagePrice}
-            minutes={pkg.minutes}
-            image={pkg.image}
-          />
-        ))}
+        {isLoading
+          ? [...Array(5)].map((_, i) => <SimCardInfoSkeleton key={i} />)
+          : filteredPackages.map((pkg, index) => (
+              <SimCardInfo key={index} {...pkg} />
+            ))}
       </div>
     </div>
   );

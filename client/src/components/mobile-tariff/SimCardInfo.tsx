@@ -14,7 +14,7 @@ export default function SimCardInfo({
     <Card className="rounded shadow-lg p-4">
       <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-right">
         <div className="sm:row-span-1 md:row-span-2">
-          <img src={image} className="w-[80px] sm:w-auto mx-auto" />
+          <img src={image} className="w-[80px] sm:w-[180px] mx-auto" />
         </div>
         <div>
           <p className="text-gray-500">نوع سیمکارت</p>
