@@ -22,7 +22,7 @@ export default function MobileTariffDetailsSelectPage() {
     const searchParams = new URLSearchParams();
     searchParams.set("volume", volume.toString());
     searchParams.set("duration", duration.toString());
-    navigate(`/mobile-details-grids?${searchParams.toString()}`);
+    navigate(`/mobile-tariff-compare?${searchParams.toString()}`);
   }
 
   return (

@@ -3,7 +3,7 @@ import irancel from "@/images/logos/irancel-logo.png";
 import hamrahAval from "@/images/logos/hamrah-aval-logo.jpg";
 import rightel from "@/images/logos/rightel-logo.jpg";
 
-export default function MobileTariffDetailsGridsPage() {
+export default function MobileTariffComparePage() {
   const mobilePackages = [
     {
       type: "اعتباری",

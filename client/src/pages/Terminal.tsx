@@ -1,9 +1,9 @@
 import { useLocation } from "react-router-dom";
-import MobileDetailsSelect from "./mobile-tariff/MobileDetailsSelect";
+import MobileDetailsSelect from "./mobile-tariff/MobileTariffDetailsSelect";
 import BarberDetailsSelectPage from "./barber/BarberDetailsSelect";
 import InternetDetailsSelectPage from "./internet/InternetDetailsSelect";
 
-export default function ComparePage() {
+export default function TerminalPage() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const type = searchParams.get("type");

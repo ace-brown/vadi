@@ -1,9 +1,10 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import HomePage from "./pages/Home";
 import RootLayout from "./pages/Root";
 import ErrorPage from "./pages/Error";
-import ComparePage from "./pages/Compare";
-import MobileDetailsGrids from "./pages/mobile-tariff/MobileTariffDetailsGrids";
+import TerminalPage from "./pages/Terminal";
+import MobileTariffCompare from "./pages/mobile-tariff/MobileTariffCompare";
 
 function App() {
   const router = createBrowserRouter([
@@ -13,10 +14,10 @@ function App() {
       errorElement: <ErrorPage />,
       children: [
         { path: "/", element: <HomePage /> },
-        { path: "/compare", element: <ComparePage /> },
+        { path: "/terminal", element: <TerminalPage /> },
         {
-          path: "/mobile-tariff-details-grids",
-          element: <MobileDetailsGrids />,
+          path: "/mobile-tariff-compare",
+          element: <MobileTariffCompare />,
         },
       ],
     },

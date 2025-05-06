@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search as SearchIcon } from "lucide-react";
 import { SearchType } from "@/types";
+import { keywordToTypeMap } from "@/data/keywordToTypeMap";
 
 export const tariffs: SearchType[] = [
   { id: 1, name: "ایرانسل", type: "mobile" },
@@ -17,18 +18,30 @@ export default function Search() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
+  function detectTypeFromQuery(query: string): string | null {
+    for (const keyword in keywordToTypeMap) {
+      if (query.toLowerCase().includes(keyword.toLowerCase())) {
+        return keywordToTypeMap[keyword];
+      }
+    }
+    return null;
+  }
+
   function handleSubmit() {
+    const detectedType = detectTypeFromQuery(query);
+    if (!detectedType) {
+      alert("نوع خدمات شناسایی نشد.");
+      return;
+    }
+
     const results = tariffs.filter((tariff) =>
       tariff.name.toLowerCase().includes(query.toLowerCase())
     );
 
-    if (results.length === 0) return;
-
-    // Send the category/type of the first match
     const searchParams = new URLSearchParams();
-    searchParams.set("type", results[0].type);
+    searchParams.set("type", detectedType);
     searchParams.set("results", JSON.stringify(results));
-    navigate(`/compare?${searchParams.toString()}`);
+    navigate(`/terminal?${searchParams.toString()}`);
   }
 
   return (
