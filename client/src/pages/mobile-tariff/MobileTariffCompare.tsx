@@ -3,9 +3,11 @@ import irancel from "@/images/logos/irancel-logo.png";
 import hamrahAval from "@/images/logos/hamrah-aval-logo.jpg";
 import rightel from "@/images/logos/rightel-logo.jpg";
 import { useState } from "react";
+import { persianToEnglishDigits } from "@/utils/helpers";
 
 export default function MobileTariffComparePage() {
   const [simTypeFilter, setSimTypeFilter] = useState("all");
+  const [maxPrice, setMaxPrice] = useState(1000000); // max value in toman
 
   const mobilePackages = [
     {
@@ -34,18 +36,25 @@ export default function MobileTariffComparePage() {
     },
   ];
 
-  // Filter packages based on selected type
-  const filteredPackages =
-    simTypeFilter === "all"
-      ? mobilePackages
-      : mobilePackages.filter((pkg) => pkg.type.includes(simTypeFilter));
+  // Filter packages
+  let filteredPackages = mobilePackages.filter((pkg) => {
+    const rawPrice = Number(
+      persianToEnglishDigits(pkg.packagePrice).replace(/[^\d]/g, "")
+    );
+
+    const matchesType =
+      simTypeFilter === "all" || pkg.type.includes(simTypeFilter);
+
+    const matchesPrice = rawPrice <= maxPrice;
+
+    return matchesType && matchesPrice;
+  });
 
   return (
     <div className="w-full mx-auto mt-8 p-4 grid grid-cols-1 lg:grid-cols-5 gap-6">
       {/* Filter Column (20% width) */}
-      <div className="lg:col-span-1 bg-white p-4 rounded border">
+      <div className="lg:col-span-1 bg-white p-4 rounded border min-h-[90vh]">
         <h2 className="font-semibold text-xl mb-4">فیلترها</h2>
-        {/* Add your filter options here */}
         <div className="space-y-4">
           <div>
             <label className="block text-sm">نوع سیم‌کارت</label>
@@ -60,8 +69,18 @@ export default function MobileTariffComparePage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm">محدوده قیمت</label>
-            <input type="range" min="0" max="1000" className="w-full p-2" />
+            <label className="block text-sm">مبلغ بسته</label>
+            <input
+              type="range"
+              min="0"
+              max="1000000"
+              step="50000"
+              onChange={(e) => setMaxPrice(Number(e.target.value))}
+              className="w-full p-2"
+            />
+            <p className="text-sm mt-1 text-gray-600">
+              حداکثر قیمت: {maxPrice.toLocaleString()} تومان
+            </p>
           </div>
         </div>
       </div>
