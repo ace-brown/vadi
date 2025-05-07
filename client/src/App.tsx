@@ -5,8 +5,8 @@ import RootLayout from "@/pages/Root";
 import ErrorPage from "@/pages/Error";
 import TerminalPage from "@/pages/Terminal";
 import MobileTariffCompare from "@/pages/mobile-tariff/MobileTariffCompare";
-import BarberComparePage from "@/pages/barber/BarberCompare";
 import BarberDetailsSelectPage from "./pages/barber/BarberDetailsSelect";
+import BarberComparePage from "./pages/barber/BarberCompare";
 
 function App() {
   const router = createBrowserRouter([

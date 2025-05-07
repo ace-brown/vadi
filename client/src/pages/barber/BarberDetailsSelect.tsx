@@ -16,10 +16,16 @@ export default function BarberDetailsSelectPage() {
 
   const [selectedState, setSelectedState] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("");
+  const [salonType, setSalonType] = useState<string>("");
 
   function handleSubmit() {
     const searchParams = new URLSearchParams();
-    // Add form values to searchParams if needed
+
+    // Add values to query params
+    searchParams.set("state", selectedState);
+    searchParams.set("city", selectedCity);
+    searchParams.set("type", salonType);
+
     navigate(`/barber-compare?${searchParams.toString()}`);
   }
 
@@ -29,7 +35,7 @@ export default function BarberDetailsSelectPage() {
         <CardContent className="space-y-4 p-6">
           <div className="space-y-2">
             <label className="block text-right font-medium">نوع آرایشگاه</label>
-            <Select>
+            <Select value={salonType} onValueChange={setSalonType}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="انتخاب کنید" />
               </SelectTrigger>

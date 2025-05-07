@@ -5,6 +5,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import provincesData from "@/data/provinces_and_main_cities.json";
 
 type Props = {
   state: string;
@@ -13,11 +14,10 @@ type Props = {
   onCityChange: (city: string) => void;
 };
 
-const citiesByState: Record<string, string[]> = {
-  تهران: ["تهران", "ری", "اسلامشهر"],
-  اصفهان: ["اصفهان", "کاشان", "نجف‌آباد"],
-  "خراسان رضوی": ["مشهد", "نیشابور", "سبزوار"],
-};
+const citiesByState: Record<string, string[]> = {};
+provincesData.forEach((province) => {
+  citiesByState[province.name] = province.cities;
+});
 
 export default function StateCitySelect({
   state,
