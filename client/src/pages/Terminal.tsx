@@ -15,7 +15,7 @@ export default function TerminalPage() {
 
   function renderComponent() {
     switch (type) {
-      case "mobile":
+      case "mobileTariff":
         return <MobileTariffComparePage />;
       case "hair":
         return <BarberDetailsSelectPage />;

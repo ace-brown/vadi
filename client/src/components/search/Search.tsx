@@ -9,6 +9,14 @@ export default function Search() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
+  // async function sendUnknownQueryToServer(query: string) {
+  //   await fetch("/api/analytics/unknown-query", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ query, timestamp: new Date().toISOString() }),
+  //   });
+  // }
+
   function detectTypeFromKeywords(query: string): string | null {
     const normalizedQuery = query.toLowerCase();
 
@@ -29,6 +37,7 @@ export default function Search() {
     const detectedType = detectTypeFromKeywords(query);
 
     if (!detectedType) {
+      // logUnknownQuery(query);
       alert("نوع خدمات شناسایی نشد.");
       return;
     }
