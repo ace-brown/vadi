@@ -16,9 +16,9 @@ router.get('/', mobileTariffControllers.getMobileTariffs)
 router.post('/', mobileTariffControllers.createMobileTariff)
 
 // Update a Mobile tariff
-router.patch('/:mtid', mobileTariffControllers.updateIdea)
+// router.patch('/:mtid', mobileTariffControllers.updateIdea)
 
 // Delete a Mobile tariff
-router.delete('/:mtid', mobileTariffControllers.deleteIdea)
+// router.delete('/:mtid', mobileTariffControllers.deleteIdea)
 
 module.exports = router

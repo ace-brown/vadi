@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 
 const usersRoutes = require('./src/routes/users-routes')
 const mobileTariffRoutes = require('./src/routes/mobile-tariffs-routes')
-const costsRoutes = require('./src/routes/costs-routes')
-const ideasRoutes = require('./src/routes/mobile-tariffs-routes')
 const downloadRoutes = require('./src/routes/download-routes')
 const HttpError = require('./src/models/http-error')
 
@@ -40,14 +38,8 @@ app.use('/api/download', downloadRoutes);
 // Reports routes
 app.use('/api/mobile-tariffs', mobileTariffRoutes);
 
-// // Costs routes
-// app.use('/api/costs', costsRoutes);
-
-// // Users routes
-// app.use('/api/users', usersRoutes);
-
-// // Ideas routes
-// app.use('/api/ideas', ideasRoutes);
+// Users routes
+app.use('/api/users', usersRoutes);
 
 // Middleware to handle wrong routes 
 app.use(function (req, res, next) {

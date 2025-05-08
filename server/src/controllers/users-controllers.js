@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
-const { Report } = require("../models/report");
 
 
 // Get the current user data
@@ -26,7 +25,6 @@ async function getUserById(req, res, next) {
         return res.status(500).json({ message: 'دریافت اطلاعات کاربر با شکست مواجه شد. لطفاً بعداً دوباره تلاش کنید.' });
     }
 }
-
 
 // Get all users
 async function getUsers(req, res, next) {
@@ -97,7 +95,6 @@ async function getUsers(req, res, next) {
 //         username,
 //         email,
 //         password: hashedPassword,
-//         reports: [],
 //         profile: { fullName }
 //     });
 
@@ -138,7 +135,6 @@ async function signup(req, res, next) {
     }
 
     const { username, email, password, fullName } = req.body;
-    console.log('Request Body:', req.body);
 
     let existingUser;
     try {
@@ -161,8 +157,7 @@ async function signup(req, res, next) {
         username,
         email,
         password, // Store plaintext password
-        reports: [],
-        profile: { fullName }
+        fullName
     });
 
     try {
@@ -381,26 +376,12 @@ async function deleteUser(req, res, next) {
             return next(new HttpError("شناسه کاربری نامعتبر است", 400));
         }
 
-        const user = await User.findById(userId).populate('ideas').populate('reports');
+        const user = await User.findById(userId);
         if (!user) {
             return next(new HttpError("کاربری برای شناسه ارائه شده پیدا نشد", 404));
         }
 
-        const sess = await mongoose.startSession();
-        sess.startTransaction();
-
-        // Delete associated Ideas and Reports
-        for (const idea of user.ideas) {
-            const reports = await Report.find({ ideaId: idea._id });
-            for (const report of reports) {
-                await report.deleteOne({ session: sess });
-            }
-            await idea.deleteOne({ session: sess });
-        }
-
-        await user.deleteOne({ session: sess });
-
-        await sess.commitTransaction();
+        await user.deleteOne();
 
         res.status(200).json({ message: "کاربر و تمام داده‌های مرتبط با آن با موفقیت حذف شدند" });
     } catch (error) {

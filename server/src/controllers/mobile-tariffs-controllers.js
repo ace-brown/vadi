@@ -79,109 +79,109 @@ async function createMobileTariff(req, res, next) {
 
 
 // Update a specific idea
-async function updateIdea(req, res, next) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        throw new HttpError("ورودی نامعتبر ارسال شده است، لطفاً داده‌های خود را بررسی کنید", 422);
-    }
+// async function updateIdea(req, res, next) {
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//         throw new HttpError("ورودی نامعتبر ارسال شده است، لطفاً داده‌های خود را بررسی کنید", 422);
+//     }
 
-    const ideaId = req.params.eid;
-    const updates = req.body;
+//     const ideaId = req.params.eid;
+//     const updates = req.body;
 
-    try {
-        if (!mongoose.Types.ObjectId.isValid(ideaId)) {
-            return next(new HttpError("شناسه ایده نامعتبر است", 400));
-        }
+//     try {
+//         if (!mongoose.Types.ObjectId.isValid(ideaId)) {
+//             return next(new HttpError("شناسه ایده نامعتبر است", 400));
+//         }
 
-        const idea = await Idea.findById(ideaId);
-        if (!idea) {
-            return next(new HttpError("نتوانستیم ایده‌ای برای شناسه ارائه شده پیدا کنیم", 404));
-        }
+//         const idea = await Idea.findById(ideaId);
+//         if (!idea) {
+//             return next(new HttpError("نتوانستیم ایده‌ای برای شناسه ارائه شده پیدا کنیم", 404));
+//         }
 
-        // Check if the idea is for the user
-        // if (idea.creator !== req.userData.userId) {
-        //     const error = new HttpError(
-        //         'You are not allowed to edit this idea.',
-        //         401
-        //     );
-        //     return next(error);
-        // }
+//         // Check if the idea is for the user
+//         // if (idea.creator !== req.userData.userId) {
+//         //     const error = new HttpError(
+//         //         'You are not allowed to edit this idea.',
+//         //         401
+//         //     );
+//         //     return next(error);
+//         // }
 
-        // Check if ideaTitle is being updated
-        if (updates.ideaTitle && updates.ideaTitle !== idea.ideaTitle) {
-            const report = await Report.findOne({ ideaId: idea._id });
-            if (report) {
-                report.ideaTitle = updates.ideaTitle;
-                await report.save();
-            }
-        }
+//         // Check if ideaTitle is being updated
+//         if (updates.ideaTitle && updates.ideaTitle !== idea.ideaTitle) {
+//             const report = await Report.findOne({ ideaId: idea._id });
+//             if (report) {
+//                 report.ideaTitle = updates.ideaTitle;
+//                 await report.save();
+//             }
+//         }
 
-        // Update the Idea document
-        const updatedIdea = await Idea.findByIdAndUpdate(
-            ideaId,
-            updates,
-            { new: true, runValidators: true }
-        );
+//         // Update the Idea document
+//         const updatedIdea = await Idea.findByIdAndUpdate(
+//             ideaId,
+//             updates,
+//             { new: true, runValidators: true }
+//         );
 
-        res.status(200).json({ idea: updatedIdea.toObject({ getters: true }) });
-    } catch (error) {
-        console.error(error);
-        return next(new HttpError("بروزرسانی ایده ناموفق بود، لطفاً بعداً دوباره تلاش کنید", 500));
-    }
-}
+//         res.status(200).json({ idea: updatedIdea.toObject({ getters: true }) });
+//     } catch (error) {
+//         console.error(error);
+//         return next(new HttpError("بروزرسانی ایده ناموفق بود، لطفاً بعداً دوباره تلاش کنید", 500));
+//     }
+// }
 
 // Delete a specific idea
-async function deleteIdea(req, res, next) {
-    const ideaId = req.params.eid;
+// async function deleteIdea(req, res, next) {
+//     const ideaId = req.params.eid;
 
-    let idea;
-    try {
-        idea = await Idea.findById(ideaId).populate('ownerId');
-    } catch (err) {
-        return next(new HttpError("مشکلی پیش آمده است، نتوانستیم ایده را حذف کنیم", 500));
-    }
+//     let idea;
+//     try {
+//         idea = await Idea.findById(ideaId).populate('ownerId');
+//     } catch (err) {
+//         return next(new HttpError("مشکلی پیش آمده است، نتوانستیم ایده را حذف کنیم", 500));
+//     }
 
-    if (!idea) {
-        return next(new HttpError("نتوانستیم ایده‌ای برای شناسه ارائه شده پیدا کنیم", 404));
-    }
+//     if (!idea) {
+//         return next(new HttpError("نتوانستیم ایده‌ای برای شناسه ارائه شده پیدا کنیم", 404));
+//     }
 
-    let report;
-    try {
-        report = await Report.findOne({ ideaId: idea._id }).populate('ownerId');
-    } catch (err) {
-        return next(new HttpError("مشکلی پیش آمده است، نتوانستیم ایده را حذف کنیم", 500));
-    }
+//     let report;
+//     try {
+//         report = await Report.findOne({ ideaId: idea._id }).populate('ownerId');
+//     } catch (err) {
+//         return next(new HttpError("مشکلی پیش آمده است، نتوانستیم ایده را حذف کنیم", 500));
+//     }
 
 
-    try {
-        const sess = await mongoose.startSession()
-        sess.startTransaction()
+//     try {
+//         const sess = await mongoose.startSession()
+//         sess.startTransaction()
 
-        // Delete the idea and report
-        await idea.deleteOne({ session: sess });
-        await report.deleteOne({ session: sess });
+//         // Delete the idea and report
+//         await idea.deleteOne({ session: sess });
+//         await report.deleteOne({ session: sess });
 
-        // Update the user with the deleted idea and report
-        idea.ownerId.ideas.pull(idea._id)
-        report.ownerId.reports.pull(report._id)
+//         // Update the user with the deleted idea and report
+//         idea.ownerId.ideas.pull(idea._id)
+//         report.ownerId.reports.pull(report._id)
 
-        await idea.ownerId.save({ session: sess });
-        await report.ownerId.save({ session: sess });
-        await sess.commitTransaction()
-    } catch (err) {
-        await sess.abortTransaction();
-        return next(new HttpError("حذف ایده ناموفق بود", 500));
-    }
+//         await idea.ownerId.save({ session: sess });
+//         await report.ownerId.save({ session: sess });
+//         await sess.commitTransaction()
+//     } catch (err) {
+//         await sess.abortTransaction();
+//         return next(new HttpError("حذف ایده ناموفق بود", 500));
+//     }
 
-    res.status(200).json(
-        {
-            message: `idea with ideaId ${idea._id} and report with reportId ${report._id} deleted successfully.`
-        });
+//     res.status(200).json(
+//         {
+//             message: `idea with ideaId ${idea._id} and report with reportId ${report._id} deleted successfully.`
+//         });
 
-}
+// }
 
 
 exports.getMobileTariffs = getMobileTariffs
 exports.createMobileTariff = createMobileTariff
-exports.updateIdea = updateIdea
-exports.deleteIdea = deleteIdea
+// exports.updateIdea = updateIdea
+// exports.deleteIdea = deleteIdea

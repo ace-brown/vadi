@@ -16,7 +16,7 @@ router.post('/signup', [
         .isEmail(),
     check('password')
         .isLength({ min: 6 }),
-    check('fullName')
+    check('profile.fullName')
         .notEmpty()
 ], usersControllers.signup)
 

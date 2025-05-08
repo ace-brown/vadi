@@ -9,4 +9,5 @@ const mobileTariffSchema = new mongoose.Schema({
     image: String,
 });
 
-export default mongoose.model("MobileTariff", mobileTariffSchema);
+const MobileTariff = mongoose.model('MobileTariff', mobileTariffSchema);
+module.exports = MobileTariff;
