@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const HttpError = require('../models/http-error')
 const { Report, defaultStages } = require('../models/report')
 const User = require('../models/user')
-const Idea = require('../models/idea')
+const Idea = require('../models/mobile-tariff')
 
 
 // Get a spesific report by a specific id 

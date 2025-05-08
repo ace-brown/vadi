@@ -2,7 +2,7 @@
   "env": {
     "DB_USER": "kylexw12345",
     "DB_PASSWORD": "tQfqmmTtqpKCYSuv",
-    "DB_NAME": "sanaDev",
+    "DB_NAME": "vadi",
     "JWT_SECRET": "supersecret_dont_share",
     "SUFFIX": "cluster0",
     "AFTER_SUFFIX": "5ihe1",
