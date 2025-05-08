@@ -32,6 +32,7 @@ export interface SimCardInfoType {
   minutes: string;
   image: string;
 }
+
 export interface BarberPlansType {
   title: string;
   haircutPrice: string;

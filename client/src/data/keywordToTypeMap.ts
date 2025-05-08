@@ -1,13 +1,23 @@
-export const keywordToTypeMap: Record<string, "mobile" | "hair" | "internet"> =
-  {
-    ایرانسل: "mobile",
-    "همراه اول": "mobile",
-    رایتل: "mobile",
-    سامسونگ: "mobile",
-    آیفون: "mobile",
-    نوکیا: "mobile",
-    پیرایشگاه: "hair",
-    آرایشگاه: "hair",
-    اسیاتک: "internet",
-    شاتل: "internet",
-  };
+export const keywordGroups: Record<string, string[]> = {
+  mobileTariff: [
+    "ایرانسل",
+    "همراه اول",
+    "رایتل",
+    "شارژ موبایل",
+    "سیم کارت",
+    "قیمت سیم کارت",
+    "طرح های موبایل",
+    "اپراتور",
+    "بسته اینترنت موبایل",
+  ],
+  internet: [
+    "اینترنت",
+    "اسیاتک",
+    "شاتل",
+    "پارس آنلاین",
+    "مودم",
+    "ADSL",
+    "فیبر نوری",
+  ],
+  hair: ["آرایشگاه", "پیرایشگاه", "اصلاح مو", "کوتاهی", "سالن زیبایی"],
+};

@@ -1,48 +1,71 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search as SearchIcon } from "lucide-react";
-import { SearchType } from "@/types";
-import { keywordToTypeMap } from "@/data/keywordToTypeMap";
-
-export const tariffs: SearchType[] = [
-  { id: 1, name: "ایرانسل", type: "mobile" },
-  { id: 2, name: "همراه اول", type: "mobile" },
-  { id: 3, name: "رایتل", type: "mobile" },
-  { id: 4, name: "اسیاتک", type: "internet" },
-  { id: 5, name: "آرایشگاه", type: "barber" },
-];
+import { keywordGroups } from "@/data/keywordToTypeMap";
 
 export default function Search() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
-  function detectTypeFromQuery(query: string): string | null {
-    for (const keyword in keywordToTypeMap) {
-      if (query.toLowerCase().includes(keyword.toLowerCase())) {
-        return keywordToTypeMap[keyword];
+  function detectTypeFromKeywords(query: string): string | null {
+    const normalizedQuery = query.toLowerCase();
+
+    for (const [type, keywords] of Object.entries(keywordGroups)) {
+      if (
+        keywords.some((keyword) =>
+          normalizedQuery.includes(keyword.toLowerCase())
+        )
+      ) {
+        return type;
       }
     }
+
     return null;
   }
 
   function handleSubmit() {
-    const detectedType = detectTypeFromQuery(query);
+    const detectedType = detectTypeFromKeywords(query);
+
     if (!detectedType) {
       alert("نوع خدمات شناسایی نشد.");
       return;
     }
 
-    const results = tariffs.filter((tariff) =>
-      tariff.name.toLowerCase().includes(query.toLowerCase())
-    );
-
     const searchParams = new URLSearchParams();
     searchParams.set("type", detectedType);
-    searchParams.set("results", JSON.stringify(results));
+    searchParams.set("query", query);
+
     navigate(`/terminal?${searchParams.toString()}`);
+    // navigate(`/terminal/${detectedType}?query=${encodeURIComponent(query)}`);
   }
+
+  //   function detectTypeFromQuery(query: string): string | null {
+  //     for (const keyword in keywordToTypeMap) {
+  //       if (query.toLowerCase().includes(keyword.toLowerCase())) {
+  //         return keywordToTypeMap[keyword];
+  //       }
+  //     }
+  //     return null;
+  //   }
+
+  // function handleSubmit() {
+  //   const detectedType = detectTypeFromQuery(query);
+  //   if (!detectedType) {
+  //     alert("نوع خدمات شناسایی نشد.");
+  //     return;
+  //   }
+
+  //   const results = searchableItems.filter((item) =>
+  //     item.name.toLowerCase().includes(query.toLowerCase())
+  //   );
+
+  //   const searchParams = new URLSearchParams();
+  //   searchParams.set("type", detectedType);
+  //   searchParams.set("results", JSON.stringify(results));
+  //   navigate(`/terminal?${searchParams.toString()}`);
+  // }
 
   return (
     <div

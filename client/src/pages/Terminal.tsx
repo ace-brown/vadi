@@ -7,8 +7,11 @@ export default function TerminalPage() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const type = searchParams.get("type");
-  const resultsParams = searchParams.get("results");
-  const results = resultsParams ? JSON.parse(resultsParams) : [];
+  const query = searchParams.get("query") ?? "";
+  // const { type } = useParams();
+  // const location = useLocation();
+  // const searchParams = new URLSearchParams(location.search);
+  // const query = searchParams.get("query") || "";
 
   function renderComponent() {
     switch (type) {
@@ -24,6 +27,7 @@ export default function TerminalPage() {
   }
 
   return (
-    <div>{results.length > 0 ? renderComponent() : <p>No data found.</p>}</div>
+    <div>{renderComponent()}</div>
+    // <div>{results.length > 0 ? renderComponent() : <p>No data found.</p>}</div>
   );
 }
