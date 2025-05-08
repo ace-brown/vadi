@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import BarberDetailsSelectPage from "./barber/BarberDetailsSelect";
 import InternetDetailsSelectPage from "./internet/InternetDetailsSelect";
-import MobileTariffComparePage from "./mobile-tariff/MobileTariffCompare";
+import MobileTariffComparePage from "./internet/mobile-tariff/MobileTariffCompare";
 
 export default function TerminalPage() {
   const location = useLocation();

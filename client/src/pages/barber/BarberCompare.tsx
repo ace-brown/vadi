@@ -1,5 +1,5 @@
 import BarberCard from "@/components/barber/BarberCard";
-import BarberCardSkeleton from "@/components/mobile-tariff/SimCardInfoSkeleton";
+import BarberCardSkeleton from "@/components/internet/mobile-tariff/SimCardInfoSkeleton";
 import img1 from "@/images/barber/1.jpg";
 import img2 from "@/images/barber/2.jpg";
 import img3 from "@/images/barber/3.jpg";

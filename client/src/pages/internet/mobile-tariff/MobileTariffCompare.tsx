@@ -1,14 +1,14 @@
-import SimCardInfo from "@/components/mobile-tariff/SimCardInfo";
-import irancel from "@/images/logos/irancel-logo.png";
-import hamrahAval from "@/images/logos/hamrah-aval-logo.jpg";
-import rightel from "@/images/logos/rightel-logo.jpg";
+import SimCardInfo from "@/components/internet/mobile-tariff/SimCardInfo";
+import irancel from "@/images/internet/mobile/irancel-logo.png";
+import hamrahAval from "@/images/internet/mobile/hamrah-aval-logo.jpg";
+import rightel from "@/images/internet/mobile/rightel-logo.jpg";
 import { useEffect, useState } from "react";
 import {
   englishToPersianDigits,
   persianToEnglishDigits,
 } from "@/utils/helpers";
 import { SimCardInfoType } from "@/types";
-import SimCardInfoSkeleton from "@/components/mobile-tariff/SimCardInfoSkeleton";
+import SimCardInfoSkeleton from "@/components/internet/mobile-tariff/SimCardInfoSkeleton";
 
 export default function MobileTariffComparePage() {
   const [simTypeFilter, setSimTypeFilter] = useState("all");

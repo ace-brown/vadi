@@ -33,6 +33,16 @@ export interface SimCardInfoType {
   image: string;
 }
 
+export interface HomeNetType {
+  title: string;
+  speed: string;
+  duration: string;
+  volume: string;
+  netType: string;
+  price: number;
+  image: string;
+}
+
 export interface BarberPlansType {
   title: string;
   haircutPrice: string;
