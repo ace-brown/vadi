@@ -19,15 +19,11 @@ async function getMobileTariffs(req, res, next) {
 async function createMobileTariff(req, res, next) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return next(
-            new HttpError(
-                "ورودی نامعتبر ارسال شده است، لطفاً داده‌های خود را بررسی کنید",
-                422
-            )
-        );
+        return next(new HttpError("ورودی نامعتبر ارسال شده است", 422));
     }
 
-    const { type, simPrice, validity, packagePrice, minutes, image } = req.body;
+    const { type, simPrice, validity, packagePrice, minutes } = req.body;
+    const imagePath = req.file?.path;
 
     const newTariff = new MobileTariff({
         type,
@@ -35,23 +31,18 @@ async function createMobileTariff(req, res, next) {
         validity,
         packagePrice,
         minutes,
-        image,
+        image: imagePath, // save the image path
     });
 
     try {
         await newTariff.save();
     } catch (err) {
-        console.error(err);
-        return next(
-            new HttpError(
-                "ایجاد تعرفه ناموفق بود، لطفاً بعداً دوباره تلاش کنید",
-                500
-            )
-        );
+        return next(new HttpError("ایجاد تعرفه ناموفق بود", 500));
     }
 
     res.status(201).json({ mobileTariff: newTariff });
 }
+
 
 // try {
 //     const sess = await mongoose.startSession();

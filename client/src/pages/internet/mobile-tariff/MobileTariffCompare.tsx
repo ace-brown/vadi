@@ -1,7 +1,4 @@
 import SimCardInfo from "@/components/internet/mobile-tariff/SimCardInfo";
-import irancel from "@/images/internet/mobile/irancel-logo.png";
-import hamrahAval from "@/images/internet/mobile/hamrah-aval-logo.jpg";
-import rightel from "@/images/internet/mobile/rightel-logo.jpg";
 import { useEffect, useState } from "react";
 import {
   englishToPersianDigits,
@@ -9,47 +6,40 @@ import {
 } from "@/utils/helpers";
 import { SimCardInfoType } from "@/types";
 import SimCardInfoSkeleton from "@/components/internet/mobile-tariff/SimCardInfoSkeleton";
+import { useHttpClient } from "@/hooks/http-hook";
 
 export default function MobileTariffComparePage() {
   const [simTypeFilter, setSimTypeFilter] = useState("all");
   const [maxPrice, setMaxPrice] = useState(1000000);
-  const [isLoading, setIsLoading] = useState(true);
+  const [allPackages, setAllPackages] = useState<SimCardInfoType[]>([]);
   const [filteredPackages, setFilteredPackages] = useState<SimCardInfoType[]>(
     []
   );
+  const { isLoading, sendRequest } = useHttpClient();
 
-  const mobilePackages = [
-    {
-      type: "اعتباری",
-      simPrice: "۵۰,۰۰۰ تومان",
-      validity: "۳۰ روز",
-      packagePrice: "۱۲۰,۰۰۰ تومان",
-      minutes: "۵۰۰ دقیقه",
-      image: irancel,
-    },
-    {
-      type: "دائمی",
-      simPrice: "۷۵,۰۰۰ تومان",
-      validity: "۶۰ روز",
-      packagePrice: "۲۰۰,۰۰۰ تومان",
-      minutes: "۱۰۰۰ دقیقه",
-      image: hamrahAval,
-    },
-    {
-      type: "اعتباری",
-      simPrice: "۱۰۰,۰۰۰ تومان",
-      validity: "۹۰ روز",
-      packagePrice: "۳۰۰,۰۰۰ تومان",
-      minutes: "۲۰۰۰ دقیقه",
-      image: rightel,
-    },
-  ];
+  async function fetchMobileTariffs() {
+    try {
+      const responseData = await sendRequest(
+        `${import.meta.env.VITE_API_URL}/api/mobile-tariffs`,
+        "GET"
+      );
+
+      setAllPackages(responseData);
+      setFilteredPackages(responseData); // show all at first
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {}
+  }
 
   useEffect(() => {
-    setIsLoading(true);
+    fetchMobileTariffs();
+    // eslint-disable-next-line
+  }, []);
 
+  useEffect(() => {
     const timer = setTimeout(() => {
-      const filteredData = mobilePackages.filter((pkg) => {
+      if (!Array.isArray(allPackages) || allPackages.length === 0) return;
+
+      const filteredData = allPackages.filter((pkg) => {
         const rawPrice = Number(
           persianToEnglishDigits(pkg.packagePrice).replace(/[^\d]/g, "")
         );
@@ -60,11 +50,10 @@ export default function MobileTariffComparePage() {
       });
 
       setFilteredPackages(filteredData);
-      setIsLoading(false);
-    }, 1000);
+    }, 300);
 
     return () => clearTimeout(timer);
-  }, [simTypeFilter, maxPrice]);
+  }, [simTypeFilter, maxPrice, allPackages]);
 
   return (
     <div className="w-full mx-auto mt-8 p-4 grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -106,7 +95,7 @@ export default function MobileTariffComparePage() {
       <div className="lg:col-span-4 flex flex-col gap-6">
         {isLoading
           ? [...Array(5)].map((_, i) => <SimCardInfoSkeleton key={i} />)
-          : filteredPackages.map((pkg, index) => (
+          : filteredPackages?.map((pkg, index) => (
               <SimCardInfo key={index} {...pkg} />
             ))}
       </div>

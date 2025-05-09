@@ -22,7 +22,7 @@ export default function LoginPage() {
 
     try {
       const responseData = await sendRequest(
-        `${import.meta.env.VITE_API_URL}/users/login`,
+        `${import.meta.env.VITE_API_URL}/api/users/login`,
         "POST",
         JSON.stringify({ email, password }),
         {

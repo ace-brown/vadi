@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -71,8 +71,8 @@ const items = [
 export default function Header() {
   const auth = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
-  console.log("islogged in in nav: ", auth.isLoggedIn);
   return (
     <header className="w-full shadow-md rtl text-right">
       {/* Header Top */}
@@ -104,6 +104,7 @@ export default function Header() {
               <Button
                 onClick={() => {
                   auth.logout();
+                  navigate("/");
                 }}
               >
                 خروج

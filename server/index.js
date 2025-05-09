@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const usersRoutes = require('./src/routes/users-routes')
 const mobileTariffRoutes = require('./src/routes/mobile-tariffs-routes')
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use('/uploads/images', express.static(path.join(__dirname, 'uploads', 'images')));
 
 // Download Routes
 app.use('/api/download', downloadRoutes);

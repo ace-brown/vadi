@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/context/auth-context";
 
 let logoutTimer: NodeJS.Timeout | null = null;
@@ -13,7 +12,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [tokenExpirationDate, setTokenExpirationDate] = useState<Date | null>(
     null
   );
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const login = useCallback(function (
     uid: string,
@@ -45,19 +44,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
   },
   []);
 
-  const logout = useCallback(
-    function () {
-      navigate("/");
-      setToken(null);
-      setUserId(null);
-      setFullName(null);
-      setUsername(null);
-      setTokenExpirationDate(null);
-      setRole(null);
-      localStorage.removeItem("userData");
-    },
-    [navigate]
-  );
+  const logout = useCallback(function () {
+    // navigate("/");
+    setToken(null);
+    setUserId(null);
+    setFullName(null);
+    setUsername(null);
+    setTokenExpirationDate(null);
+    setRole(null);
+    localStorage.removeItem("userData");
+  }, []);
 
   useEffect(() => {
     if (logoutTimer) {

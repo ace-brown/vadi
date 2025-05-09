@@ -33,24 +33,22 @@ function App() {
       children: [
         { index: true, element: <HomePage /> },
         { path: "terminal", element: <TerminalPage /> },
-        { path: "mobile-tariff-compare", element: <MobileTariffComparePage /> },
         {
           path: "internet-details-select",
           element: <InternetDetailsSelectPage />,
         },
+        { path: "mobile-tariff-compare", element: <MobileTariffComparePage /> },
         { path: "home-tariff-compare", element: <HomeTariffComparePage /> },
         { path: "barber-details-select", element: <BarberDetailsSelectPage /> },
         { path: "barber-compare", element: <BarberComparePage /> },
         { path: "login", element: <LoginPage /> },
         { path: "signup", element: <SignupPage /> },
+        {
+          path: "/dashboard",
+          element: auth.isLoggedIn ? <AuthLayoutPage /> : <Navigate to="/" />,
+          children: [{ index: true, element: <SettingsPage /> }],
+        },
       ],
-    },
-
-    // Authenticated Routes (no nav/footer)
-    {
-      path: "/dashboard",
-      element: auth.isLoggedIn ? <AuthLayoutPage /> : <Navigate to="/" />,
-      children: [{ index: true, element: <SettingsPage /> }],
     },
   ]);
 

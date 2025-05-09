@@ -50,7 +50,7 @@ export default function SignupPage() {
 
     try {
       const responseData = await sendRequest(
-        `${import.meta.env.VITE_API_URL}/users/signup`,
+        `${import.meta.env.VITE_API_URL}/api/users/signup`,
         "POST",
         JSON.stringify(formData),
         {
