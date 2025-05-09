@@ -17,6 +17,8 @@ import HomeTariffComparePage from "./pages/internet/home-tariff/HomeTariffCompar
 import InternetDetailsSelectPage from "./pages/internet/InternetDetailsSelect";
 import AuthLayoutPage from "./pages/dashboard/AuthLayout";
 import SettingsPage from "./pages/dashboard/Settings";
+import LoginPage from "./pages/Login";
+import SignupPage from "./pages/Signup";
 
 function App() {
   const auth = useContext(AuthContext);
@@ -38,6 +40,8 @@ function App() {
         { path: "home-tariff-compare", element: <HomeTariffComparePage /> },
         { path: "barber-details-select", element: <BarberDetailsSelectPage /> },
         { path: "barber-compare", element: <BarberComparePage /> },
+        { path: "login", element: <LoginPage /> },
+        { path: "signup", element: <SignupPage /> },
       ],
     },
 

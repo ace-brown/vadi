@@ -61,6 +61,7 @@ export default function LoginPage() {
                   ایمیل<span className="text-red-500">*</span>
                 </Label>
                 <Input
+                  className="mt-4"
                   type="email"
                   id="email"
                   name="email"
@@ -76,6 +77,7 @@ export default function LoginPage() {
                   رمز عبور<span className="text-red-500">*</span>
                 </Label>
                 <Input
+                  className="mt-4"
                   type="password"
                   id="password"
                   name="password"
