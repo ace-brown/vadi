@@ -1,4 +1,10 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "@/context/auth-context";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 
 import HomePage from "@/pages/Home";
 import RootLayout from "@/pages/Root";
@@ -9,35 +15,37 @@ import BarberDetailsSelectPage from "./pages/barber/BarberDetailsSelect";
 import BarberComparePage from "./pages/barber/BarberCompare";
 import HomeTariffComparePage from "./pages/internet/home-tariff/HomeTariffCompare";
 import InternetDetailsSelectPage from "./pages/internet/InternetDetailsSelect";
+import AuthLayoutPage from "./pages/dashboard/AuthLayout";
+import SettingsPage from "./pages/dashboard/Settings";
 
 function App() {
+  const auth = useContext(AuthContext);
+
   const router = createBrowserRouter([
+    // Public Routes (with nav)
     {
       path: "/",
       element: <RootLayout />,
       errorElement: <ErrorPage />,
       children: [
-        { path: "/", element: <HomePage /> },
-
-        { path: "/terminal", element: <TerminalPage /> },
+        { index: true, element: <HomePage /> },
+        { path: "terminal", element: <TerminalPage /> },
+        { path: "mobile-tariff-compare", element: <MobileTariffComparePage /> },
         {
-          path: "/mobile-tariff-compare",
-          element: <MobileTariffComparePage />,
-        },
-        {
-          path: "/internet-details-select",
+          path: "internet-details-select",
           element: <InternetDetailsSelectPage />,
         },
-        {
-          path: "/home-tariff-compare",
-          element: <HomeTariffComparePage />,
-        },
-        {
-          path: "/barber-details-select",
-          element: <BarberDetailsSelectPage />,
-        },
-        { path: "/barber-compare", element: <BarberComparePage /> },
+        { path: "home-tariff-compare", element: <HomeTariffComparePage /> },
+        { path: "barber-details-select", element: <BarberDetailsSelectPage /> },
+        { path: "barber-compare", element: <BarberComparePage /> },
       ],
+    },
+
+    // Authenticated Routes (no nav/footer)
+    {
+      path: "/dashboard",
+      element: auth.isLoggedIn ? <AuthLayoutPage /> : <Navigate to="/" />,
+      children: [{ index: true, element: <SettingsPage /> }],
     },
   ]);
 

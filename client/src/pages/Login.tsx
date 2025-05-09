@@ -24,7 +24,7 @@ export default function LoginPage() {
 
     try {
       const responseData = await sendRequest(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
+        `${process.env.REACT_APP_API_URL}/users/login`,
         "POST",
         JSON.stringify({ email, password }),
         {
