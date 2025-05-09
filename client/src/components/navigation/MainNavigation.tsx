@@ -72,6 +72,7 @@ export default function Header() {
   const auth = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  console.log("islogged in in nav: ", auth.isLoggedIn);
   return (
     <header className="w-full shadow-md rtl text-right">
       {/* Header Top */}

@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useContext, useState } from "react";
 import { Toaster } from "sonner";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
@@ -52,7 +50,7 @@ export default function SignupPage() {
 
     try {
       const responseData = await sendRequest(
-        `${process.env.REACT_APP_API_URL}/users/signup`,
+        `${import.meta.env.VITE_API_URL}/users/signup`,
         "POST",
         JSON.stringify(formData),
         {

@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useContext, useState } from "react";
 import { Toaster } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
@@ -24,7 +22,7 @@ export default function LoginPage() {
 
     try {
       const responseData = await sendRequest(
-        `${process.env.REACT_APP_API_URL}/users/login`,
+        `${import.meta.env.VITE_API_URL}/users/login`,
         "POST",
         JSON.stringify({ email, password }),
         {

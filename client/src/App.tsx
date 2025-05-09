@@ -22,7 +22,8 @@ import SignupPage from "./pages/Signup";
 
 function App() {
   const auth = useContext(AuthContext);
-
+  console.log("auth is logged in: ", auth.isLoggedIn);
+  console.log("auth: ", auth);
   const router = createBrowserRouter([
     // Public Routes (with nav)
     {
