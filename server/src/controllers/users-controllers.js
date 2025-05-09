@@ -157,7 +157,7 @@ async function signup(req, res, next) {
         username,
         email,
         password, // Store plaintext password
-        fullName
+        profile: { fullName }
     });
 
     try {

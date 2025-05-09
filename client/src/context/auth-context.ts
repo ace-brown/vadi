@@ -7,7 +7,6 @@ interface AuthContextType {
   fullName: string | null;
   username: string | null;
   role: string | null;
-  reportId: string | null;
   login: (
     uid: string,
     fullName: string,
@@ -17,7 +16,6 @@ interface AuthContextType {
     expirationDate?: Date
   ) => void;
   logout: () => void;
-  getReportId: (reportId: string | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -26,9 +24,7 @@ export const AuthContext = createContext<AuthContextType>({
   token: null,
   fullName: null,
   username: null,
-  reportId: null,
   role: null,
   login: () => {},
   logout: () => {},
-  getReportId: () => {},
 });
