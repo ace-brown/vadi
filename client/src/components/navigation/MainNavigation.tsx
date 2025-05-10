@@ -69,9 +69,9 @@ const items = [
 ];
 
 export default function Header() {
-  const auth = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
-  const navigate = useNavigate();
+  // const auth = useContext(AuthContext);
+  // const navigate = useNavigate();
 
   return (
     <header className="w-full shadow-md rtl text-right">
@@ -83,7 +83,7 @@ export default function Header() {
         </Link>
 
         <div className="flex items-center gap-4">
-          {!auth.isLoggedIn && (
+          {/* {!auth.isLoggedIn && (
             <>
               <Link to="/signup">
                 <Button>ثبت‌ نام</Button>
@@ -110,7 +110,7 @@ export default function Header() {
                 خروج
               </Button>
             </>
-          )}
+          )} */}
           <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
             {menuOpen ? <X /> : <Menu />}
           </button>

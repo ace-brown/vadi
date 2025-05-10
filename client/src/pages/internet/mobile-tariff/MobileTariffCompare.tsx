@@ -93,11 +93,17 @@ export default function MobileTariffComparePage() {
 
       {/* Card Column (80% width) */}
       <div className="lg:col-span-4 flex flex-col gap-6">
-        {isLoading
-          ? [...Array(5)].map((_, i) => <SimCardInfoSkeleton key={i} />)
-          : filteredPackages?.map((pkg, index) => (
-              <SimCardInfo key={index} {...pkg} />
-            ))}
+        {isLoading ? (
+          [...Array(5)].map((_, i) => <SimCardInfoSkeleton key={i} />)
+        ) : filteredPackages.length === 0 ? (
+          <p className="text-center text-gray-500 text-lg mt-8">
+            هیچ بسته‌ای یافت نشد.
+          </p>
+        ) : (
+          filteredPackages.map((pkg, index) => (
+            <SimCardInfo key={index} {...pkg} />
+          ))
+        )}
       </div>
     </div>
   );

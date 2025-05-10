@@ -102,6 +102,11 @@ export const keywordGroups: Record<string, string[]> = {
     "Fiber Package",
     "بسته TD-LTE",
     "TD-LTE Package",
+    "اینترنت بی‌سیم ثابت",
+    "wireless",
+    "آی دی اس ال",
+    "وی دی اس ال",
+    "تی دی ال تی",
   ],
 
   hair: [
