@@ -92,6 +92,20 @@ export default function HomeTariffComparePage() {
     );
   }
 
+  // Check if any filter is active
+  const isAnyFilterActive =
+    netTypeFilter.length > 0 ||
+    speedFilter.length > 0 ||
+    durationFilter.length > 0 ||
+    maxPrice !== 2000000;
+
+  function resetFilters() {
+    setNetTypeFilter([]);
+    setSpeedFilter([]);
+    setDurationFilter([]);
+    setMaxPrice(2000000);
+  }
+
   // Filter operations
   useEffect(() => {
     setIsLoading(true);
@@ -184,9 +198,6 @@ export default function HomeTariffComparePage() {
           `حداکثر قیمت: ${englishToPersianDigits(v.toLocaleString())} تومان`
         }
       />
-
-      {/* "حذف فیلتر ها" */}
-      <Button>حذف فیلتر ها</Button>
     </>
   );
 
@@ -195,6 +206,8 @@ export default function HomeTariffComparePage() {
       filters={filters}
       isLoading={isLoading}
       skeleton={<HomeNetCardSkeleton />}
+      isAnyFilterActive={isAnyFilterActive}
+      onResetFilters={resetFilters}
     >
       {sortedPKGs.map((pkg, i) => (
         <HomeNetCard key={i} {...pkg} />
