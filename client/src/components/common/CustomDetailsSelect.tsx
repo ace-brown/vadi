@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import StateCitySelect from "@/components/common/StateCitySelect";
+import Search from "@/components/search/Search";
 
 type Props = {
   title: string;
@@ -35,16 +36,17 @@ export default function CustomDetailsSelect({
   children,
 }: Props) {
   return (
-    <div className="max-w-md mx-auto mt-10 p-4">
-      <Card className="min-h-[420px] grid grid-rows-[1fr_auto]">
+    <div className="max-w-5xl mx-auto">
+      <Search />
+      <Card className="max-w-md mx-auto min-h-[420px] grid grid-rows-[1fr_auto]">
         <CardContent className="space-y-4 p-6">
           <div className="space-y-2">
             <label className="block text-right font-medium">{title}</label>
             <Select value={selectedItem} onValueChange={onSelectedItem}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full" style={{ direction: "rtl" }}>
                 <SelectValue placeholder="انتخاب کنید" />
               </SelectTrigger>
-              <SelectContent className="bg-white">
+              <SelectContent className="bg-white" style={{ direction: "rtl" }}>
                 {options.map((opt) => (
                   <SelectItem
                     key={opt.value}

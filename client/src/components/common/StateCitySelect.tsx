@@ -39,10 +39,13 @@ export default function StateCitySelect({
             onCityChange(""); // Reset city when state changes
           }}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full" style={{ direction: "rtl" }}>
             <SelectValue placeholder="استان را انتخاب کنید" />
           </SelectTrigger>
-          <SelectContent className="bg-white shadow-md rounded-md">
+          <SelectContent
+            className="bg-white shadow-md rounded-md"
+            style={{ direction: "rtl" }}
+          >
             {Object.keys(citiesByState).map((stateName) => (
               <SelectItem
                 key={stateName}
@@ -63,10 +66,13 @@ export default function StateCitySelect({
             شهر خود را انتخاب کنید
           </label>
           <Select value={city} onValueChange={onCityChange}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" style={{ direction: "rtl" }}>
               <SelectValue placeholder="شهر را انتخاب کنید" />
             </SelectTrigger>
-            <SelectContent className="bg-white shadow-md rounded-md">
+            <SelectContent
+              className="bg-white shadow-md rounded-md"
+              style={{ direction: "rtl" }}
+            >
               {citiesByState[state].map((cityName) => (
                 <SelectItem
                   key={cityName}
