@@ -10,10 +10,12 @@ import CustomCompareLayout from "@/components/common/CustomCompareLayout";
 import FilterCollapse from "@/components/common/FilterCollapse";
 import FilterSelect from "@/components/common/FilterSelect";
 import FilterSlider from "@/components/common/FilterSlider";
+import { Button } from "@/components/ui/button";
 
 export default function HomeTariffComparePage() {
   const [netTypeFilter, setNetTypeFilter] = useState<string[]>([]);
   const [speedFilter, setSpeedFilter] = useState<string[]>([]);
+  const [durationFilter, setDurationFilter] = useState<string[]>([]);
   const [maxPrice, setMaxPrice] = useState(2000000);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredPackages, setFilteredPackages] = useState<HomeNetType[]>([]);
@@ -28,7 +30,14 @@ export default function HomeTariffComparePage() {
     "100 تا 1000 مگابیت بر ثانیه",
   ];
   const INTERNET_TYPES = ["ADSL", "VDSL", "فیبر نوری", "TD-LTE", "بی‌سیم"];
-
+  const DURATION_OPTIONS = [
+    "1 ماهه",
+    "3 ماهه",
+    "6 ماهه",
+    "12 ماهه",
+    "18 ماهه",
+    "24 ماهه",
+  ];
   const homePackages = [
     {
       title: "آسیاتک",
@@ -76,6 +85,13 @@ export default function HomeTariffComparePage() {
     );
   }
 
+  function handleDurationChnage(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    setDurationFilter((prev) =>
+      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
+    );
+  }
+
   // Filter operations
   useEffect(() => {
     setIsLoading(true);
@@ -90,7 +106,10 @@ export default function HomeTariffComparePage() {
         const matchesSpeed =
           speedFilter.length === 0 || speedFilter.includes(pkg.speed);
 
-        return matchesType && matchesPrice && matchesSpeed;
+        const matchesDuration =
+          durationFilter.length === 0 || durationFilter.includes(pkg.duration);
+
+        return matchesType && matchesPrice && matchesSpeed && matchesDuration;
       });
 
       setFilteredPackages(filteredData);
@@ -98,7 +117,7 @@ export default function HomeTariffComparePage() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [netTypeFilter, maxPrice, speedFilter]);
+  }, [netTypeFilter, maxPrice, speedFilter, durationFilter]);
 
   // Sort operation
   const sortedPKGs = [...filteredPackages].sort((a, b) => {
@@ -141,6 +160,18 @@ export default function HomeTariffComparePage() {
         }
       />
 
+      {/* مدت اعتبار */}
+      <FilterCollapse
+        label="مدت اعتبار"
+        options={DURATION_OPTIONS}
+        selectedValues={durationFilter}
+        onChange={(value: string) =>
+          handleDurationChnage({
+            target: { value },
+          } as React.ChangeEvent<HTMLInputElement>)
+        }
+      />
+
       {/* قیمت */}
       <FilterSlider
         label="مبلغ بسته"
@@ -153,6 +184,9 @@ export default function HomeTariffComparePage() {
           `حداکثر قیمت: ${englishToPersianDigits(v.toLocaleString())} تومان`
         }
       />
+
+      {/* "حذف فیلتر ها" */}
+      <Button>حذف فیلتر ها</Button>
     </>
   );
 
