@@ -12,6 +12,7 @@ export default function HomeTariffComparePage() {
   const [maxPrice, setMaxPrice] = useState(2000000);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredPackages, setFilteredPackages] = useState<HomeNetType[]>([]);
+  const [sortOrder, setSortOrder] = useState("asc");
   const INTERNET_TYPES = ["ADSL", "VDSL", "فیبر نوری", "TD-LTE", "بی‌سیم"];
 
   const homePackages = [
@@ -29,7 +30,7 @@ export default function HomeTariffComparePage() {
       speed: "16 مگابیت بر ثانیه",
       duration: "6 ماهه",
       volume: "500 گیگ داخلی معادل 180 گیگ بین‌الملل",
-      netType: "VDSL",
+      netType: "ADSL",
       price: 1530000,
       image: sabanet,
     },
@@ -44,6 +45,7 @@ export default function HomeTariffComparePage() {
     },
   ];
 
+  // Filter operations
   useEffect(() => {
     setIsLoading(true);
 
@@ -62,18 +64,40 @@ export default function HomeTariffComparePage() {
     return () => clearTimeout(timer);
   }, [netTypeFilter, maxPrice]);
 
+  // Sort operation
+  const sortedPKGs = [...filteredPackages].sort((a, b) => {
+    return sortOrder === "asc" ? a.price - b.price : b.price - a.price;
+  });
+
   return (
     <div className="w-full mx-auto mt-8 p-4 grid grid-cols-1 lg:grid-cols-5 gap-6">
       {/* Filter Column (20% width) */}
       <div className="lg:col-span-1 bg-white p-4 rounded border min-h-[90vh]">
-        <h2 className="font-semibold text-xl mb-4">فیلترها</h2>
+        <h2 className="font-bold text-2xl text-gray-800 tracking-tight mb-4">
+          فیلترها
+        </h2>
+        <div className="block mb-4">
+          <select
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="min-w-[150px] border border-gray-300 text-sm rounded px-3 py-1 focus:outline-none focus:ring focus:ring-blue-200 cursor-pointer"
+          >
+            <option value="asc">ارزان‌ترین</option>
+            <option value="desc">گران‌ترین</option>
+          </select>
+        </div>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm">نوع اینترنت</label>
+            <label className="block text-base font-semibold text-gray-700 mb-1">
+              نوع اینترنت
+            </label>
             <div className="mt-2 space-y-1">
               {INTERNET_TYPES.map((type) => (
-                <label key={type} className="flex items-center space-x-2">
+                <label
+                  key={type}
+                  className="flex items-center space-x-2 cursor-pointer"
+                >
                   <input
+                    className="cursor-pointer"
                     type="checkbox"
                     value={type}
                     checked={netTypeFilter.includes(type)}
@@ -94,7 +118,9 @@ export default function HomeTariffComparePage() {
           </div>
 
           <div>
-            <label className="block text-sm">مبلغ بسته</label>
+            <label className="block text-base font-semibold text-gray-700 mb-1">
+              مبلغ بسته
+            </label>
             <input
               type="range"
               min="0"
@@ -102,7 +128,7 @@ export default function HomeTariffComparePage() {
               step="20000"
               value={maxPrice}
               onChange={(e) => setMaxPrice(Number(e.target.value))}
-              className="w-full p-2"
+              className="w-full p-2 cursor-pointer"
             />
             <p className="text-sm mt-1 text-gray-600">
               حداکثر قیمت: {englishToPersianDigits(maxPrice.toLocaleString())}{" "}
@@ -116,14 +142,12 @@ export default function HomeTariffComparePage() {
       <div className="lg:col-span-4 flex flex-col gap-6">
         {isLoading ? (
           [...Array(5)].map((_, i) => <HomeNetCardSkeleton key={i} />)
-        ) : filteredPackages.length === 0 ? (
+        ) : sortedPKGs.length === 0 ? (
           <p className="text-center text-gray-500 text-lg mt-8">
             هیچ بسته‌ای یافت نشد.
           </p>
         ) : (
-          filteredPackages.map((pkg, index) => (
-            <HomeNetCard key={index} {...pkg} />
-          ))
+          sortedPKGs.map((pkg, index) => <HomeNetCard key={index} {...pkg} />)
         )}
       </div>
     </div>

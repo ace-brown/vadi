@@ -32,7 +32,7 @@ export default function HomeNetCard({
         </div>
         <div>
           <p className="text-gray-500">مبلغ بسته (تومان)</p>
-          <p className="font-semibold mt-1">{price}</p>
+          <p className="font-semibold mt-1">{price.toLocaleString()}</p>
         </div>
         <div>
           <p className="text-gray-500">مدت اعتبار</p>
