@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 type FilterCollapseProps = {
   label: string;
@@ -13,7 +14,7 @@ export default function FilterCollapse({
   selectedValues,
   onChange,
 }: FilterCollapseProps) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggleCollapse = () => setIsOpen((prev) => !prev);
 
@@ -21,10 +22,12 @@ export default function FilterCollapse({
     <div className="border rounded mb-4">
       <button
         onClick={toggleCollapse}
-        className="w-full text-right font-semibold px-3 py-2 bg-gray-100 hover:bg-gray-200 transition flex justify-between items-center"
+        className="w-full text-right font-semibold px-3 py-2 hover:bg-gray-100 transition flex justify-between items-center"
       >
         <span>{label}</span>
-        <span>{isOpen ? "▲" : "▼"}</span>
+        <span>
+          {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        </span>
       </button>
 
       {isOpen && (

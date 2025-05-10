@@ -6,10 +6,10 @@ import { HomeNetType } from "@/types";
 import HomeNetCard from "@/components/internet/home-tariff/HomeNetCard";
 import HomeNetCardSkeleton from "@/components/internet/home-tariff/HomeNetCardSkeleton";
 import { englishToPersianDigits } from "@/utils/helpers";
-import CustomCompareLayout from "../../../components/common/CustomCompareLayout";
-import FilterLabel from "@/components/common/FilterLabel";
-import FilterDropdown from "@/components/common/FilterCollapse";
+import CustomCompareLayout from "@/components/common/CustomCompareLayout";
 import FilterCollapse from "@/components/common/FilterCollapse";
+import FilterSelect from "@/components/common/FilterSelect";
+import FilterSlider from "@/components/common/FilterSlider";
 
 export default function HomeTariffComparePage() {
   const [netTypeFilter, setNetTypeFilter] = useState<string[]>([]);
@@ -108,27 +108,24 @@ export default function HomeTariffComparePage() {
   const filters = (
     <>
       {/* sort */}
-      <div className="block mb-4">
-        <select
-          onChange={(e) => setSortOrder(e.target.value)}
-          className="min-w-[150px] border border-gray-300 text-sm rounded px-3 py-1 focus:outline-none focus:ring focus:ring-blue-200 cursor-pointer"
-        >
-          <option value="asc">ارزان‌ترین</option>
-          <option value="desc">گران‌ترین</option>
-        </select>
-      </div>
+      <FilterSelect
+        value={sortOrder}
+        onChange={setSortOrder}
+        options={[
+          { value: "asc", label: "ارزان‌ترین" },
+          { value: "desc", label: "گران‌ترین" },
+        ]}
+      />
 
       {/* نوع اینترنت */}
       <FilterCollapse
         label="نوع اینترنت"
         options={INTERNET_TYPES}
         selectedValues={netTypeFilter}
-        onChange={(value) =>
-          setNetTypeFilter((prev) =>
-            prev.includes(value)
-              ? prev.filter((v) => v !== value)
-              : [...prev, value]
-          )
+        onChange={(value: string) =>
+          handleNetTypeChange({
+            target: { value },
+          } as React.ChangeEvent<HTMLInputElement>)
         }
       />
 
@@ -137,31 +134,25 @@ export default function HomeTariffComparePage() {
         label="سرعت"
         options={SPEED_OPTIONS}
         selectedValues={speedFilter}
-        onChange={(value) =>
-          setSpeedFilter((prev) =>
-            prev.includes(value)
-              ? prev.filter((v) => v !== value)
-              : [...prev, value]
-          )
+        onChange={(value: string) =>
+          handleNetSpeedChange({
+            target: { value },
+          } as React.ChangeEvent<HTMLInputElement>)
         }
       />
 
       {/* قیمت */}
-      <div>
-        <FilterLabel>مبلغ بسته</FilterLabel>
-        <input
-          type="range"
-          min="0"
-          max="2000000"
-          step="20000"
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(Number(e.target.value))}
-          className="w-full p-2 cursor-pointer"
-        />
-        <p className="text-sm text-gray-600">
-          حداکثر قیمت: {englishToPersianDigits(maxPrice.toLocaleString())} تومان
-        </p>
-      </div>
+      <FilterSlider
+        label="مبلغ بسته"
+        min={0}
+        max={2000000}
+        step={20000}
+        value={maxPrice}
+        onChange={setMaxPrice}
+        formatValue={(v) =>
+          `حداکثر قیمت: ${englishToPersianDigits(v.toLocaleString())} تومان`
+        }
+      />
     </>
   );
 
