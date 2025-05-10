@@ -6,7 +6,7 @@ export default function RootLayout() {
   return (
     <div className="flex min-h-screen flex-col justify-between">
       <Header />
-      <div className="w-[90%] mx-auto">
+      <div className="w-[95%] mx-auto">
         <Outlet />
       </div>
       <Footer />
