@@ -10,7 +10,6 @@ import CustomCompareLayout from "@/components/common/CustomCompareLayout";
 import FilterCollapse from "@/components/common/FilterCollapse";
 import FilterSelect from "@/components/common/FilterSelect";
 import FilterSlider from "@/components/common/FilterSlider";
-import { Button } from "@/components/ui/button";
 
 export default function HomeTariffComparePage() {
   const [netTypeFilter, setNetTypeFilter] = useState<string[]>([]);
@@ -209,9 +208,12 @@ export default function HomeTariffComparePage() {
       isAnyFilterActive={isAnyFilterActive}
       onResetFilters={resetFilters}
     >
-      {sortedPKGs.map((pkg, i) => (
-        <HomeNetCard key={i} {...pkg} />
-      ))}
+      <>
+        <h3>نتایج مردانه</h3>
+        {sortedPKGs.map((pkg, i) => (
+          <HomeNetCard key={i} {...pkg} />
+        ))}
+      </>
     </CustomCompareLayout>
   );
 }

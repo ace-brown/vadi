@@ -1,15 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import StateCitySelect from "@/components/common/StateCitySelect";
+import CustomDetailsSelect from "@/components/common/CustomDetailsSelect";
 
 export default function BarberDetailsSelectPage() {
   const navigate = useNavigate();
@@ -17,6 +8,10 @@ export default function BarberDetailsSelectPage() {
   const [selectedState, setSelectedState] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [salonType, setSalonType] = useState<string>("");
+  const salonOptions = [
+    { label: "مردانه", value: "men" },
+    { label: "زنانه", value: "women" },
+  ];
 
   function handleSubmit() {
     const searchParams = new URLSearchParams();
@@ -30,51 +25,16 @@ export default function BarberDetailsSelectPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-4">
-      <Card className="min-h-[420px] grid grid-rows-[1fr_auto]">
-        <CardContent className="space-y-4 p-6">
-          <div className="space-y-2">
-            <label className="block text-right font-medium">نوع آرایشگاه</label>
-            <Select value={salonType} onValueChange={setSalonType}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="انتخاب کنید" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                <SelectItem
-                  value="all"
-                  className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
-                >
-                  همه
-                </SelectItem>
-                <SelectItem
-                  value="men"
-                  className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
-                >
-                  مردانه
-                </SelectItem>
-                <SelectItem
-                  value="women"
-                  className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
-                >
-                  زنانه
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <StateCitySelect
-            state={selectedState}
-            city={selectedCity}
-            onStateChange={setSelectedState}
-            onCityChange={setSelectedCity}
-          />
-        </CardContent>
-        <div className="px-6 pb-4 pt-0">
-          <Button onClick={handleSubmit} className="w-full">
-            مقایسه
-          </Button>
-        </div>
-      </Card>
-    </div>
+    <CustomDetailsSelect
+      title="نوع آرایشگاه"
+      selectedItem={salonType}
+      options={salonOptions}
+      state={selectedState}
+      city={selectedCity}
+      onSelectedItem={setSalonType}
+      onStateChange={setSelectedState}
+      onCityChange={setSelectedCity}
+      onSubmit={handleSubmit}
+    />
   );
 }

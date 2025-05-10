@@ -1,3 +1,4 @@
+import CardInfoItem from "@/components/common/CardInfoItem";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { HomeNetType } from "@/types";
@@ -26,26 +27,14 @@ export default function HomeNetCard({
             {title}
           </h2>
         </div> */}
-        <div>
-          <p className="text-gray-500">سرعت</p>
-          <p className="font-semibold mt-1">{speed}</p>
-        </div>
-        <div>
-          <p className="text-gray-500">مبلغ بسته (تومان)</p>
-          <p className="font-semibold mt-1">{price.toLocaleString()}</p>
-        </div>
-        <div>
-          <p className="text-gray-500">مدت اعتبار</p>
-          <p className="font-semibold mt-1">{duration}</p>
-        </div>
-        <div>
-          <p className="text-gray-500">نوع اینترنت</p>
-          <p className="font-semibold mt-1">{netType}</p>
-        </div>
-        <div>
-          <p className="text-gray-500">حجم بسته</p>
-          <p className="font-semibold mt-1">{volume}</p>
-        </div>
+        <CardInfoItem label="سرعت" value={speed} />
+        <CardInfoItem
+          label="مبلغ بسته (تومان)"
+          value={price.toLocaleString()}
+        />
+        <CardInfoItem label="مدت اعتبار" value={duration} />
+        <CardInfoItem label="نوع اینترنت" value={netType} />
+        <CardInfoItem label="حجم بسته" value={volume} />
         <div className="sm:col-span-2 lg:col-span-1">
           <Button className="w-full">سفارش</Button>
         </div>
