@@ -1,7 +1,8 @@
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import asiatech from "@/images/internet/home/asiatech.jpg";
 import sabanet from "@/images/internet/home/sabanet.png";
 import shatel from "@/images/internet/home/shatel.png";
-import { useEffect, useState } from "react";
 import { HomeNetType } from "@/types";
 import HomeNetCard from "@/components/internet/home-tariff/HomeNetCard";
 import HomeNetCardSkeleton from "@/components/internet/home-tariff/HomeNetCardSkeleton";
@@ -19,6 +20,10 @@ export default function HomeTariffComparePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [filteredPackages, setFilteredPackages] = useState<HomeNetType[]>([]);
   const [sortOrder, setSortOrder] = useState("asc");
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const currentResult = queryParams.get("currentResult") ?? "پیدا نشد";
 
   const SPEED_OPTIONS = [
     "2 مگابیت بر ثانیه",
@@ -207,13 +212,12 @@ export default function HomeTariffComparePage() {
       skeleton={<HomeNetCardSkeleton />}
       isAnyFilterActive={isAnyFilterActive}
       onResetFilters={resetFilters}
+      currentResult={currentResult}
+      returnTxt="بازگشت به صحفه ی انتخاب نوع اینترنت"
     >
-      <>
-        <h3>نتایج مردانه</h3>
-        {sortedPKGs.map((pkg, i) => (
-          <HomeNetCard key={i} {...pkg} />
-        ))}
-      </>
+      {sortedPKGs.map((pkg, i) => (
+        <HomeNetCard key={i} {...pkg} />
+      ))}
     </CustomCompareLayout>
   );
 }

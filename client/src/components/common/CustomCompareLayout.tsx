@@ -1,4 +1,5 @@
 import React from "react";
+import { CornerUpLeft } from "lucide-react";
 
 type CustomCompareLayoutProps = {
   filters: React.ReactNode;
@@ -7,6 +8,8 @@ type CustomCompareLayoutProps = {
   skeleton: React.ReactNode;
   emptyMessage?: string;
   isAnyFilterActive: boolean;
+  currentResult: string;
+  returnTxt: string;
   onResetFilters: () => void;
 };
 
@@ -17,10 +20,12 @@ export default function CustomCompareLayout({
   skeleton,
   emptyMessage = "موردی یافت نشد.",
   isAnyFilterActive,
+  currentResult,
+  returnTxt,
   onResetFilters,
 }: CustomCompareLayoutProps) {
   return (
-    <div className="w-full mx-auto mt-8 py-4 px-0 grid grid-cols-1 lg:grid-cols-5 gap-6">
+    <div className="w-full mx-auto mt-8 py-4 px-0 grid grid-cols-1 lg:grid-cols-5 gap-4">
       {/* Filter Column */}
       <div className="lg:col-span-1 bg-white p-4 rounded border min-h-[90vh]">
         <div className="flex items-center justify-between gap-4 mb-4">
@@ -40,7 +45,16 @@ export default function CustomCompareLayout({
       </div>
 
       {/* Card Column */}
-      <div className="lg:col-span-4 flex flex-col gap-6">
+      <div className="lg:col-span-4 flex flex-col gap-4">
+        <div className="flex items-center justify-between" dir="rtl">
+          <h2 className="text-lg font-semibold text-gray-800">{`نتایج ${currentResult}`}</h2>
+          {returnTxt && (
+            <button className="flex items-center gap-1 border border-gray-300 hover:border-gray-400 hover:bg-gray-50 text-sm text-black font-normal py-1.5 px-3 rounded-md transition">
+              <CornerUpLeft className="w-4 h-4" />
+              {returnTxt}
+            </button>
+          )}
+        </div>
         {isLoading ? (
           [...Array(5)].map((_, i) =>
             React.cloneElement(skeleton as React.ReactElement, { key: i })

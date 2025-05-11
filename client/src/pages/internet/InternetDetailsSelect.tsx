@@ -26,10 +26,15 @@ export default function InternetDetailsSelectPage() {
     const slug = routeMap[netType];
     if (!slug) return;
 
+    // Send all the results from options
+    const currentOpt = internetOptions.find((opt) => opt.value === netType);
+    const currentResult = currentOpt?.label || "";
+
     const searchParams = new URLSearchParams({
       state: selectedState,
       city: selectedCity,
       type: netType,
+      currentResult,
     });
 
     navigate(`/${slug}?${searchParams.toString()}`);
