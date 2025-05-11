@@ -13,17 +13,18 @@ import FilterSelect from "@/components/common/FilterSelect";
 import FilterSlider from "@/components/common/FilterSlider";
 
 export default function HomeTariffComparePage() {
+  const MAX_PRICE = 2000000;
   const [netTypeFilter, setNetTypeFilter] = useState<string[]>([]);
   const [speedFilter, setSpeedFilter] = useState<string[]>([]);
   const [durationFilter, setDurationFilter] = useState<string[]>([]);
-  const [maxPrice, setMaxPrice] = useState(2000000);
+  const [maxPrice, setMaxPrice] = useState(MAX_PRICE);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredPackages, setFilteredPackages] = useState<HomeNetType[]>([]);
   const [sortOrder, setSortOrder] = useState("asc");
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const currentResult = queryParams.get("currentResult") ?? "پیدا نشد";
+  const currentResult = queryParams.get("currentResult") ?? "";
 
   const SPEED_OPTIONS = [
     "2 مگابیت بر ثانیه",
@@ -101,13 +102,13 @@ export default function HomeTariffComparePage() {
     netTypeFilter.length > 0 ||
     speedFilter.length > 0 ||
     durationFilter.length > 0 ||
-    maxPrice !== 2000000;
+    maxPrice !== MAX_PRICE;
 
   function resetFilters() {
     setNetTypeFilter([]);
     setSpeedFilter([]);
     setDurationFilter([]);
-    setMaxPrice(2000000);
+    setMaxPrice(MAX_PRICE);
   }
 
   // Filter operations
@@ -194,7 +195,7 @@ export default function HomeTariffComparePage() {
       <FilterSlider
         label="مبلغ بسته"
         min={0}
-        max={2000000}
+        max={MAX_PRICE}
         step={20000}
         value={maxPrice}
         onChange={setMaxPrice}
@@ -214,6 +215,7 @@ export default function HomeTariffComparePage() {
       onResetFilters={resetFilters}
       currentResult={currentResult}
       returnTxt="بازگشت به صحفه ی انتخاب نوع اینترنت"
+      returnSlug="/internet-details-select"
     >
       {sortedPKGs.map((pkg, i) => (
         <HomeNetCard key={i} {...pkg} />

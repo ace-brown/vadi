@@ -45,7 +45,7 @@ export interface HomeNetType {
 
 export interface BarberPlansType {
   title: string;
-  haircutPrice: string;
+  haircutPrice: number;
   menLift: string;
   groomMakeup: string;
   curlyHairDo: string;

@@ -4,7 +4,6 @@ import CustomDetailsSelect from "@/components/common/CustomDetailsSelect";
 
 export default function BarberDetailsSelectPage() {
   const navigate = useNavigate();
-
   const [selectedState, setSelectedState] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [salonType, setSalonType] = useState<string>("");
@@ -27,10 +26,15 @@ export default function BarberDetailsSelectPage() {
     const slug = routeMap[salonType];
     if (!slug) return;
 
+    // Send all the results from options
+    const currentOpt = salonOptions.find((opt) => opt.value === salonType);
+    const currentResult = currentOpt?.label || "";
+
     const searchParams = new URLSearchParams({
       state: selectedState,
       city: selectedCity,
       type: salonType,
+      currentResult,
     });
 
     navigate(`/${slug}?${searchParams.toString()}`);

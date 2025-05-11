@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function SimCardInfoSkeleton() {
+export default function BarberCardSkeleton() {
   return (
     <Card className="rounded border border-gray-300 p-4 animate-pulse">
       <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-right">

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { BarberPlansType } from "@/types";
+import { englishToPersianDigits } from "@/utils/helpers";
 
 export default function BarberCard({
   title,
@@ -27,7 +28,9 @@ export default function BarberCard({
         </div>
         <div>
           <p className="text-gray-500">اصلاح مو و ریش</p>
-          <p className="font-semibold mt-1">{haircutPrice}</p>
+          <p className="font-semibold mt-1">
+            {englishToPersianDigits(haircutPrice)}
+          </p>
         </div>
         <div>
           <p className="text-gray-500">جوان سازی پوست</p>
