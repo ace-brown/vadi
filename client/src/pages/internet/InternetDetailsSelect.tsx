@@ -1,10 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CustomDetailsSelect from "@/components/common/CustomDetailsSelect";
 
 export default function InternetDetailsSelectPage() {
   const navigate = useNavigate();
-
   const [selectedState, setSelectedState] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [netType, setNetType] = useState<string>("");
@@ -39,11 +38,11 @@ export default function InternetDetailsSelectPage() {
   return (
     <CustomDetailsSelect
       title="نوع اینترنت"
-      selectedItem={netType}
+      xType={netType}
       options={internetOptions}
       state={selectedState}
       city={selectedCity}
-      onSelectedItem={setNetType}
+      onSetXType={setNetType}
       onStateChange={setSelectedState}
       onCityChange={setSelectedCity}
       onSubmit={handleSubmit}

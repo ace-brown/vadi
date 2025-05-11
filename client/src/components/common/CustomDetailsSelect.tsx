@@ -12,11 +12,11 @@ import Search from "@/components/search/Search";
 
 type Props = {
   title: string;
-  selectedItem: string;
-  onSelectedItem: (value: string) => void;
+  xType: string;
   options: { label: string; value: string }[];
   state: string;
   city: string;
+  onSetXType: (value: string) => void;
   onStateChange: (state: string) => void;
   onCityChange: (city: string) => void;
   onSubmit: () => void;
@@ -25,13 +25,13 @@ type Props = {
 
 export default function CustomDetailsSelect({
   title,
-  selectedItem,
-  onSelectedItem,
+  xType,
   options,
   state,
   city,
   onStateChange,
   onCityChange,
+  onSetXType,
   onSubmit,
   children,
 }: Props) {
@@ -42,7 +42,7 @@ export default function CustomDetailsSelect({
         <CardContent className="space-y-4 p-6">
           <div className="space-y-2">
             <label className="block text-right font-medium">{title}</label>
-            <Select value={selectedItem} onValueChange={onSelectedItem}>
+            <Select value={xType} onValueChange={onSetXType}>
               <SelectTrigger className="w-full" style={{ direction: "rtl" }}>
                 <SelectValue placeholder="انتخاب کنید" />
               </SelectTrigger>

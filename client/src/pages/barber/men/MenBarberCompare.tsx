@@ -10,7 +10,7 @@ import {
 } from "@/utils/helpers";
 import { useEffect, useState } from "react";
 
-export default function BarberComparePage() {
+export default function MenBarberComparePage() {
   const [hairCutFilter, setHairCutFilter] = useState("all");
   const [maxPrice, setMaxPrice] = useState(1000000);
   const [isLoading, setIsLoading] = useState(true);

@@ -9,29 +9,41 @@ export default function BarberDetailsSelectPage() {
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [salonType, setSalonType] = useState<string>("");
   const salonOptions = [
-    { label: "مردانه", value: "men" },
-    { label: "زنانه", value: "women" },
+    { label: "مردانه", value: "menBarber" },
+    { label: "زنانه", value: "womenBarber" },
   ];
 
   function handleSubmit() {
-    const searchParams = new URLSearchParams();
+    if (!salonType) {
+      alert("لطفاً نوع آرایشگاه را انتخاب کنید.");
+      return;
+    }
 
-    // Add values to query params
-    searchParams.set("state", selectedState);
-    searchParams.set("city", selectedCity);
-    searchParams.set("type", salonType);
+    const routeMap: Record<string, string> = {
+      menBarber: "men-barber-compare",
+      womenBarber: "women-barber-compare",
+    };
 
-    navigate(`/barber-compare?${searchParams.toString()}`);
+    const slug = routeMap[salonType];
+    if (!slug) return;
+
+    const searchParams = new URLSearchParams({
+      state: selectedState,
+      city: selectedCity,
+      type: salonType,
+    });
+
+    navigate(`/${slug}?${searchParams.toString()}`);
   }
 
   return (
     <CustomDetailsSelect
       title="نوع آرایشگاه"
-      selectedItem={salonType}
+      xType={salonType}
       options={salonOptions}
       state={selectedState}
       city={selectedCity}
-      onSelectedItem={setSalonType}
+      onSetXType={setSalonType}
       onStateChange={setSelectedState}
       onCityChange={setSelectedCity}
       onSubmit={handleSubmit}
