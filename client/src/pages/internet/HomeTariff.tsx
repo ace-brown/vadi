@@ -12,7 +12,7 @@ import FilterCollapse from "@/components/common/FilterCollapse";
 import FilterSelect from "@/components/common/FilterSelect";
 import FilterSlider from "@/components/common/FilterSlider";
 
-export default function HomeTariffComparePage() {
+export default function HomeTariffPage() {
   const MAX_PRICE = 2000000;
   const [netTypeFilter, setNetTypeFilter] = useState<string[]>([]);
   const [speedFilter, setSpeedFilter] = useState<string[]>([]);

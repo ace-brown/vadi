@@ -19,8 +19,8 @@ export default function InternetDetailsSelectPage() {
     }
 
     const routeMap: Record<string, string> = {
-      mobileNet: "mobile-tariff-compare",
-      homeNet: "home-tariff-compare",
+      mobileNet: "mobile-tariff",
+      homeNet: "home-tariff",
     };
 
     const slug = routeMap[netType];
@@ -37,7 +37,7 @@ export default function InternetDetailsSelectPage() {
       currentResult,
     });
 
-    navigate(`/${slug}?${searchParams.toString()}`);
+    navigate(`/internet/${slug}?${searchParams.toString()}`);
   }
 
   return (

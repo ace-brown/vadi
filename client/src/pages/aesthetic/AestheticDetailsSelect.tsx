@@ -2,14 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import CustomDetailsSelect from "@/components/common/CustomDetailsSelect";
 
-export default function BarberDetailsSelectPage() {
+export default function AestheticDetailsSelectPage() {
   const navigate = useNavigate();
   const [selectedState, setSelectedState] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [salonType, setSalonType] = useState<string>("");
   const salonOptions = [
-    { label: "مردانه", value: "menBarber" },
-    { label: "زنانه", value: "womenBarber" },
+    { label: "آرایشگاه مردانه", value: "menBarber" },
+    { label: "آرایشگاه زنانه", value: "womenBarber" },
   ];
 
   function handleSubmit() {
@@ -19,8 +19,8 @@ export default function BarberDetailsSelectPage() {
     }
 
     const routeMap: Record<string, string> = {
-      menBarber: "men-barber-compare",
-      womenBarber: "women-barber-compare",
+      menBarber: "men-salon",
+      womenBarber: "women-salon",
     };
 
     const slug = routeMap[salonType];
@@ -37,7 +37,7 @@ export default function BarberDetailsSelectPage() {
       currentResult,
     });
 
-    navigate(`/${slug}?${searchParams.toString()}`);
+    navigate(`/aesthetic/${slug}?${searchParams.toString()}`);
   }
 
   return (

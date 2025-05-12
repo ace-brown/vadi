@@ -11,7 +11,7 @@ import { englishToPersianDigits } from "@/utils/helpers";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-export default function MenBarberComparePage() {
+export default function WomenSalonPage() {
   const HAIRCUT_MAX_PRICE = 3000000;
   const [hairCutPrice, setHairCutPrice] = useState(HAIRCUT_MAX_PRICE);
   const [isLoading, setIsLoading] = useState(true);

@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import BarberDetailsSelectPage from "./barber/BarberDetailsSelect";
 import InternetDetailsSelectPage from "./internet/InternetDetailsSelect";
+import AestheticDetailsSelectPage from "./aesthetic/AestheticDetailsSelect";
 
 export default function TerminalPage() {
   const location = useLocation();
@@ -18,7 +18,7 @@ export default function TerminalPage() {
       case "internet":
         return <InternetDetailsSelectPage />;
       case "hair":
-        return <BarberDetailsSelectPage />;
+        return <AestheticDetailsSelectPage />;
       default:
         return <p>نوع مشخص نشده است.</p>;
     }

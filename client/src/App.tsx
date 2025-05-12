@@ -12,15 +12,10 @@ import ErrorPage from "@/pages/Error";
 import TerminalPage from "@/pages/Terminal";
 import LoginPage from "@/pages/Login";
 import SignupPage from "@/pages/Signup";
-import MobileTariffComparePage from "@/pages/internet/mobile-tariff/MobileTariffCompare";
-import BarberDetailsSelectPage from "@/pages/barber/BarberDetailsSelect";
-import BarberComparePage from "@/pages/barber/women/WomenBarberCompare";
-import HomeTariffComparePage from "@/pages/internet/home-tariff/HomeTariffCompare";
-import InternetDetailsSelectPage from "@/pages/internet/InternetDetailsSelect";
 import AuthLayoutPage from "@/pages/dashboard/AuthLayout";
 import SettingsPage from "@/pages/dashboard/Settings";
-import MenBarberComparePage from "@/pages/barber/men/MenBarberCompare";
-import WomenBarberComparePage from "@/pages/barber/women/WomenBarberCompare";
+import { aestheticRoutes } from "@/routes/aestheticRoutes";
+import { internetRoutes } from "@/routes/internetRoutes";
 
 function App() {
   const auth = useContext(AuthContext);
@@ -34,20 +29,6 @@ function App() {
         // ---------- Static Pages ----------
         { index: true, element: <HomePage /> },
         { path: "terminal", element: <TerminalPage /> },
-
-        // ---------- Internet Comparison ----------
-        {
-          path: "internet-details-select",
-          element: <InternetDetailsSelectPage />,
-        },
-        { path: "mobile-tariff-compare", element: <MobileTariffComparePage /> },
-        { path: "home-tariff-compare", element: <HomeTariffComparePage /> },
-
-        // ---------- Barber Comparison ----------
-        { path: "barber-details-select", element: <BarberDetailsSelectPage /> },
-        { path: "men-barber-compare", element: <MenBarberComparePage /> },
-        { path: "women-barber-compare", element: <WomenBarberComparePage /> },
-
         // ---------- Auth ----------
         { path: "login", element: <LoginPage /> },
         { path: "signup", element: <SignupPage /> },
@@ -57,6 +38,15 @@ function App() {
           path: "/dashboard",
           element: auth.isLoggedIn ? <AuthLayoutPage /> : <Navigate to="/" />,
           children: [{ index: true, element: <SettingsPage /> }],
+        },
+        // ---------- Comparison Routes ----------
+        {
+          path: "aesthetic",
+          children: aestheticRoutes,
+        },
+        {
+          path: "internet",
+          children: internetRoutes,
         },
       ],
     },

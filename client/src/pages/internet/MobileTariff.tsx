@@ -8,7 +8,7 @@ import { SimCardInfoType } from "@/types";
 import SimCardInfoSkeleton from "@/components/internet/mobile-tariff/SimCardInfoSkeleton";
 import { useHttpClient } from "@/hooks/http-hook";
 
-export default function MobileTariffComparePage() {
+export default function MobileTariffPage() {
   const [simTypeFilter, setSimTypeFilter] = useState("all");
   const [maxPrice, setMaxPrice] = useState(1000000);
   const [allPackages, setAllPackages] = useState<SimCardInfoType[]>([]);
