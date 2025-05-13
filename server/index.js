@@ -4,6 +4,7 @@ const path = require('path');
 
 const usersRoutes = require('./src/routes/users-routes')
 const mobileTariffRoutes = require('./src/routes/mobile-tariffs-routes')
+const homeTariffRoutes = require('./src/routes/home-tariffs-routes')
 const downloadRoutes = require('./src/routes/download-routes')
 const HttpError = require('./src/models/http-error')
 
@@ -37,8 +38,11 @@ app.use('/uploads/images', express.static(path.join(__dirname, 'uploads', 'image
 // Download Routes
 app.use('/api/download', downloadRoutes);
 
-// Reports routes
+// Moible Tariff routes
 app.use('/api/mobile-tariffs', mobileTariffRoutes);
+
+// Home Tariff routes
+app.use('/api/home-tariffs', homeTariffRoutes);
 
 // Users routes
 app.use('/api/users', usersRoutes);

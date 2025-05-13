@@ -23,7 +23,9 @@ async function createMobileTariff(req, res, next) {
     }
 
     const { type, simPrice, validity, packagePrice, minutes } = req.body;
-    const imagePath = req.file?.path;
+    // const imagePath = req.file?.path;
+    const imagePath = req.body.image ? `uploads/images/${req.body.image}` : null;
+
 
     const newTariff = new MobileTariff({
         type,

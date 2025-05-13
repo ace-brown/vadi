@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import asiatech from "@/images/internet/home/asiatech.jpg";
-import sabanet from "@/images/internet/home/sabanet.png";
-import shatel from "@/images/internet/home/shatel.png";
 import { HomeNetType } from "@/types";
 import HomeNetCard from "@/components/internet/home-tariff/HomeNetCard";
 import HomeNetCardSkeleton from "@/components/internet/home-tariff/HomeNetCardSkeleton";
@@ -11,6 +8,7 @@ import CustomCompareLayout from "@/components/common/CustomCompareLayout";
 import FilterCollapse from "@/components/common/FilterCollapse";
 import FilterSelect from "@/components/common/FilterSelect";
 import FilterSlider from "@/components/common/FilterSlider";
+import { useHttpClient } from "@/hooks/http-hook";
 
 export default function HomeTariffPage() {
   const MAX_PRICE = 2000000;
@@ -18,10 +16,10 @@ export default function HomeTariffPage() {
   const [speedFilter, setSpeedFilter] = useState<string[]>([]);
   const [durationFilter, setDurationFilter] = useState<string[]>([]);
   const [maxPrice, setMaxPrice] = useState(MAX_PRICE);
-  const [isLoading, setIsLoading] = useState(true);
   const [filteredPackages, setFilteredPackages] = useState<HomeNetType[]>([]);
+  const [allPackages, setAllPackages] = useState<HomeNetType[]>([]);
   const [sortOrder, setSortOrder] = useState("asc");
-
+  const { isLoading, sendRequest } = useHttpClient();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const currentResult = queryParams.get("currentResult") ?? "";
@@ -42,35 +40,6 @@ export default function HomeTariffPage() {
     "12 ماهه",
     "18 ماهه",
     "24 ماهه",
-  ];
-  const homePackages = [
-    {
-      title: "آسیاتک",
-      speed: "8 مگابیت بر ثانیه",
-      duration: "12 ماهه",
-      volume: "648 گیگ داخلی معادل 240 گیگ بین‌الملل",
-      netType: "ADSL",
-      price: 250000,
-      image: asiatech,
-    },
-    {
-      title: "صبانت",
-      speed: "16 مگابیت بر ثانیه",
-      duration: "6 ماهه",
-      volume: "500 گیگ داخلی معادل 180 گیگ بین‌الملل",
-      netType: "ADSL",
-      price: 1530000,
-      image: sabanet,
-    },
-    {
-      title: "شاتل",
-      speed: "100 تا 1000 مگابیت بر ثانیه",
-      duration: "12 ماهه",
-      volume: "1200 گیگ داخلی معادل 400 گیگ بین‌الملل",
-      netType: "فیبر نوری",
-      price: 690000,
-      image: shatel,
-    },
   ];
 
   function handleNetTypeChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -111,12 +80,36 @@ export default function HomeTariffPage() {
     setMaxPrice(MAX_PRICE);
   }
 
+  async function fetchMobileTariffs() {
+    try {
+      const responseData = await sendRequest(
+        `${import.meta.env.VITE_API_URL}/api/home-tariffs`,
+        "GET"
+      );
+      console.log("responseData", responseData);
+
+      if (responseData && Array.isArray(responseData)) {
+        setAllPackages(responseData);
+        setFilteredPackages(responseData);
+      } else {
+        console.warn("Unexpected response format:", responseData);
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {}
+  }
+
+  useEffect(() => {
+    fetchMobileTariffs();
+    // eslint-disable-next-line
+  }, []);
+
   // Filter operations
   useEffect(() => {
-    setIsLoading(true);
-
     const timer = setTimeout(() => {
-      const filteredData = homePackages.filter((pkg) => {
+      if (!Array.isArray(allPackages) || allPackages.length === 0) return;
+
+      const filteredData = allPackages.filter((pkg) => {
         const matchesType =
           netTypeFilter.length === 0 || netTypeFilter.includes(pkg.netType);
 
@@ -132,11 +125,10 @@ export default function HomeTariffPage() {
       });
 
       setFilteredPackages(filteredData);
-      setIsLoading(false);
-    }, 1000);
+    }, 300);
 
     return () => clearTimeout(timer);
-  }, [netTypeFilter, maxPrice, speedFilter, durationFilter]);
+  }, [netTypeFilter, maxPrice, allPackages, speedFilter, durationFilter]);
 
   // Sort operation
   const sortedPKGs = [...filteredPackages].sort((a, b) => {
