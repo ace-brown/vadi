@@ -1,9 +1,9 @@
 const express = require('express')
 const { check } = require('express-validator')
-const fileUpload = require('../middleware/file-upload');
+const fileUpload = require('../../middleware/file-upload');
 
-const homeTariffControllers = require('../controllers/home-tariffs-controllers')
-const checkAuth = require('../middleware/check-auth');
+const homeTariffControllers = require('../../controllers/internet/home-tariffs-controllers')
+const checkAuth = require('../../middleware/check-auth');
 
 const router = express.Router()
 

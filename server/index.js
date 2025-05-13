@@ -3,8 +3,10 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 const usersRoutes = require('./src/routes/users-routes')
-const mobileTariffRoutes = require('./src/routes/mobile-tariffs-routes')
-const homeTariffRoutes = require('./src/routes/home-tariffs-routes')
+const mobileTariffRoutes = require('./src/routes/internet/mobile-tariffs-routes')
+const homeTariffRoutes = require('./src/routes/internet/home-tariffs-routes')
+const menSalonPlanRoutes = require('./src/routes/aesthetic/men-salons-routes')
+const womenSalonPlanRoutes = require('./src/routes/aesthetic/women-salons-routes')
 const downloadRoutes = require('./src/routes/download-routes')
 const HttpError = require('./src/models/http-error')
 
@@ -39,10 +41,16 @@ app.use('/uploads/images', express.static(path.join(__dirname, 'uploads', 'image
 app.use('/api/download', downloadRoutes);
 
 // Moible Tariff routes
-app.use('/api/mobile-tariffs', mobileTariffRoutes);
+app.use('/api/internet/mobile-tariffs', mobileTariffRoutes);
 
 // Home Tariff routes
-app.use('/api/home-tariffs', homeTariffRoutes);
+app.use('/api/internet/home-tariffs', homeTariffRoutes);
+
+// Men Salon Plan
+app.use('/api/aesthetic/men-salon', menSalonPlanRoutes);
+
+// Women Salon Plan
+app.use('/api/aesthetic/women-salon', womenSalonPlanRoutes);
 
 // Users routes
 app.use('/api/users', usersRoutes);

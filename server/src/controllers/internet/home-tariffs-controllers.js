@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator')
 const mongoose = require('mongoose')
-const HttpError = require('../models/http-error')
-const HomeTariff = require("../models/home-tariff")
+const HttpError = require('../../models/http-error')
+const HomeTariff = require("../../models/internet/home-tariff")
 
 
 // Get all home-tariffs 
