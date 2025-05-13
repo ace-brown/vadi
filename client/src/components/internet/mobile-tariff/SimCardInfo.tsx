@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { SimCardInfoType } from "@/types";
@@ -11,6 +12,11 @@ export default function SimCardInfo({
   minutes,
   image,
 }: SimCardInfoType) {
+  function handleOrder() {
+    toast.success("سفارش شما با موفقیت ثبت شد.", {
+      description: "به زودی با شما تماس خواهیم گرفت.",
+    });
+  }
   return (
     <Card className="rounded shadow-lg p-4">
       <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-right">
@@ -27,7 +33,7 @@ export default function SimCardInfo({
         <div>
           <p className="text-gray-500">قیمت سیم کارت</p>
           <p className="font-semibold mt-1">
-            {`${englishToPersianDigits(simPrice)} تومان`}
+            {`${englishToPersianDigits(simPrice).toLocaleString()} تومان`}
           </p>
         </div>
         <div>
@@ -42,10 +48,14 @@ export default function SimCardInfo({
         </div>
         <div>
           <p className="text-gray-500">دقیقه بسته</p>
-          <p className="font-semibold mt-1">{minutes}</p>
+          <p className="font-semibold mt-1">
+            {englishToPersianDigits(minutes)}
+          </p>
         </div>
         <div className="sm:col-span-2 lg:col-span-1">
-          <Button className="w-full">سفارش</Button>
+          <Button onClick={handleOrder} className="w-full">
+            سفارش
+          </Button>
         </div>
       </CardContent>
     </Card>

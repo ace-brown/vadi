@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { WomenSalonPlansType } from "@/types";
@@ -17,6 +18,11 @@ export default function BeautySalonCard({
   waxingPrice,
   image,
 }: WomenSalonPlansType) {
+  function handleOrder() {
+    toast.success("سفارش شما با موفقیت ثبت شد.", {
+      description: "به زودی با شما تماس خواهیم گرفت.",
+    });
+  }
   return (
     <Card className="rounded shadow-lg p-2">
       <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-2 text-right">
@@ -95,7 +101,9 @@ export default function BeautySalonCard({
         </div>
 
         <div className="sm:col-span-2 lg:col-span-1">
-          <Button className="w-full">گرفتن نوبت</Button>
+          <Button onClick={handleOrder} className="w-full">
+            گرفتن نوبت
+          </Button>
         </div>
       </CardContent>
     </Card>

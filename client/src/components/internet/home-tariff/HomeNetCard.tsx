@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import CardInfoItem from "@/components/common/CardInfoItem";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +13,11 @@ export default function HomeNetCard({
   price,
   image,
 }: HomeNetType) {
+  function handleOrder() {
+    toast.success("سفارش شما با موفقیت ثبت شد.", {
+      description: "به زودی با شما تماس خواهیم گرفت.",
+    });
+  }
   return (
     <Card className="rounded shadow-lg p-4 pr-0">
       <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-8 text-right">
@@ -36,7 +42,9 @@ export default function HomeNetCard({
         <CardInfoItem label="نوع اینترنت" value={netType} />
         <CardInfoItem label="حجم بسته" value={volume} />
         <div className="sm:col-span-2 lg:col-span-1">
-          <Button className="w-full">سفارش</Button>
+          <Button onClick={handleOrder} className="w-full">
+            سفارش
+          </Button>
         </div>
       </CardContent>
     </Card>

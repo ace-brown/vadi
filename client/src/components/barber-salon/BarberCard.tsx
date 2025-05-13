@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MenSalonPlansType } from "@/types";
@@ -11,6 +12,11 @@ export default function BarberCard({
   curlyHairDoPrice,
   image,
 }: MenSalonPlansType) {
+  function handleOrder() {
+    toast.success("سفارش شما با موفقیت ثبت شد.", {
+      description: "به زودی با شما تماس خواهیم گرفت.",
+    });
+  }
   return (
     <Card className="rounded shadow-lg p-4">
       <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-right">
@@ -51,7 +57,9 @@ export default function BarberCard({
           </p>
         </div>
         <div className="sm:col-span-2 lg:col-span-1">
-          <Button className="w-full">گرفتن نوبت</Button>
+          <Button onClick={handleOrder} className="w-full">
+            گرفتن نوبت
+          </Button>
         </div>
       </CardContent>
     </Card>

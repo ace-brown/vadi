@@ -11,7 +11,7 @@ import { useLocation } from "react-router-dom";
 import FilterSlider from "@/components/common/FilterSlider";
 
 export default function MobileTariffPage() {
-  const MAX_PKG_PRICE = 1000000;
+  const MAX_PKG_PRICE = 500000;
   const MAX_SIM_PRICE = 1000000;
   const MAX_MINS = 2000;
   const [simTypeFilter, setSimTypeFilter] = useState<string[]>([]);
@@ -78,9 +78,15 @@ export default function MobileTariffPage() {
         `${import.meta.env.VITE_API_URL}/api/mobile-tariffs`,
         "GET"
       );
+      console.log("responseData", responseData);
 
-      setAllPackages(responseData);
-      setFilteredPackages(responseData); // show all at first
+      if (responseData && Array.isArray(responseData)) {
+        setAllPackages(responseData);
+        setFilteredPackages(responseData);
+      } else {
+        console.warn("Unexpected response format:", responseData);
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {}
   }
@@ -141,9 +147,9 @@ export default function MobileTariffPage() {
         ]}
       />
 
-      {/* نوع اینترنت */}
+      {/* نوع سیم کارت */}
       <FilterCollapse
-        label="نوع اینترنت"
+        label="نوع سیم کارت"
         options={["اعتباری", "دائمی"]}
         selectedValues={simTypeFilter}
         onChange={(value: string) =>
@@ -174,9 +180,7 @@ export default function MobileTariffPage() {
         value={maxPkgPrice}
         onChange={setMaxPkgPrice}
         formatValue={(v) =>
-          ` بسته حداکثر قیمت: ${englishToPersianDigits(
-            v.toLocaleString()
-          )} تومان`
+          ` حداکثر قیمت: ${englishToPersianDigits(v.toLocaleString())} تومان`
         }
       />
 
@@ -194,12 +198,12 @@ export default function MobileTariffPage() {
       />
       {/* مقدار دقیقه */}
       <FilterSlider
-        label="مبلغ بسته"
+        label="مقدار دقیقه"
         min={0}
         max={MAX_MINS}
         step={100}
         value={maxMins}
-        onChange={setMaxPkgPrice}
+        onChange={setMaxMins}
         formatValue={(v) =>
           ` حداکثر قیمت: ${englishToPersianDigits(v.toLocaleString())} تومان`
         }
@@ -218,7 +222,7 @@ export default function MobileTariffPage() {
       returnTxt="بازگشت به صحفه ی انتخاب نوع اینترنت"
       returnSlug="/internet/internet-details-select"
     >
-      {sortedPKGs.map((pkg, i) => (
+      {sortedPKGs?.map((pkg, i) => (
         <SimCardInfo key={i} {...pkg} />
       ))}
     </CustomCompareLayout>
