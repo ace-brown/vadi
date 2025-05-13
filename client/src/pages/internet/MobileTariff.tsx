@@ -73,7 +73,7 @@ export default function MobileTariffPage() {
   async function fetchMobileTariffs() {
     try {
       const responseData = await sendRequest(
-        `${import.meta.env.VITE_API_URL}/api/mobile-tariffs`,
+        `${import.meta.env.VITE_API_URL}/api/internet/mobile-tariffs`,
         "GET"
       );
       console.log("responseData", responseData);

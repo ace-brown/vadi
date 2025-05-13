@@ -3,9 +3,7 @@ import CustomCompareLayout from "@/components/common/CustomCompareLayout";
 import FilterSelect from "@/components/common/FilterSelect";
 import FilterSlider from "@/components/common/FilterSlider";
 import BarberCardSkeleton from "@/components/internet/mobile-tariff/SimCardInfoSkeleton";
-import img1 from "@/images/barber/1.jpg";
-import img2 from "@/images/barber/2.jpg";
-import img3 from "@/images/barber/3.jpg";
+import { useHttpClient } from "@/hooks/http-hook";
 import { MenSalonPlansType } from "@/types";
 import { englishToPersianDigits } from "@/utils/helpers";
 import { useEffect, useState } from "react";
@@ -29,11 +27,10 @@ export default function MenSalonPage() {
   const [curlyHairDoPrice, setCurlyHairDoPrice] = useState(
     MAX_CURLY_HAIRDO_PRICE
   );
-
   const [sortOrder, setSortOrder] = useState("asc");
-
+  const { isLoading, sendRequest } = useHttpClient();
   const [filteredPlans, setFilteredPlans] = useState<MenSalonPlansType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [allPlans, setAllPlans] = useState<MenSalonPlansType[]>([]);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -45,32 +42,32 @@ export default function MenSalonPage() {
     groomMakeupPrice !== MAX_GROOM_MAKEUP_PRICE ||
     curlyHairDoPrice !== MAX_CURLY_HAIRDO_PRICE;
 
-  const barberPlans = [
-    {
-      title: "آرایشگاه عباس معصومی",
-      haircutPrice: 120000,
-      menLiftPrice: 300000,
-      groomMakeupPrice: 750000,
-      curlyHairDoPrice: 300000,
-      image: img1,
-    },
-    {
-      title: "آرایشگاه مردان آلفا",
-      haircutPrice: 550000,
-      menLiftPrice: 220000,
-      groomMakeupPrice: 800000,
-      curlyHairDoPrice: 320000,
-      image: img2,
-    },
-    {
-      title: "آرایشگاه متین",
-      haircutPrice: 200000,
-      menLiftPrice: 250000,
-      groomMakeupPrice: 720000,
-      curlyHairDoPrice: 290000,
-      image: img3,
-    },
-  ];
+  // const barberPlans = [
+  //   {
+  //     title: "آرایشگاه عباس معصومی",
+  //     haircutPrice: 120000,
+  //     menLiftPrice: 300000,
+  //     groomMakeupPrice: 750000,
+  //     curlyHairDoPrice: 300000,
+  //     image: img1,
+  //   },
+  //   {
+  //     title: "آرایشگاه مردان آلفا",
+  //     haircutPrice: 550000,
+  //     menLiftPrice: 220000,
+  //     groomMakeupPrice: 800000,
+  //     curlyHairDoPrice: 320000,
+  //     image: img2,
+  //   },
+  //   {
+  //     title: "آرایشگاه متین",
+  //     haircutPrice: 200000,
+  //     menLiftPrice: 250000,
+  //     groomMakeupPrice: 720000,
+  //     curlyHairDoPrice: 290000,
+  //     image: img3,
+  //   },
+  // ];
 
   function resetFilters() {
     setHairCutPrice(HAIRCUT_MAX_PRICE);
@@ -79,11 +76,33 @@ export default function MenSalonPage() {
     setCurlyHairDoPrice(MAX_CURLY_HAIRDO_PRICE);
   }
 
-  useEffect(() => {
-    setIsLoading(true);
+  async function fetchMenSalon() {
+    try {
+      const responseData = await sendRequest(
+        `${import.meta.env.VITE_API_URL}/api/home-tariffs`,
+        "GET"
+      );
+      console.log("responseData", responseData);
 
+      if (responseData && Array.isArray(responseData)) {
+        setAllPlans(responseData);
+        setFilteredPlans(responseData);
+      } else {
+        console.warn("Unexpected response format:", responseData);
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {}
+  }
+
+  useEffect(() => {
+    fetchMenSalon();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
-      const filteredData = barberPlans.filter((plan) => {
+      const filteredData = allPlans.filter((plan) => {
         return (
           plan.haircutPrice <= hairCutPrice &&
           plan.menLiftPrice <= menLiftPrice &&
@@ -93,7 +112,6 @@ export default function MenSalonPage() {
       });
 
       setFilteredPlans(filteredData);
-      setIsLoading(false);
     }, 1000);
 
     return () => clearTimeout(timer);

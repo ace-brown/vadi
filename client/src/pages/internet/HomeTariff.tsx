@@ -80,10 +80,10 @@ export default function HomeTariffPage() {
     setMaxPrice(MAX_PRICE);
   }
 
-  async function fetchMobileTariffs() {
+  async function fetchHomeTariffs() {
     try {
       const responseData = await sendRequest(
-        `${import.meta.env.VITE_API_URL}/api/home-tariffs`,
+        `${import.meta.env.VITE_API_URL}/api/internet/home-tariffs`,
         "GET"
       );
       console.log("responseData", responseData);
@@ -100,7 +100,7 @@ export default function HomeTariffPage() {
   }
 
   useEffect(() => {
-    fetchMobileTariffs();
+    fetchHomeTariffs();
     // eslint-disable-next-line
   }, []);
 
