@@ -1,7 +1,7 @@
 import SimCardInfo from "@/components/internet/mobile-tariff/SimCardInfo";
 import { useEffect, useState } from "react";
 import { englishToPersianDigits } from "@/utils/helpers";
-import { SimCardInfoType } from "@/types";
+import { MobileNetType } from "@/types";
 import SimCardInfoSkeleton from "@/components/internet/mobile-tariff/SimCardInfoSkeleton";
 import { useHttpClient } from "@/hooks/http-hook";
 import CustomCompareLayout from "@/components/common/CustomCompareLayout";
@@ -19,10 +19,8 @@ export default function MobileTariffPage() {
   const [maxSimPrice, setMaxSimPrice] = useState(MAX_SIM_PRICE);
   const [maxMins, setMaxMins] = useState(MAX_MINS);
   const [durationFilter, setDurationFilter] = useState<string[]>([]);
-  const [allPackages, setAllPackages] = useState<SimCardInfoType[]>([]);
-  const [filteredPackages, setFilteredPackages] = useState<SimCardInfoType[]>(
-    []
-  );
+  const [allPackages, setAllPackages] = useState<MobileNetType[]>([]);
+  const [filteredPackages, setFilteredPackages] = useState<MobileNetType[]>([]);
   const { isLoading, sendRequest } = useHttpClient();
   const [sortOrder, setSortOrder] = useState("asc");
 

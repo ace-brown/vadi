@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const mobileTariffSchema = new mongoose.Schema({
     type: String,
-    simPrice: String,
+    simPrice: Number,
     validity: String,
-    packagePrice: String,
-    minutes: String,
+    packagePrice: Number,
+    minutes: Number,
     image: String,
 });
 

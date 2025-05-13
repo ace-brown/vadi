@@ -24,7 +24,7 @@ export interface UserType {
   };
 }
 
-export interface SimCardInfoType {
+export interface MobileNetType {
   type: string;
   simPrice: number;
   validity: string;

@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { SimCardInfoType } from "@/types";
+import { MobileNetType } from "@/types";
 import { englishToPersianDigits } from "@/utils/helpers";
 
 export default function SimCardInfo({
@@ -11,7 +11,7 @@ export default function SimCardInfo({
   packagePrice,
   minutes,
   image,
-}: SimCardInfoType) {
+}: MobileNetType) {
   function handleOrder() {
     toast.success("سفارش شما با موفقیت ثبت شد.", {
       description: "به زودی با شما تماس خواهیم گرفت.",
