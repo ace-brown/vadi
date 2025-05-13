@@ -26,10 +26,10 @@ export interface UserType {
 
 export interface SimCardInfoType {
   type: string;
-  simPrice: string;
+  simPrice: number;
   validity: string;
-  packagePrice: string;
-  minutes: string;
+  packagePrice: number;
+  minutes: number;
   image: string;
 }
 

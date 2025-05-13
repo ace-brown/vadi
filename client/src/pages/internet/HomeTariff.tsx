@@ -215,7 +215,7 @@ export default function HomeTariffPage() {
       onResetFilters={resetFilters}
       currentResult={currentResult}
       returnTxt="بازگشت به صحفه ی انتخاب نوع اینترنت"
-      returnSlug="/internet-details-select"
+      returnSlug="/internet/internet-details-select"
     >
       {sortedPKGs.map((pkg, i) => (
         <HomeNetCard key={i} {...pkg} />

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { SimCardInfoType } from "@/types";
+import { englishToPersianDigits } from "@/utils/helpers";
 
 export default function SimCardInfo({
   type,
@@ -25,15 +26,19 @@ export default function SimCardInfo({
         </div>
         <div>
           <p className="text-gray-500">قیمت سیم کارت</p>
-          <p className="font-semibold mt-1">{simPrice}</p>
+          <p className="font-semibold mt-1">
+            {`${englishToPersianDigits(simPrice)} تومان`}
+          </p>
         </div>
         <div>
           <p className="text-gray-500">مدت اعتبار بسته</p>
           <p className="font-semibold mt-1">{validity}</p>
         </div>
         <div>
-          <p className="text-gray-500">مبلغ بسته (تومان)</p>
-          <p className="font-semibold mt-1">{packagePrice}</p>
+          <p className="text-gray-500">مبلغ بسته</p>
+          <p className="font-semibold mt-1">
+            {`${englishToPersianDigits(packagePrice)} تومان`}
+          </p>
         </div>
         <div>
           <p className="text-gray-500">دقیقه بسته</p>

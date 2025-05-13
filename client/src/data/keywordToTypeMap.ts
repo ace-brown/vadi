@@ -109,7 +109,7 @@ export const keywordGroups: Record<string, string[]> = {
     "تی دی ال تی",
   ],
 
-  hair: [
+  aesthetic: [
     "آرایشگاه",
     "پیرایشگاه",
     "سالن زیبایی",

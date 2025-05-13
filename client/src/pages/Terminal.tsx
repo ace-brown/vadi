@@ -17,7 +17,7 @@ export default function TerminalPage() {
     switch (type) {
       case "internet":
         return <InternetDetailsSelectPage />;
-      case "hair":
+      case "aesthetic":
         return <AestheticDetailsSelectPage />;
       default:
         return <p>نوع مشخص نشده است.</p>;
