@@ -1,16 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { BarberPlansType } from "@/types";
+import { MenSalonPlansType } from "@/types";
 import { englishToPersianDigits } from "@/utils/helpers";
 
 export default function BarberCard({
   title,
   haircutPrice,
-  menLift,
-  groomMakeup,
-  curlyHairDo,
+  menLiftPrice,
+  groomMakeupPrice,
+  curlyHairDoPrice,
   image,
-}: BarberPlansType) {
+}: MenSalonPlansType) {
   return (
     <Card className="rounded shadow-lg p-4">
       <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-right">
@@ -29,20 +29,26 @@ export default function BarberCard({
         <div>
           <p className="text-gray-500">اصلاح مو و ریش</p>
           <p className="font-semibold mt-1">
-            {englishToPersianDigits(haircutPrice)}
+            {`${englishToPersianDigits(haircutPrice)} تومان`}
           </p>
         </div>
         <div>
           <p className="text-gray-500">جوان سازی پوست</p>
-          <p className="font-semibold mt-1">{menLift}</p>
+          <p className="font-semibold mt-1">
+            {`${englishToPersianDigits(menLiftPrice)} تومان`}
+          </p>
         </div>
         <div>
           <p className="text-gray-500">گریم حرفه ای داماد</p>
-          <p className="font-semibold mt-1">{groomMakeup}</p>
+          <p className="font-semibold mt-1">
+            {`${englishToPersianDigits(groomMakeupPrice)} تومان`}
+          </p>
         </div>
         <div>
           <p className="text-gray-500">فر کردن مو</p>
-          <p className="font-semibold mt-1">{curlyHairDo}</p>
+          <p className="font-semibold mt-1">
+            {`${englishToPersianDigits(curlyHairDoPrice)} تومان`}
+          </p>
         </div>
         <div className="sm:col-span-2 lg:col-span-1">
           <Button className="w-full">گرفتن نوبت</Button>

@@ -43,11 +43,26 @@ export interface HomeNetType {
   image: string;
 }
 
-export interface BarberPlansType {
+export type MenSalonPlansType = {
   title: string;
   haircutPrice: number;
-  menLift: string;
-  groomMakeup: string;
-  curlyHairDo: string;
+  menLiftPrice: number;
+  groomMakeupPrice: number;
+  curlyHairDoPrice: number;
   image: string;
-}
+};
+
+export type WomenSalonPlansType = {
+  title: string;
+  faceCarePrice: number;
+  hairBotoxPrice: number;
+  hairColorPrice: number;
+  makeupPrice: number;
+  eyelashExtensionPrice: number;
+  eyebrowShapePrice: number;
+  eyebrowLiftPrice: number;
+  nailExtensionPrice: number;
+  manicurePrice: number;
+  waxingPrice: number;
+  image: string;
+};
