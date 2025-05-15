@@ -23,7 +23,7 @@ export default function BarberCard({
         <div className="sm:row-span-1 md:row-span-2">
           <img
             alt={`${title} image`}
-            src={image}
+            src={`${import.meta.env.VITE_API_URL}/${image}`}
             className="w-[80px] h-[80px] sm:w-[180px] sm:h-[180px] mx-auto object-cover"
           />
         </div>

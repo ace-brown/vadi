@@ -79,7 +79,7 @@ export default function MenSalonPage() {
   async function fetchMenSalon() {
     try {
       const responseData = await sendRequest(
-        `${import.meta.env.VITE_API_URL}/api/home-tariffs`,
+        `${import.meta.env.VITE_API_URL}/api/aesthetic/men-salon`,
         "GET"
       );
       console.log("responseData", responseData);

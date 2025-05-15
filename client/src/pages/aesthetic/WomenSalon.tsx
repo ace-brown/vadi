@@ -3,6 +3,7 @@ import CustomCompareLayout from "@/components/common/CustomCompareLayout";
 import FilterSelect from "@/components/common/FilterSelect";
 import FilterSlider from "@/components/common/FilterSlider";
 import BarberCardSkeleton from "@/components/internet/mobile-tariff/SimCardInfoSkeleton";
+import { useHttpClient } from "@/hooks/http-hook";
 import women1 from "@/images/barber/women-1.jpg";
 import women2 from "@/images/barber/women-2.jpg";
 import women3 from "@/images/barber/women-3.jpg";
@@ -62,12 +63,10 @@ export default function WomenSalonPage() {
   );
   const [manicurePrice, setManicurePrice] = useState(MAX_MANICURE_PRICE);
   const [waxingPrice, setWaxingPrice] = useState(MAX_WAXING_PRICE);
-
   const [sortOrder, setSortOrder] = useState("asc");
-
   const [filteredPlans, setFilteredPlans] = useState<WomenSalonPlansType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [allPlans, setAllPlans] = useState<WomenSalonPlansType[]>([]);
+  const { isLoading, sendRequest } = useHttpClient();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const currentResult = queryParams.get("currentResult") ?? "";
@@ -170,11 +169,33 @@ export default function WomenSalonPage() {
     setWaxingPrice(MAX_WAXING_PRICE);
   }
 
-  useEffect(() => {
-    setIsLoading(true);
+  async function fetchHomeTariffs() {
+    try {
+      const responseData = await sendRequest(
+        `${import.meta.env.VITE_API_URL}/api/aesthetic/women-salon`,
+        "GET"
+      );
+      console.log("responseData", responseData);
 
+      if (responseData && Array.isArray(responseData)) {
+        setAllPlans(responseData);
+        setFilteredPlans(responseData);
+      } else {
+        console.warn("Unexpected response format:", responseData);
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {}
+  }
+
+  useEffect(() => {
+    fetchHomeTariffs();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
-      const filteredData = salonPlans.filter((plan) => {
+      const filteredData = allPlans.filter((plan) => {
         return (
           plan.faceCarePrice <= faceCarePrice &&
           plan.hairBotoxPrice <= hairBotoxPrice &&
@@ -190,7 +211,6 @@ export default function WomenSalonPage() {
       });
 
       setFilteredPlans(filteredData);
-      setIsLoading(false);
     }, 1000);
 
     return () => clearTimeout(timer);
