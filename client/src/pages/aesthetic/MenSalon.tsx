@@ -82,13 +82,10 @@ export default function MenSalonPage() {
         `${import.meta.env.VITE_API_URL}/api/aesthetic/men-salon`,
         "GET"
       );
-      console.log("responseData", responseData);
 
       if (responseData && Array.isArray(responseData)) {
         setAllPlans(responseData);
         setFilteredPlans(responseData);
-      } else {
-        console.warn("Unexpected response format:", responseData);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -115,7 +112,13 @@ export default function MenSalonPage() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [hairCutPrice, menLiftPrice, groomMakeupPrice, curlyHairDoPrice]);
+  }, [
+    hairCutPrice,
+    menLiftPrice,
+    groomMakeupPrice,
+    curlyHairDoPrice,
+    allPlans,
+  ]);
 
   const sortedPlans = [...filteredPlans].sort((a, b) => {
     return sortOrder === "asc"

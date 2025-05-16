@@ -76,15 +76,11 @@ export default function MobileTariffPage() {
         `${import.meta.env.VITE_API_URL}/api/internet/mobile-tariffs`,
         "GET"
       );
-      console.log("responseData", responseData);
 
       if (responseData && Array.isArray(responseData)) {
         setAllPackages(responseData);
         setFilteredPackages(responseData);
-      } else {
-        console.warn("Unexpected response format:", responseData);
       }
-
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {}
   }

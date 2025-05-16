@@ -7,6 +7,7 @@ const mobileTariffRoutes = require('./src/routes/internet/mobile-tariffs-routes'
 const homeTariffRoutes = require('./src/routes/internet/home-tariffs-routes')
 const menSalonPlanRoutes = require('./src/routes/aesthetic/men-salons-routes')
 const womenSalonPlanRoutes = require('./src/routes/aesthetic/women-salons-routes')
+const autoRepairRoutes = require('./src/routes/vehicle/auto-repair-routes')
 const downloadRoutes = require('./src/routes/download-routes')
 const HttpError = require('./src/models/http-error')
 
@@ -46,11 +47,14 @@ app.use('/api/internet/mobile-tariffs', mobileTariffRoutes);
 // Home Tariff routes
 app.use('/api/internet/home-tariffs', homeTariffRoutes);
 
-// Men Salon Plan
+// Men Salon Plan routes
 app.use('/api/aesthetic/men-salon', menSalonPlanRoutes);
 
-// Women Salon Plan
+// Women Salon Plan routes
 app.use('/api/aesthetic/women-salon', womenSalonPlanRoutes);
+
+// Auto Repair routes
+app.use('/api/vehicle/auto-repair', autoRepairRoutes);
 
 // Users routes
 app.use('/api/users', usersRoutes);

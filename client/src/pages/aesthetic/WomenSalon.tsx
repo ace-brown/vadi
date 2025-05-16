@@ -78,73 +78,73 @@ export default function WomenSalonPage() {
     manicurePrice !== MAX_MANICURE_PRICE ||
     waxingPrice !== MAX_WAXING_PRICE;
 
-  const salonPlans = [
-    {
-      title: "سالن زیبایی پرنیان",
-      faceCarePrice: 150000,
-      hairBotoxPrice: 400000,
-      hairColorPrice: 350000,
-      makeupPrice: 800000,
-      eyelashExtensionPrice: 300000,
-      eyebrowShapePrice: 50000,
-      eyebrowLiftPrice: 180000,
-      nailExtensionPrice: 250000,
-      manicurePrice: 120000,
-      waxingPrice: 200000,
-    },
-    {
-      title: "سالن زیبایی دیانا",
-      faceCarePrice: 180000,
-      hairBotoxPrice: 420000,
-      hairColorPrice: 370000,
-      makeupPrice: 850000,
-      eyelashExtensionPrice: 320000,
-      eyebrowShapePrice: 60000,
-      eyebrowLiftPrice: 200000,
-      nailExtensionPrice: 280000,
-      manicurePrice: 140000,
-      waxingPrice: 220000,
-    },
-    {
-      title: "سالن زیبایی نیلوفر",
-      faceCarePrice: 160000,
-      hairBotoxPrice: 410000,
-      hairColorPrice: 360000,
-      makeupPrice: 830000,
-      eyelashExtensionPrice: 310000,
-      eyebrowShapePrice: 55000,
-      eyebrowLiftPrice: 190000,
-      nailExtensionPrice: 270000,
-      manicurePrice: 130000,
-      waxingPrice: 210000,
-    },
-    {
-      title: "سالن زیبایی ارغوان",
-      faceCarePrice: 260000,
-      hairBotoxPrice: 510000,
-      hairColorPrice: 460000,
-      makeupPrice: 930000,
-      eyelashExtensionPrice: 410000,
-      eyebrowShapePrice: 65000,
-      eyebrowLiftPrice: 290000,
-      nailExtensionPrice: 370000,
-      manicurePrice: 180000,
-      waxingPrice: 270000,
-    },
-    {
-      title: "سالن زیبایی مرجان خاتون",
-      faceCarePrice: 110000,
-      hairBotoxPrice: 210000,
-      hairColorPrice: 160000,
-      makeupPrice: 430000,
-      eyelashExtensionPrice: 110000,
-      eyebrowShapePrice: 25000,
-      eyebrowLiftPrice: 90000,
-      nailExtensionPrice: 120000,
-      manicurePrice: 80000,
-      waxingPrice: 150000,
-    },
-  ];
+  // const salonPlans = [
+  //   {
+  //     title: "سالن زیبایی پرنیان",
+  //     faceCarePrice: 150000,
+  //     hairBotoxPrice: 400000,
+  //     hairColorPrice: 350000,
+  //     makeupPrice: 800000,
+  //     eyelashExtensionPrice: 300000,
+  //     eyebrowShapePrice: 50000,
+  //     eyebrowLiftPrice: 180000,
+  //     nailExtensionPrice: 250000,
+  //     manicurePrice: 120000,
+  //     waxingPrice: 200000,
+  //   },
+  //   {
+  //     title: "سالن زیبایی دیانا",
+  //     faceCarePrice: 180000,
+  //     hairBotoxPrice: 420000,
+  //     hairColorPrice: 370000,
+  //     makeupPrice: 850000,
+  //     eyelashExtensionPrice: 320000,
+  //     eyebrowShapePrice: 60000,
+  //     eyebrowLiftPrice: 200000,
+  //     nailExtensionPrice: 280000,
+  //     manicurePrice: 140000,
+  //     waxingPrice: 220000,
+  //   },
+  //   {
+  //     title: "سالن زیبایی نیلوفر",
+  //     faceCarePrice: 160000,
+  //     hairBotoxPrice: 410000,
+  //     hairColorPrice: 360000,
+  //     makeupPrice: 830000,
+  //     eyelashExtensionPrice: 310000,
+  //     eyebrowShapePrice: 55000,
+  //     eyebrowLiftPrice: 190000,
+  //     nailExtensionPrice: 270000,
+  //     manicurePrice: 130000,
+  //     waxingPrice: 210000,
+  //   },
+  //   {
+  //     title: "سالن زیبایی ارغوان",
+  //     faceCarePrice: 260000,
+  //     hairBotoxPrice: 510000,
+  //     hairColorPrice: 460000,
+  //     makeupPrice: 930000,
+  //     eyelashExtensionPrice: 410000,
+  //     eyebrowShapePrice: 65000,
+  //     eyebrowLiftPrice: 290000,
+  //     nailExtensionPrice: 370000,
+  //     manicurePrice: 180000,
+  //     waxingPrice: 270000,
+  //   },
+  //   {
+  //     title: "سالن زیبایی مرجان خاتون",
+  //     faceCarePrice: 110000,
+  //     hairBotoxPrice: 210000,
+  //     hairColorPrice: 160000,
+  //     makeupPrice: 430000,
+  //     eyelashExtensionPrice: 110000,
+  //     eyebrowShapePrice: 25000,
+  //     eyebrowLiftPrice: 90000,
+  //     nailExtensionPrice: 120000,
+  //     manicurePrice: 80000,
+  //     waxingPrice: 150000,
+  //   },
+  // ];
 
   function resetFilters() {
     setFaceCarePrice(MAX_FACE_CARE_PRICE);
@@ -165,13 +165,10 @@ export default function WomenSalonPage() {
         `${import.meta.env.VITE_API_URL}/api/aesthetic/women-salon`,
         "GET"
       );
-      console.log("responseData", responseData);
 
       if (responseData && Array.isArray(responseData)) {
         setAllPlans(responseData);
         setFilteredPlans(responseData);
-      } else {
-        console.warn("Unexpected response format:", responseData);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -215,6 +212,7 @@ export default function WomenSalonPage() {
     nailExtensionPrice,
     manicurePrice,
     waxingPrice,
+    allPlans,
   ]);
 
   const sortedPlans = [...filteredPlans].sort((a, b) => {

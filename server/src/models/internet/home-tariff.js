@@ -7,7 +7,10 @@ const homeTariffSchema = new mongoose.Schema({
     volume: String,
     netType: String,
     price: Number,
-    image: String,
+    image: {
+        type: String,
+        required: false,
+    },
 });
 
 const HomeTariff = mongoose.model('HomeTariff', homeTariffSchema);

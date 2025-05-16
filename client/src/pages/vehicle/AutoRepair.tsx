@@ -9,9 +9,6 @@ import FilterSlider from "@/components/common/FilterSlider";
 import SimCardInfoSkeleton from "@/components/internet/mobile-tariff/SimCardInfoSkeleton";
 import AutoRepairCard from "@/components/vehicle/auto-repair/AutoRepairCard";
 import { AutoRepairType } from "@/types";
-import autoRepair1 from "@/images/auto-repair-1.jpg";
-import autoRepair2 from "@/images/auto-repair-2.jpg";
-import autoRepair3 from "@/images/auto-repair-3.jpg";
 
 export default function AutoRepairPage() {
   const MAX_PKG_PRICE = 500000;
@@ -22,7 +19,7 @@ export default function AutoRepairPage() {
   const [maxSimPrice, setMaxSimPrice] = useState(MAX_SIM_PRICE);
   const [maxMins, setMaxMins] = useState(MAX_MINS);
   const [durationFilter, setDurationFilter] = useState<string[]>([]);
-  const [allPackages, setAllPackages] = useState<AutoRepairType[]>([]);
+  const [allAutoRepairs, setAllAutoRepairs] = useState<AutoRepairType[]>([]);
   const [filteredPackages, setFilteredPackages] = useState<AutoRepairType[]>(
     []
   );
@@ -42,26 +39,26 @@ export default function AutoRepairPage() {
     "24 ماهه",
   ];
 
-  const autoRepairShops = [
-    {
-      title: "تعمیرگاه ولیعصر",
-      address: "تهران، خیابان ولیعصر، بالاتر از پارک ملت، پلاک ۱۰۵",
-      services: ["تعویض روغن", "تعویض فیلتر هوا", "شارژ گاز کولر"],
-      image: autoRepair1,
-    },
-    {
-      title: "گاراژ ونک",
-      address: "تهران، میدان ونک، خیابان خدامی، پلاک ۲۳",
-      services: ["تنظیم موتور", "تعویض تسمه تایم", "تعمیر جلوبندی"],
-      image: autoRepair2,
-    },
-    {
-      title: "مکانیکی گلبرگ",
-      address: "تهران، نارمک، خیابان گلبرگ شرقی، کوچه نسترن، پلاک ۸",
-      services: ["تعویض لنت ترمز", "تعویض باتری", "تعویض شمع"],
-      image: autoRepair3,
-    },
-  ];
+  // const autoRepairShops = [
+  //   {
+  //     title: "تعمیرگاه ولیعصر",
+  //     address: "تهران، خیابان ولیعصر، بالاتر از پارک ملت، پلاک ۱۰۵",
+  //     services: ["تعویض روغن", "تعویض فیلتر هوا", "شارژ گاز کولر"],
+  //     image: autoRepair1,
+  //   },
+  //   {
+  //     title: "گاراژ ونک",
+  //     address: "تهران، میدان ونک، خیابان خدامی، پلاک ۲۳",
+  //     services: ["تنظیم موتور", "تعویض تسمه تایم", "تعمیر جلوبندی"],
+  //     image: autoRepair2,
+  //   },
+  //   {
+  //     title: "مکانیکی گلبرگ",
+  //     address: "تهران، نارمک، خیابان گلبرگ شرقی، کوچه نسترن، پلاک ۸",
+  //     services: ["تعویض لنت ترمز", "تعویض باتری", "تعویض شمع"],
+  //     image: autoRepair3,
+  //   },
+  // ];
 
   // Check if any filter is active
   const isAnyFilterActive =
@@ -99,16 +96,13 @@ export default function AutoRepairPage() {
   async function fetchMobileTariffs() {
     try {
       const responseData = await sendRequest(
-        `${import.meta.env.VITE_API_URL}/api/internet/mobile-tariffs`,
+        `${import.meta.env.VITE_API_URL}/api/vehicle/auto-repair`,
         "GET"
       );
-      console.log("responseData", responseData);
 
       if (responseData && Array.isArray(responseData)) {
-        setAllPackages(responseData);
+        setAllAutoRepairs(responseData);
         setFilteredPackages(responseData);
-      } else {
-        console.warn("Unexpected response format:", responseData);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -122,9 +116,9 @@ export default function AutoRepairPage() {
 
   // useEffect(() => {
   //   const timer = setTimeout(() => {
-  //     if (!Array.isArray(allPackages) || allPackages.length === 0) return;
+  //     if (!Array.isArray(allAutoRepairs) || allAutoRepairs.length === 0) return;
 
-  //     const filteredData = allPackages.filter((pkg) => {
+  //     const filteredData = allAutoRepairs.filter((pkg) => {
 
   //       return (
 
@@ -135,7 +129,7 @@ export default function AutoRepairPage() {
   //   }, 300);
 
   //   return () => clearTimeout(timer);
-  // }, [simTypeFilter, maxPkgPrice, allPackages, maxSimPrice, maxMins]);
+  // }, [simTypeFilter, maxPkgPrice, allAutoRepairs, maxSimPrice, maxMins]);
 
   // Sort operation
   // const sortedPKGs = [...filteredPackages].sort((a, b) => {
@@ -157,7 +151,7 @@ export default function AutoRepairPage() {
       returnTxt="بازگشت به صحفه ی انتخاب نوع اینترنت"
       returnSlug="/internet/internet-details-select"
     >
-      {autoRepairShops?.map((pkg, i) => (
+      {filteredPackages?.map((pkg, i) => (
         <AutoRepairCard key={i} {...pkg} />
       ))}
     </CustomCompareLayout>

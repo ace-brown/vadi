@@ -6,7 +6,10 @@ const MenSalonPlanSchema = new mongoose.Schema({
     menLiftPrice: Number,
     groomMakeupPrice: Number,
     curlyHairDoPrice: Number,
-    image: String,
+    image: {
+        type: String,
+        required: false,
+    },
 });
 
 const MenSalonPlan = mongoose.model('MenSalonPlan', MenSalonPlanSchema);

@@ -86,13 +86,10 @@ export default function HomeTariffPage() {
         `${import.meta.env.VITE_API_URL}/api/internet/home-tariffs`,
         "GET"
       );
-      console.log("responseData", responseData);
 
       if (responseData && Array.isArray(responseData)) {
         setAllPackages(responseData);
         setFilteredPackages(responseData);
-      } else {
-        console.warn("Unexpected response format:", responseData);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

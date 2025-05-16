@@ -6,7 +6,10 @@ const mobileTariffSchema = new mongoose.Schema({
     validity: String,
     packagePrice: Number,
     minutes: Number,
-    image: String,
+    image: {
+        type: String,
+        required: false,
+    },
 });
 
 const MobileTariff = mongoose.model('MobileTariff', mobileTariffSchema);

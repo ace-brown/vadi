@@ -12,7 +12,10 @@ const WomenSalonPlanSchema = new mongoose.Schema({
     nailExtensionPrice: Number,
     manicurePrice: Number,
     waxingPrice: Number,
-    image: String,
+    image: {
+        type: String,
+        required: false,
+    },
 });
 
 const WomenSalonPlan = mongoose.model('WomenSalonPlan', WomenSalonPlanSchema);

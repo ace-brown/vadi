@@ -21,8 +21,7 @@ export default function AutoRepairCard({
       <CardContent className="grid grid-cols-[80px_1fr_1fr] sm:grid-cols-[180px_1fr_1fr] gap-4 items-start text-right">
         <img
           alt={`${title} تصویر`}
-          //   src={`${import.meta.env.VITE_API_URL}/${image}`}
-          src={image}
+          src={`${import.meta.env.VITE_API_URL}/${image}`}
           className="w-[80px] h-[80px] sm:w-[180px] sm:h-[180px] object-cover row-span-2 pl-4"
         />
         <CardInfoItem value={<h1 className="text-[1.75rem]">{title}</h1>} />

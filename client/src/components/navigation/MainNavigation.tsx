@@ -22,7 +22,7 @@ const navItems = [
     label: "وسایل نقلیه",
     icon: Car,
     submenu: [
-      { label: "تعميرات خودرو", path: "/vehicle/car-repair" },
+      { label: "تعميرات خودرو", path: "/vehicle/auto-repair" },
       {
         label: "تعميرات موتور سیکلت",
         path: "/vehicle/motorcycle-repair",
