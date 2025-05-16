@@ -4,11 +4,6 @@ import FilterSelect from "@/components/common/FilterSelect";
 import FilterSlider from "@/components/common/FilterSlider";
 import BarberCardSkeleton from "@/components/internet/mobile-tariff/SimCardInfoSkeleton";
 import { useHttpClient } from "@/hooks/http-hook";
-import women1 from "@/images/barber/women-1.jpg";
-import women2 from "@/images/barber/women-2.jpg";
-import women3 from "@/images/barber/women-3.jpg";
-import women4 from "@/images/barber/women-4.jpg";
-import women5 from "@/images/barber/women-5.jpg";
 import { WomenSalonPlansType } from "@/types";
 import { englishToPersianDigits } from "@/utils/helpers";
 import { useEffect, useState } from "react";
@@ -96,7 +91,6 @@ export default function WomenSalonPage() {
       nailExtensionPrice: 250000,
       manicurePrice: 120000,
       waxingPrice: 200000,
-      image: women1,
     },
     {
       title: "سالن زیبایی دیانا",
@@ -110,7 +104,6 @@ export default function WomenSalonPage() {
       nailExtensionPrice: 280000,
       manicurePrice: 140000,
       waxingPrice: 220000,
-      image: women2,
     },
     {
       title: "سالن زیبایی نیلوفر",
@@ -124,7 +117,6 @@ export default function WomenSalonPage() {
       nailExtensionPrice: 270000,
       manicurePrice: 130000,
       waxingPrice: 210000,
-      image: women3,
     },
     {
       title: "سالن زیبایی ارغوان",
@@ -138,7 +130,6 @@ export default function WomenSalonPage() {
       nailExtensionPrice: 370000,
       manicurePrice: 180000,
       waxingPrice: 270000,
-      image: women4,
     },
     {
       title: "سالن زیبایی مرجان خاتون",
@@ -152,7 +143,6 @@ export default function WomenSalonPage() {
       nailExtensionPrice: 120000,
       manicurePrice: 80000,
       waxingPrice: 150000,
-      image: women5,
     },
   ];
 

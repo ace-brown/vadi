@@ -30,7 +30,7 @@ export interface MobileNetType {
   validity: string;
   packagePrice: number;
   minutes: number;
-  image: string;
+  image?: string;
 }
 
 export interface HomeNetType {
@@ -40,7 +40,7 @@ export interface HomeNetType {
   volume: string;
   netType: string;
   price: number;
-  image: string;
+  image?: string;
 }
 
 export type MenSalonPlansType = {
@@ -49,7 +49,7 @@ export type MenSalonPlansType = {
   menLiftPrice: number;
   groomMakeupPrice: number;
   curlyHairDoPrice: number;
-  image: string;
+  image?: string;
 };
 
 export type WomenSalonPlansType = {
@@ -64,5 +64,12 @@ export type WomenSalonPlansType = {
   nailExtensionPrice: number;
   manicurePrice: number;
   waxingPrice: number;
-  image: string;
+  image?: string;
+};
+
+export type AutoRepairType = {
+  title?: string;
+  address?: string;
+  services?: string[];
+  image?: string;
 };

@@ -16,6 +16,7 @@ import AuthLayoutPage from "@/pages/dashboard/AuthLayout";
 import SettingsPage from "@/pages/dashboard/Settings";
 import { aestheticRoutes } from "@/routes/aestheticRoutes";
 import { internetRoutes } from "@/routes/internetRoutes";
+import { vehicleRoutes } from "@/routes/vehicleRoutes";
 
 function App() {
   const auth = useContext(AuthContext);
@@ -47,6 +48,10 @@ function App() {
         {
           path: "internet",
           children: internetRoutes,
+        },
+        {
+          path: "vehicle",
+          children: vehicleRoutes,
         },
       ],
     },

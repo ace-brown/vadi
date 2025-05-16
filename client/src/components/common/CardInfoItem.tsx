@@ -1,6 +1,8 @@
+import { ReactNode } from "react";
+
 type CardInfoItemProps = {
-  label: string;
-  value: string;
+  label?: string;
+  value?: ReactNode;
   className?: string;
 };
 
@@ -11,8 +13,8 @@ export default function CardInfoItem({
 }: CardInfoItemProps) {
   return (
     <div className={className}>
-      <p className="text-gray-500">{label}</p>
-      <p className="font-semibold mt-1">{value}</p>
+      {label && <p className="text-gray-500">{label}</p>}
+      <div className="font-semibold mt-1">{value}</div>
     </div>
   );
 }

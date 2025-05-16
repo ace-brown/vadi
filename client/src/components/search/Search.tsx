@@ -100,6 +100,7 @@ export default function Search() {
       <div className="flex gap-4">
         <p>ایرانسل</p>
         <p>آرایشگاه</p>
+        <p>مکانیکی</p>
       </div>
     </div>
   );
