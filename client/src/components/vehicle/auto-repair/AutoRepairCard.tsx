@@ -38,7 +38,7 @@ export default function AutoRepairCard({
         />
 
         <div className="text-left mt-4">
-          <Button onClick={handleOrder}>رزرو نوبت</Button>
+          <Button onClick={handleOrder}>گرفتن نوبت</Button>
         </div>
       </CardContent>
     </Card>

@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
-import { englishToPersianDigits } from "@/utils/helpers";
 import { useHttpClient } from "@/hooks/http-hook";
 import CustomCompareLayout from "@/components/common/CustomCompareLayout";
-import FilterSelect from "@/components/common/FilterSelect";
-import FilterCollapse from "@/components/common/FilterCollapse";
 import { useLocation } from "react-router-dom";
-import FilterSlider from "@/components/common/FilterSlider";
 import SimCardInfoSkeleton from "@/components/internet/mobile-tariff/SimCardInfoSkeleton";
 import AutoRepairCard from "@/components/vehicle/auto-repair/AutoRepairCard";
 import { AutoRepairType } from "@/types";
@@ -25,19 +21,9 @@ export default function AutoRepairPage() {
   );
   const { isLoading, sendRequest } = useHttpClient();
   const [sortOrder, setSortOrder] = useState("asc");
-
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const currentResult = queryParams.get("currentResult") ?? "";
-
-  const DURATION_OPTIONS = [
-    "1 ماهه",
-    "3 ماهه",
-    "6 ماهه",
-    "12 ماهه",
-    "18 ماهه",
-    "24 ماهه",
-  ];
 
   // const autoRepairShops = [
   //   {
@@ -76,23 +62,6 @@ export default function AutoRepairPage() {
     setMaxMins(MAX_MINS);
   }
 
-  function handleNetTypeChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value;
-    setSimTypeFilter(
-      (prev) =>
-        prev.includes(value)
-          ? prev.filter((t) => t !== value) // remove
-          : [...prev, value] // add
-    );
-  }
-
-  function handleDurationChnage(e: React.ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value;
-    setDurationFilter((prev) =>
-      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
-    );
-  }
-
   async function fetchMobileTariffs() {
     try {
       const responseData = await sendRequest(
@@ -114,30 +83,6 @@ export default function AutoRepairPage() {
     // eslint-disable-next-line
   }, []);
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     if (!Array.isArray(allAutoRepairs) || allAutoRepairs.length === 0) return;
-
-  //     const filteredData = allAutoRepairs.filter((pkg) => {
-
-  //       return (
-
-  //       );
-  //     });
-
-  //     setFilteredPackages(filteredData);
-  //   }, 300);
-
-  //   return () => clearTimeout(timer);
-  // }, [simTypeFilter, maxPkgPrice, allAutoRepairs, maxSimPrice, maxMins]);
-
-  // Sort operation
-  // const sortedPKGs = [...filteredPackages].sort((a, b) => {
-  //   return sortOrder === "asc"
-  //     ? a.packagePrice - b.packagePrice
-  //     : b.packagePrice - a.packagePrice;
-  // });
-
   const filters = <></>;
 
   return (
@@ -148,8 +93,8 @@ export default function AutoRepairPage() {
       isAnyFilterActive={isAnyFilterActive}
       onResetFilters={resetFilters}
       currentResult={currentResult}
-      returnTxt="بازگشت به صحفه ی انتخاب نوع اینترنت"
-      returnSlug="/internet/internet-details-select"
+      returnTxt="بازگشت به صحفه ی انتخاب نوع وسیله ی نقلیه"
+      returnSlug="/vehicle/auto-repair"
     >
       {filteredPackages?.map((pkg, i) => (
         <AutoRepairCard key={i} {...pkg} />

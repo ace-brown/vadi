@@ -19,22 +19,11 @@ import { useState } from "react";
 
 const navItems = [
   {
-    label: "وسایل نقلیه",
-    icon: Car,
+    label: "اینترنت",
+    icon: Wifi,
     submenu: [
-      { label: "تعميرات خودرو", path: "/vehicle/auto-repair" },
-      {
-        label: "تعميرات موتور سیکلت",
-        path: "/vehicle/motorcycle-repair",
-      },
-    ],
-  },
-  {
-    label: "گردشگری",
-    icon: Plane,
-    submenu: [
-      { label: "تور داخلی", path: "/travel/domestic" },
-      { label: "تور خارجی", path: "/travel/international" },
+      { label: "اینترنت خانگی", path: "/internet/home-tariff" },
+      { label: "اینترنت موبایل", path: "/internet/mobile-tariff" },
     ],
   },
   {
@@ -43,6 +32,14 @@ const navItems = [
     submenu: [
       { label: "آرایشگاه زنانه", path: "/aesthetic/women-salon" },
       { label: "آرایشگاه مردانه", path: "/aesthetic/men-salon" },
+    ],
+  },
+  {
+    label: "گردشگری",
+    icon: Plane,
+    submenu: [
+      { label: "تور داخلی", path: "/travel/domestic" },
+      { label: "تور خارجی", path: "/travel/international" },
     ],
   },
   {
@@ -64,14 +61,6 @@ const navItems = [
     ],
   },
   {
-    label: "اینترنت",
-    icon: Wifi,
-    submenu: [
-      { label: "اینترنت خانگی", path: "/internet/home-tariff" },
-      { label: "اینترنت موبایل", path: "/internet/mobile-tariff" },
-    ],
-  },
-  {
     label: "خدمات کشاورزی",
     icon: Shovel,
     submenu: [
@@ -84,13 +73,23 @@ const navItems = [
     icon: HeartPulse,
     submenu: [{ label: "دندانپزشکی", path: "/healthcare/dental" }],
   },
-
   {
     label: "آموزشی",
     icon: Book,
     submenu: [
       { label: "آموزشگاه ها", path: "/education/centers" },
       { label: "کتابفروشی", path: "/education/bookstores" },
+    ],
+  },
+  {
+    label: "وسایل نقلیه",
+    icon: Car,
+    submenu: [
+      { label: "تعميرات خودرو", path: "/vehicle/auto-repair" },
+      {
+        label: "تعميرات موتور سیکلت",
+        path: "/vehicle/motorcycle-repair",
+      },
     ],
   },
 ];
