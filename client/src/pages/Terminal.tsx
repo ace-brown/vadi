@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import InternetDetailsSelectPage from "./internet/InternetDetailsSelect";
 import AestheticDetailsSelectPage from "./aesthetic/AestheticDetailsSelect";
 import VehicleDetailsSelectPage from "./vehicle/VehicleDetailsSelect";
+import TravelDetailsSelectPage from "./travel/TravelDetailsSelect";
 
 export default function TerminalPage() {
   const location = useLocation();
@@ -14,6 +15,8 @@ export default function TerminalPage() {
   // const searchParams = new URLSearchParams(location.search);
   // const query = searchParams.get("query") || "";
 
+  console.log("TerminalPage loaded with type:", type);
+
   function renderComponent() {
     switch (type) {
       case "internet":
@@ -22,6 +25,8 @@ export default function TerminalPage() {
         return <AestheticDetailsSelectPage />;
       case "vehicle":
         return <VehicleDetailsSelectPage />;
+      case "travel":
+        return <TravelDetailsSelectPage />;
       default:
         return <p>نوع مشخص نشده است.</p>;
     }

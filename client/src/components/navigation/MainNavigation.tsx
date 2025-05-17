@@ -74,14 +74,6 @@ const navItems = [
     submenu: [{ label: "دندانپزشکی", path: "/healthcare/dental" }],
   },
   {
-    label: "آموزشی",
-    icon: Book,
-    submenu: [
-      { label: "آموزشگاه ها", path: "/education/centers" },
-      { label: "کتابفروشی", path: "/education/bookstores" },
-    ],
-  },
-  {
     label: "وسایل نقلیه",
     icon: Car,
     submenu: [
@@ -90,6 +82,14 @@ const navItems = [
         label: "تعميرات موتور سیکلت",
         path: "/vehicle/motorcycle-repair",
       },
+    ],
+  },
+  {
+    label: "آموزشی",
+    icon: Book,
+    submenu: [
+      { label: "آموزشگاه ها", path: "/education/centers" },
+      { label: "کتابفروشی", path: "/education/bookstores" },
     ],
   },
 ];

@@ -12,8 +12,8 @@ import Search from "@/components/search/Search";
 
 type Props = {
   title: string;
-  xType: string;
-  options: { label: string; value: string }[];
+  xType?: string;
+  options?: { label: string; value: string }[];
   state: string;
   city: string;
   onSetXType: (value: string) => void;
@@ -47,7 +47,7 @@ export default function CustomDetailsSelect({
                 <SelectValue placeholder="انتخاب کنید" />
               </SelectTrigger>
               <SelectContent className="bg-white" style={{ direction: "rtl" }}>
-                {options.map((opt) => (
+                {options?.map((opt) => (
                   <SelectItem
                     key={opt.value}
                     value={opt.value}

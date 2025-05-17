@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Search as SearchIcon } from "lucide-react";
 import { keywordGroups } from "@/data/keywordToTypeMap";
 
@@ -101,6 +100,7 @@ export default function Search() {
         <p>ایرانسل</p>
         <p>آرایشگاه</p>
         <p>مکانیکی</p>
+        <p>گردشگری</p>
       </div>
     </div>
   );

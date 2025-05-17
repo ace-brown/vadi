@@ -26,7 +26,6 @@ export default function AestheticDetailsSelectPage() {
     const slug = routeMap[salonType];
     if (!slug) return;
 
-    // Send all the results from options
     const currentOpt = salonOptions.find((opt) => opt.value === salonType);
     const currentResult = currentOpt?.label || "";
 

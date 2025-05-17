@@ -26,7 +26,6 @@ export default function VehicleDetailsSelectPage() {
     const slug = routeMap[vehicleType];
     if (!slug) return;
 
-    // Send all the results from options
     const currentOpt = vehicleOptions.find((opt) => opt.value === vehicleType);
     const currentResult = currentOpt?.label || "";
 
