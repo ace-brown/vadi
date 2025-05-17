@@ -10,6 +10,7 @@ const womenSalonPlanRoutes = require('./src/routes/aesthetic/women-salons-routes
 const autoRepairRoutes = require('./src/routes/vehicle/auto-repair-routes')
 const motorcycleRepairRoutes = require('./src/routes/vehicle/motorcycle-repair-routes')
 const applianceRepairRoutes = require('./src/routes/electronics/appliance-repair-routes')
+const mobileRepairRoutes = require('./src/routes/PM/mobile-repair-routes')
 const downloadRoutes = require('./src/routes/download-routes')
 const HttpError = require('./src/models/http-error')
 
@@ -63,6 +64,9 @@ app.use('/api/vehicle/motorcycle-repair', motorcycleRepairRoutes);
 
 // Appliance Repair routes
 app.use('/api/electronics/appliance-repair', applianceRepairRoutes);
+
+// Mobile Repair routes
+app.use('/api/pc-mobile/mobile-repair', mobileRepairRoutes);
 
 // Users routes
 app.use('/api/users', usersRoutes);

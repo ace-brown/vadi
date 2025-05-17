@@ -62,7 +62,7 @@ export default function AutoRepairPage() {
     setMaxMins(MAX_MINS);
   }
 
-  async function fetchMobileTariffs() {
+  async function fetchAutoRepair() {
     try {
       const responseData = await sendRequest(
         `${import.meta.env.VITE_API_URL}/api/vehicle/auto-repair`,
@@ -79,7 +79,7 @@ export default function AutoRepairPage() {
   }
 
   useEffect(() => {
-    fetchMobileTariffs();
+    fetchAutoRepair();
     // eslint-disable-next-line
   }, []);
 

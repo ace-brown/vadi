@@ -159,7 +159,7 @@ export default function WomenSalonPage() {
     setWaxingPrice(MAX_WAXING_PRICE);
   }
 
-  async function fetchHomeTariffs() {
+  async function fetchWomenSalon() {
     try {
       const responseData = await sendRequest(
         `${import.meta.env.VITE_API_URL}/api/aesthetic/women-salon`,
@@ -176,7 +176,7 @@ export default function WomenSalonPage() {
   }
 
   useEffect(() => {
-    fetchHomeTariffs();
+    fetchWomenSalon();
     // eslint-disable-next-line
   }, []);
 

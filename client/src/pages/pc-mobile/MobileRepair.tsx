@@ -6,17 +6,17 @@ import CustomCompareLayout from "@/components/common/CustomCompareLayout";
 import { useHttpClient } from "@/hooks/http-hook";
 import AutoRepairCard from "@/components/vehicle/auto-repair/AutoRepairCard";
 
-export default function ApplianceRepairPage() {
+export default function MobileRepairPage() {
   const [allServices, setAllServices] = useState<AutoRepairType[]>([]);
   const { isLoading, sendRequest } = useHttpClient();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const currentResult = queryParams.get("currentResult") ?? "";
 
-  async function fetchApplianceRepair() {
+  async function fetchMobileRepair() {
     try {
       const responseData = await sendRequest(
-        `${import.meta.env.VITE_API_URL}/api/electronics/appliance-repair`,
+        `${import.meta.env.VITE_API_URL}/api/pc-mobile/mobile-repair`,
         "GET"
       );
 
@@ -29,7 +29,7 @@ export default function ApplianceRepairPage() {
   }
 
   useEffect(() => {
-    fetchApplianceRepair();
+    fetchMobileRepair();
     // eslint-disable-next-line
   }, []);
 
@@ -68,8 +68,8 @@ export default function ApplianceRepairPage() {
       isAnyFilterActive={false}
       //   onResetFilters={resetFilters}
       currentResult={currentResult}
-      //   returnTxt="بازگشت به صحفه ی انتخاب نوع اینترنت"
-      //   returnSlug="/internet/internet-details-select"
+      returnTxt="بازگشت به صحفه ی انتخاب نوع تعمیرات"
+      returnSlug="/pc-mobile/pc-mobile-details-select"
     >
       {allServices.map((pkg, i) => (
         <AutoRepairCard key={i} {...pkg} />

@@ -48,8 +48,11 @@ const navItems = [
     label: "موبایل و کامپیوتر",
     icon: Smartphone,
     submenu: [
-      { label: "موبایل", path: "/pc-mobile/mobile" },
-      { label: "کامپیوتر", path: "/pc-mobile/computer" },
+      { label: "تعمیرات موبایل", path: "/pc-mobile/mobile-repair" },
+      {
+        label: "تعمیرات کامپیوتر و لپ تاپ",
+        path: "/pc-mobile/computer-repair",
+      },
     ],
   },
   {

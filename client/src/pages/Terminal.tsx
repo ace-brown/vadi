@@ -3,7 +3,8 @@ import InternetDetailsSelectPage from "./internet/InternetDetailsSelect";
 import AestheticDetailsSelectPage from "./aesthetic/AestheticDetailsSelect";
 import VehicleDetailsSelectPage from "./vehicle/VehicleDetailsSelect";
 import TravelDetailsSelectPage from "./travel/TravelDetailsSelect";
-import ApplianceRepairPage from "./electronics/applianceRepair";
+import ApplianceRepairPage from "./electronics/ApplianceRepair";
+import PcMobileDetailsSelectPage from "./pc-mobile/PcMobileDetailsSelect";
 
 export default function TerminalPage() {
   const location = useLocation();
@@ -30,6 +31,8 @@ export default function TerminalPage() {
         return <TravelDetailsSelectPage />;
       case "appliance":
         return <ApplianceRepairPage />;
+      case "PM":
+        return <PcMobileDetailsSelectPage />;
       default:
         return <p>نوع مشخص نشده است.</p>;
     }

@@ -41,7 +41,7 @@ export default function MotorcycleRepairPage() {
     setMaxMins(MAX_MINS);
   }
 
-  async function fetchMobileTariffs() {
+  async function fetchMotorcycleRepair() {
     try {
       const responseData = await sendRequest(
         `${import.meta.env.VITE_API_URL}/api/vehicle/motorcycle-repair`,
@@ -58,7 +58,7 @@ export default function MotorcycleRepairPage() {
   }
 
   useEffect(() => {
-    fetchMobileTariffs();
+    fetchMotorcycleRepair();
     // eslint-disable-next-line
   }, []);
 
