@@ -11,12 +11,13 @@ import StateCitySelect from "@/components/common/StateCitySelect";
 import Search from "@/components/search/Search";
 
 type Props = {
-  title: string;
+  title?: string;
   xType?: string;
   options?: { label: string; value: string }[];
   state: string;
   city: string;
-  onSetXType: (value: string) => void;
+  isSingleRoute?: boolean;
+  onSetXType?: (value: string) => void;
   onStateChange: (state: string) => void;
   onCityChange: (city: string) => void;
   onSubmit: () => void;
@@ -29,6 +30,7 @@ export default function CustomDetailsSelect({
   options,
   state,
   city,
+  isSingleRoute = false,
   onStateChange,
   onCityChange,
   onSetXType,
@@ -40,25 +42,30 @@ export default function CustomDetailsSelect({
       <Search />
       <Card className="max-w-md mx-auto min-h-[420px] grid grid-rows-[1fr_auto]">
         <CardContent className="space-y-4 p-6">
-          <div className="space-y-2">
-            <label className="block text-right font-medium">{title}</label>
-            <Select value={xType} onValueChange={onSetXType}>
-              <SelectTrigger className="w-full" style={{ direction: "rtl" }}>
-                <SelectValue placeholder="انتخاب کنید" />
-              </SelectTrigger>
-              <SelectContent className="bg-white" style={{ direction: "rtl" }}>
-                {options?.map((opt) => (
-                  <SelectItem
-                    key={opt.value}
-                    value={opt.value}
-                    className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
-                  >
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {!isSingleRoute && (
+            <div className="space-y-2">
+              <label className="block text-right font-medium">{title}</label>
+              <Select value={xType} onValueChange={onSetXType}>
+                <SelectTrigger className="w-full" style={{ direction: "rtl" }}>
+                  <SelectValue placeholder="انتخاب کنید" />
+                </SelectTrigger>
+                <SelectContent
+                  className="bg-white"
+                  style={{ direction: "rtl" }}
+                >
+                  {options?.map((opt) => (
+                    <SelectItem
+                      key={opt.value}
+                      value={opt.value}
+                      className="cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
+                    >
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           <StateCitySelect
             state={state}

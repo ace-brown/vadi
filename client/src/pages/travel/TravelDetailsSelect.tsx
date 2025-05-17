@@ -13,9 +13,7 @@ export default function TravelDetailsSelectPage() {
   const navigate = useNavigate();
   const [selectedState, setSelectedState] = useState<string>("");
   const [selectedCity, setSelectedCity] = useState<string>("");
-  const [netType, setNetType] = useState<string>("");
   const [travelPoint, setTravelPoint] = useState<string>("");
-  const internetOptions = [{ label: " خانگی", value: "domestic" }];
 
   const TRAVEL_POINTS = [
     {
@@ -28,27 +26,12 @@ export default function TravelDetailsSelectPage() {
     },
   ];
   function handleSubmit() {
-    if (!netType) {
-      alert("لطفاً نوع اینترنت را انتخاب کنید.");
-      return;
-    }
-
-    const routeMap: Record<string, string> = {
-      mobileNet: "mobile-tariff",
-      homeNet: "home-tariff",
-    };
-
-    const slug = routeMap[netType];
-    if (!slug) return;
-
-    const currentOpt = internetOptions.find((opt) => opt.value === netType);
-    const currentResult = currentOpt?.label || "";
-
+    const slug = "here";
     const searchParams = new URLSearchParams({
       state: selectedState,
       city: selectedCity,
-      type: netType,
-      currentResult,
+      //   type: netType,
+      //   currentResult,
     });
 
     navigate(`/internet/${slug}?${searchParams.toString()}`);
@@ -56,12 +39,9 @@ export default function TravelDetailsSelectPage() {
 
   return (
     <CustomDetailsSelect
-      title="نوع اینترنت"
-      xType={netType}
-      options={internetOptions}
+      isSingleRoute={true}
       state={selectedState}
       city={selectedCity}
-      onSetXType={setNetType}
       onStateChange={setSelectedState}
       onCityChange={setSelectedCity}
       onSubmit={handleSubmit}

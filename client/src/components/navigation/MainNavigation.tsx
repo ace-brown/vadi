@@ -35,14 +35,6 @@ const navItems = [
     ],
   },
   {
-    label: "گردشگری",
-    icon: Plane,
-    submenu: [
-      { label: "تور داخلی", path: "/travel/domestic" },
-      { label: "تور خارجی", path: "/travel/international" },
-    ],
-  },
-  {
     label: "لوازم الکترونیک",
     icon: Tv,
     submenu: [
@@ -90,6 +82,14 @@ const navItems = [
     submenu: [
       { label: "آموزشگاه ها", path: "/education/centers" },
       { label: "کتابفروشی", path: "/education/bookstores" },
+    ],
+  },
+  {
+    label: "گردشگری",
+    icon: Plane,
+    submenu: [
+      { label: "تور داخلی", path: "/travel/domestic" },
+      { label: "تور خارجی", path: "/travel/international" },
     ],
   },
 ];
