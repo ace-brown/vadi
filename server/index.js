@@ -11,6 +11,7 @@ const autoRepairRoutes = require('./src/routes/vehicle/auto-repair-routes')
 const motorcycleRepairRoutes = require('./src/routes/vehicle/motorcycle-repair-routes')
 const applianceRepairRoutes = require('./src/routes/electronics/appliance-repair-routes')
 const mobileRepairRoutes = require('./src/routes/PM/mobile-repair-routes')
+const computerRepairRoutes = require('./src/routes/PM/computer-repair-routes')
 const downloadRoutes = require('./src/routes/download-routes')
 const HttpError = require('./src/models/http-error')
 
@@ -67,6 +68,9 @@ app.use('/api/electronics/appliance-repair', applianceRepairRoutes);
 
 // Mobile Repair routes
 app.use('/api/pc-mobile/mobile-repair', mobileRepairRoutes);
+
+// Computer Repair routes
+app.use('/api/pc-mobile/computer-repair', computerRepairRoutes);
 
 // Users routes
 app.use('/api/users', usersRoutes);
