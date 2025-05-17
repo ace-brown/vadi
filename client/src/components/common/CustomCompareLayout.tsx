@@ -3,16 +3,16 @@ import { CornerUpLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
 type CustomCompareLayoutProps = {
-  filters: React.ReactNode;
+  filters?: React.ReactNode;
   children: React.ReactNode;
   isLoading: boolean;
-  skeleton: React.ReactNode;
+  skeleton?: React.ReactNode;
   emptyMessage?: string;
-  isAnyFilterActive: boolean;
-  currentResult: string;
-  returnTxt: string;
-  returnSlug: string;
-  onResetFilters: () => void;
+  isAnyFilterActive?: boolean;
+  currentResult?: string;
+  returnTxt?: string;
+  returnSlug?: string;
+  onResetFilters?: () => void;
 };
 
 export default function CustomCompareLayout({
@@ -52,7 +52,7 @@ export default function CustomCompareLayout({
         <div className="flex items-center justify-between" dir="rtl">
           <h2 className="text-lg font-semibold text-gray-800">{`نتایج ${currentResult}`}</h2>
           {returnTxt && (
-            <Link to={returnSlug}>
+            <Link to={returnSlug ?? ""}>
               <button className="flex items-center gap-1 border border-gray-300 hover:border-gray-400 hover:bg-gray-50 text-sm text-black font-normal py-1.5 px-3 rounded-md transition">
                 <CornerUpLeft className="w-4 h-4" />
                 {returnTxt}

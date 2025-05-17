@@ -18,6 +18,7 @@ import { aestheticRoutes } from "@/routes/aestheticRoutes";
 import { internetRoutes } from "@/routes/internetRoutes";
 import { vehicleRoutes } from "@/routes/vehicleRoutes";
 import { travelRoutes } from "./routes/travelRoutes";
+import ApplianceRepairPage from "./pages/electronics/applianceRepair";
 
 function App() {
   const auth = useContext(AuthContext);
@@ -57,6 +58,10 @@ function App() {
         {
           path: "travel",
           children: travelRoutes,
+        },
+        {
+          path: "electronics",
+          element: <ApplianceRepairPage />,
         },
       ],
     },
