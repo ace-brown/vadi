@@ -100,7 +100,7 @@ export default function Search() {
         <p>ایرانسل</p>
         <p>آرایشگاه</p>
         <p>مکانیکی</p>
-        <p>گردشگری</p>
+        <p>تعمیر پنکه</p>
       </div>
     </div>
   );

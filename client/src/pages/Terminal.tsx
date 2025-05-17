@@ -3,6 +3,7 @@ import InternetDetailsSelectPage from "./internet/InternetDetailsSelect";
 import AestheticDetailsSelectPage from "./aesthetic/AestheticDetailsSelect";
 import VehicleDetailsSelectPage from "./vehicle/VehicleDetailsSelect";
 import TravelDetailsSelectPage from "./travel/TravelDetailsSelect";
+import ApplianceRepairPage from "./electronics/applianceRepair";
 
 export default function TerminalPage() {
   const location = useLocation();
@@ -27,6 +28,8 @@ export default function TerminalPage() {
         return <VehicleDetailsSelectPage />;
       case "travel":
         return <TravelDetailsSelectPage />;
+      case "appliance":
+        return <ApplianceRepairPage />;
       default:
         return <p>نوع مشخص نشده است.</p>;
     }

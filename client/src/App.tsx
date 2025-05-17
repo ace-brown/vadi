@@ -60,7 +60,7 @@ function App() {
           children: travelRoutes,
         },
         {
-          path: "electronics",
+          path: "electronics/appliance-repair",
           element: <ApplianceRepairPage />,
         },
       ],
