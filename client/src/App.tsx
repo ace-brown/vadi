@@ -21,6 +21,8 @@ import { travelRoutes } from "./routes/travelRoutes";
 import ApplianceRepairPage from "./pages/electronics/ApplianceRepair";
 import { PMRoutes } from "./routes/PMRoutes";
 import { agricultureRoutes } from "./routes/agricultureRoutes";
+import DentalPage from "./pages/healthcare/Dental";
+import { educationRoutes } from "./routes/educationRoutes";
 
 function App() {
   const auth = useContext(AuthContext);
@@ -40,7 +42,7 @@ function App() {
 
         // ---------- Dashboard (Private) ----------
         {
-          path: "/dashboard",
+          path: "dashboard",
           element: auth.isLoggedIn ? <AuthLayoutPage /> : <Navigate to="/" />,
           children: [{ index: true, element: <SettingsPage /> }],
         },
@@ -58,11 +60,6 @@ function App() {
           children: vehicleRoutes,
         },
         {
-          path: "travel",
-          children: travelRoutes,
-        },
-
-        {
           path: "electronics/appliance-repair",
           element: <ApplianceRepairPage />,
         },
@@ -73,6 +70,22 @@ function App() {
         {
           path: "agriculture",
           children: agricultureRoutes,
+        },
+        {
+          path: "healthcare/dental",
+          element: <DentalPage />,
+        },
+        {
+          path: "education",
+          children: educationRoutes,
+        },
+        {
+          path: "healthcare/dental",
+          element: <DentalPage />,
+        },
+        {
+          path: "travel",
+          children: travelRoutes,
         },
       ],
     },

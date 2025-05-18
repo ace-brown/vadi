@@ -14,6 +14,9 @@ const mobileRepairRoutes = require('./src/routes/PM/mobile-repair-routes')
 const computerRepairRoutes = require('./src/routes/PM/computer-repair-routes')
 const gardenSuppliesRoutes = require('./src/routes/agriculture/garden-supplies-routes')
 const animalBasedProdRoutes = require('./src/routes/agriculture/animal-based-products-routes')
+const dentalServiceRoutes = require('./src/routes/healthcare/dental-services-routes')
+const bookstoresRoutes = require('./src/routes/education/bookstores-routes')
+const eduCenterRoutes = require('./src/routes/education/education-centers-routes')
 const downloadRoutes = require('./src/routes/download-routes')
 const HttpError = require('./src/models/http-error')
 
@@ -79,6 +82,15 @@ app.use('/api/agriculture/garden-supplies', gardenSuppliesRoutes);
 
 // Animal-based products routes
 app.use('/api/agriculture/animal-based-products', animalBasedProdRoutes);
+
+// Dental Services routes
+app.use('/api/healthcare/dental', dentalServiceRoutes);
+
+// Bookstores routes
+app.use('/api/education/bookstores', bookstoresRoutes);
+
+// Education Center routes
+app.use('/api/education/centers', eduCenterRoutes);
 
 // Users routes
 app.use('/api/users', usersRoutes);

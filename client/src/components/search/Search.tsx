@@ -103,6 +103,7 @@ export default function Search() {
         <p>تعمیر پنکه</p>
         <p>موبایل</p>
         <p>لبنیات</p>
+        <p>درمان</p>
       </div>
     </div>
   );
