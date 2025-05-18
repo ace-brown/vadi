@@ -60,7 +60,7 @@ const navItems = [
     icon: Shovel,
     submenu: [
       { label: "کود و محصولات باغی", path: "/agriculture/garden-supplies" },
-      { label: "محصولات دامی", path: "/agriculture/livestock" },
+      { label: "محصولات دامی", path: "/agriculture/animal-based-products" },
     ],
   },
   {

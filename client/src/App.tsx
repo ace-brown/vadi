@@ -20,6 +20,7 @@ import { vehicleRoutes } from "@/routes/vehicleRoutes";
 import { travelRoutes } from "./routes/travelRoutes";
 import ApplianceRepairPage from "./pages/electronics/ApplianceRepair";
 import { PMRoutes } from "./routes/PMRoutes";
+import { agricultureRoutes } from "./routes/agricultureRoutes";
 
 function App() {
   const auth = useContext(AuthContext);
@@ -68,6 +69,10 @@ function App() {
         {
           path: "pc-mobile",
           children: PMRoutes,
+        },
+        {
+          path: "agriculture",
+          children: agricultureRoutes,
         },
       ],
     },

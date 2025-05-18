@@ -102,6 +102,7 @@ export default function Search() {
         <p>مکانیکی</p>
         <p>تعمیر پنکه</p>
         <p>موبایل</p>
+        <p>لبنیات</p>
       </div>
     </div>
   );

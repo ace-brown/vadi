@@ -12,6 +12,8 @@ const motorcycleRepairRoutes = require('./src/routes/vehicle/motorcycle-repair-r
 const applianceRepairRoutes = require('./src/routes/electronics/appliance-repair-routes')
 const mobileRepairRoutes = require('./src/routes/PM/mobile-repair-routes')
 const computerRepairRoutes = require('./src/routes/PM/computer-repair-routes')
+const gardenSuppliesRoutes = require('./src/routes/agriculture/garden-supplies-routes')
+const animalBasedProdRoutes = require('./src/routes/agriculture/animal-based-products-routes')
 const downloadRoutes = require('./src/routes/download-routes')
 const HttpError = require('./src/models/http-error')
 
@@ -71,6 +73,12 @@ app.use('/api/pc-mobile/mobile-repair', mobileRepairRoutes);
 
 // Computer Repair routes
 app.use('/api/pc-mobile/computer-repair', computerRepairRoutes);
+
+// Garden Supplies routes
+app.use('/api/agriculture/garden-supplies', gardenSuppliesRoutes);
+
+// Animal-based products routes
+app.use('/api/agriculture/animal-based-products', animalBasedProdRoutes);
 
 // Users routes
 app.use('/api/users', usersRoutes);
