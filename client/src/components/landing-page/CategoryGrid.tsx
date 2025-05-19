@@ -54,11 +54,11 @@ const categoriesItems = [
     icon: <Book className="w-8 h-8 text-indigo-600" />,
     link: "/education/education-details-select",
   },
-  {
-    label: "گردشگری",
-    icon: <Plane className="w-8 h-8 text-cyan-600" />,
-    link: "#",
-  },
+  // {
+  //   label: "گردشگری",
+  //   icon: <Plane className="w-8 h-8 text-cyan-600" />,
+  //   link: "#",
+  // },
 ];
 
 export default function CategoryGrid() {

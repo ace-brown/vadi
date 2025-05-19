@@ -87,14 +87,14 @@ const navItems = [
       { label: "کتابفروشی", path: "/education/bookstores" },
     ],
   },
-  {
-    label: "گردشگری",
-    icon: Plane,
-    submenu: [
-      { label: "تور داخلی", path: "/travel/domestic" },
-      { label: "تور خارجی", path: "/travel/international" },
-    ],
-  },
+  // {
+  //   label: "گردشگری",
+  //   icon: Plane,
+  //   submenu: [
+  //     { label: "تور داخلی", path: "/travel/travel-details-select" },
+  //     { label: "تور خارجی", path: "/travel/international" },
+  //   ],
+  // },
 ];
 
 export default function Header() {
