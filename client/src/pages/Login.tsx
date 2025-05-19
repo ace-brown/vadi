@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Container from "@/components/common/Container";
+// import Container from "@/components/common/Container";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import { useHttpClient } from "@/hooks/http-hook";
 import { AuthContext } from "@/context/auth-context";
@@ -43,7 +43,7 @@ export default function LoginPage() {
   };
 
   return (
-    <Container>
+    <div>
       {isLoading && <LoadingSpinner asOverlay />}
       <Toaster position="top-center" richColors />
       <div className="min-h-[50vh] flex items-start justify-center">
@@ -106,6 +106,6 @@ export default function LoginPage() {
           </CardContent>
         </Card>
       </div>
-    </Container>
+    </div>
   );
 }
