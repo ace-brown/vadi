@@ -1,5 +1,3 @@
-import React from "react";
-
 // Define the mapping of file extensions to MIME types
 const mimeTypes: { [key: string]: string } = {
   pdf: "application/pdf",

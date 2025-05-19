@@ -4,7 +4,6 @@ import logo from "@/images/logo.jpg";
 import {
   Smartphone,
   Car,
-  Plane,
   Scissors,
   Tv,
   Wifi,

@@ -1,5 +1,3 @@
-import React from "react";
-
 import "./LoadingSpinner.css";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

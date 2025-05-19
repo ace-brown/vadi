@@ -10,7 +10,6 @@ import {
   HeartPulse,
   Car,
   Book,
-  Plane,
 } from "lucide-react";
 
 const categoriesItems = [

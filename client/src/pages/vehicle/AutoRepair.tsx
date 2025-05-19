@@ -15,12 +15,11 @@ export default function AutoRepairPage() {
   const [maxSimPrice, setMaxSimPrice] = useState(MAX_SIM_PRICE);
   const [maxMins, setMaxMins] = useState(MAX_MINS);
   const [durationFilter, setDurationFilter] = useState<string[]>([]);
-  const [allAutoRepairs, setAllAutoRepairs] = useState<AutoRepairType[]>([]);
+  // const [ setAllAutoRepairs] = useState<AutoRepairType[]>([]);
   const [filteredPackages, setFilteredPackages] = useState<AutoRepairType[]>(
     []
   );
   const { isLoading, sendRequest } = useHttpClient();
-  const [sortOrder, setSortOrder] = useState("asc");
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const currentResult = queryParams.get("currentResult") ?? "";
@@ -70,7 +69,7 @@ export default function AutoRepairPage() {
       );
 
       if (responseData && Array.isArray(responseData)) {
-        setAllAutoRepairs(responseData);
+        // setAllAutoRepairs(responseData);
         setFilteredPackages(responseData);
       }
 

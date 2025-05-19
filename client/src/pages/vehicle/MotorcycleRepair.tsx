@@ -20,7 +20,7 @@ export default function MotorcycleRepairPage() {
   >([]);
   // const [filteredPackages, setFilteredPackages] = useState<AutoRepairType[]>( [] );
   const { isLoading, sendRequest } = useHttpClient();
-  const [sortOrder, setSortOrder] = useState("asc");
+  // const [sortOrder, setSortOrder] = useState("asc");
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const currentResult = queryParams.get("currentResult") ?? "";
