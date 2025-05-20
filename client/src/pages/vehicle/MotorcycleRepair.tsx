@@ -73,7 +73,7 @@ export default function MotorcycleRepairPage() {
       onResetFilters={resetFilters}
       currentResult={currentResult}
       returnTxt="بازگشت به صحفه ی انتخاب نوع وسیله ی نقلیه"
-      returnSlug="/vehicle/motorcycle-repair"
+      returnSlug="/vehicle/vehicle-details-select"
     >
       {allMotorcycleRepairs?.map((pkg, i) => (
         <AutoRepairCard key={i} {...pkg} />

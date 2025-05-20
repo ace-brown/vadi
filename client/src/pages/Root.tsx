@@ -1,5 +1,5 @@
 import { Toaster } from "sonner";
-import Footer from "@/components/footer";
+import Footer from "@/components/footer/footer";
 import Header from "@/components/navigation/MainNavigation";
 import { Outlet } from "react-router-dom";
 

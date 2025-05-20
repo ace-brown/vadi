@@ -1,3 +1,4 @@
+import Footer from "@/components/footer/footer";
 import Header from "@/components/navigation/MainNavigation";
 
 export default function ErrorPage() {
@@ -9,6 +10,7 @@ export default function ErrorPage() {
           صفحه مورد نظر پیدا نشد
         </h1>
       </main>
+      <Footer />
     </>
   );
 }

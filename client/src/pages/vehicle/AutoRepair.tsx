@@ -93,7 +93,7 @@ export default function AutoRepairPage() {
       onResetFilters={resetFilters}
       currentResult={currentResult}
       returnTxt="بازگشت به صحفه ی انتخاب نوع وسیله ی نقلیه"
-      returnSlug="/vehicle/auto-repair"
+      returnSlug="/vehicle/vehicle-details-select"
     >
       {filteredPackages?.map((pkg, i) => (
         <AutoRepairCard key={i} {...pkg} />

@@ -10,8 +10,8 @@ import HomePage from "@/pages/Home";
 import RootLayout from "@/pages/Root";
 import ErrorPage from "@/pages/Error";
 import TerminalPage from "@/pages/Terminal";
-import LoginPage from "@/pages/Login";
-import SignupPage from "@/pages/Signup";
+import LoginPage from "@/pages/dashboard/Login";
+import SignupPage from "@/pages/dashboard/Signup";
 import AuthLayoutPage from "@/pages/dashboard/AuthLayout";
 import SettingsPage from "@/pages/dashboard/Settings";
 import { aestheticRoutes } from "@/routes/aestheticRoutes";
@@ -23,6 +23,9 @@ import { PMRoutes } from "./routes/PMRoutes";
 import { agricultureRoutes } from "./routes/agricultureRoutes";
 import DentalPage from "./pages/healthcare/Dental";
 import { educationRoutes } from "./routes/educationRoutes";
+import Contact from "./pages/legal/Contact";
+import PrivacyPage from "./pages/legal/Privacy";
+import TermsPage from "./pages/legal/Terms";
 
 function App() {
   const auth = useContext(AuthContext);
@@ -86,6 +89,19 @@ function App() {
         {
           path: "travel",
           children: travelRoutes,
+        },
+        // ---------- Footer Routes ----------
+        {
+          path: "/contact",
+          element: <Contact />,
+        },
+        {
+          path: "/privacy",
+          element: <PrivacyPage />,
+        },
+        {
+          path: "/terms",
+          element: <TermsPage />,
         },
       ],
     },

@@ -13,10 +13,16 @@ import {
   Menu,
   X,
   ChevronDown,
+  Home,
 } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
+  {
+    label: "صفحه اول",
+    icon: Home,
+    path: "/",
+  },
   {
     label: "اینترنت",
     icon: Wifi,
@@ -143,26 +149,38 @@ export default function Header() {
       {/* Desktop Menu */}
       <nav className="hidden md:block bg-[#023e8a] text-white shadow relative z-50">
         <ul className="flex justify-center space-x-6 p-4 text-sm font-medium">
-          {navItems.map(({ label, icon: Icon, submenu }, idx) => (
+          {navItems.map(({ label, icon: Icon, submenu, path }, idx) => (
             <li key={idx} className="relative group">
-              <div className="flex flex-wrap items-center justify-center gap-[3px] cursor-pointer transition">
-                <Icon size={16} />
-                {label}
-              </div>
-              <div className="absolute right-0 top-full mt-0 w-max min-w-[100px] bg-[#023e8a] rounded shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 ease-in-out z-50">
-                <ul className="flex flex-col py-2 text-right">
-                  {submenu.map((sub, i) => (
-                    <li key={i}>
-                      <Link
-                        to={sub.path}
-                        className="block px-4 py-2 text-sm hover:bg-[#0077b6]"
-                      >
-                        {sub.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {path ? (
+                <Link
+                  to={path}
+                  className="flex items-center gap-[3px] transition"
+                >
+                  <Icon size={16} />
+                  {label}
+                </Link>
+              ) : (
+                <div className="flex flex-wrap items-center justify-center gap-[3px] cursor-pointer transition">
+                  <Icon size={16} />
+                  {label}
+                </div>
+              )}
+              {submenu && (
+                <div className="absolute right-0 top-full mt-0 w-max min-w-[100px] bg-[#023e8a] rounded shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 ease-in-out z-50">
+                  <ul className="flex flex-col py-2 text-right">
+                    {submenu?.map((sub, i) => (
+                      <li key={i}>
+                        <Link
+                          to={sub.path}
+                          className="block px-4 py-2 text-sm hover:bg-[#0077b6]"
+                        >
+                          {sub.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </li>
           ))}
         </ul>
@@ -182,7 +200,7 @@ export default function Header() {
                     />
                   </summary>
                   <ul className="mt-2 ps-4 text-sm text-gray-600">
-                    {submenu.map(({ label: subLabel, path }, i) => (
+                    {submenu?.map(({ label: subLabel, path }, i) => (
                       <li key={i} className="py-1">
                         <Link to={path} className="block w-full">
                           {subLabel}

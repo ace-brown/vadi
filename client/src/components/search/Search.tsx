@@ -96,7 +96,7 @@ export default function Search() {
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
       </div>
-      <div className="flex gap-4">
+      {/* <div className="flex gap-4">
         <p>ایرانسل</p>
         <p>آرایشگاه</p>
         <p>مکانیکی</p>
@@ -104,7 +104,7 @@ export default function Search() {
         <p>موبایل</p>
         <p>لبنیات</p>
         <p>درمان</p>
-      </div>
+      </div> */}
     </div>
   );
 }

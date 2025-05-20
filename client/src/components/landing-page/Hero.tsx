@@ -21,7 +21,7 @@ export default function Hero() {
             مشاهده تعرفه‌های اینترنت
           </button>
         </Link>
-        <Link to="/vehicle/auto-repair">
+        <Link to="/vehicle/vehicle-details-select">
           <button className="bg-gray-200 text-gray-800 px-6 py-3 rounded-2xl shadow hover:bg-gray-300 transition">
             بررسی خدمات وسایل نقلیه
           </button>
