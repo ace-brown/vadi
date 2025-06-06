@@ -5,13 +5,42 @@ import HomeNetCardSkeleton from "@/components/internet/home-tariff/HomeNetCardSk
 import CustomCompareLayout from "@/components/common/CustomCompareLayout";
 import { useHttpClient } from "@/hooks/http-hook";
 import AutoRepairCard from "@/components/vehicle/auto-repair/AutoRepairCard";
+import { Button } from "@/components/ui/button";
 
 export default function DentalPage() {
   const [allServices, setAllServices] = useState<AutoRepairType[]>([]);
   const { isLoading, sendRequest } = useHttpClient();
+  const [showModal, setShowModal] = useState(false);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const currentResult = queryParams.get("currentResult") ?? "";
+
+  const dentists: AutoRepairType[] = [
+    {
+      title: "کلینیک دندانپزشکی سلامت لبخند",
+      address: "خیابان ولیعصر ۱۵، تهران",
+      services: ["جرم‌گیری", "پرکردن دندان", "بلیچینگ"],
+      image: "https://example.com/images/dentist1.jpg",
+    },
+    {
+      title: "مرکز دندانپزشکی پارس",
+      address: "خیابان انقلاب ۳۲، اصفهان",
+      services: ["ارتودنسی", "کشیدن دندان", "عصب‌کشی"],
+      image: "https://example.com/images/dentist2.jpg",
+    },
+    {
+      title: "کلینیک تخصصی دندانپزشکی آرام",
+      address: "خیابان حافظ ۷، شیراز",
+      services: ["ایمپلنت", "روکش دندان", "جراحی لثه"],
+      image: "https://example.com/images/dentist3.jpg",
+    },
+    {
+      title: "دندانپزشکی پیشرفته لبخند زیبا",
+      address: "بلوار آزادی ۲۳، مشهد",
+      services: ["سفیدکردن دندان", "تشخیص و درمان پوسیدگی", "پروتز دندان"],
+      image: "https://example.com/images/dentist4.jpg",
+    },
+  ];
 
   async function fetchApplianceRepair() {
     try {
@@ -61,19 +90,61 @@ export default function DentalPage() {
 
   // Sort operation
 
+  function handleCloseModal() {
+    setShowModal(false);
+  }
+
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showModal]);
+
+  useEffect(() => {
+    function handleEsc(e: KeyboardEvent) {
+      if (e.key === "Escape") setShowModal(false);
+    }
+
+    if (showModal) {
+      window.addEventListener("keydown", handleEsc);
+    }
+
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [showModal]);
+
   return (
-    <CustomCompareLayout
-      isLoading={isLoading}
-      skeleton={<HomeNetCardSkeleton />}
-      isAnyFilterActive={false}
-      //   onResetFilters={resetFilters}
-      currentResult={currentResult}
-      //   returnTxt="بازگشت به صحفه ی انتخاب نوع اینترنت"
-      //   returnSlug="/internet/internet-details-select"
-    >
-      {allServices.map((pkg, i) => (
-        <AutoRepairCard key={i} {...pkg} />
-      ))}
-    </CustomCompareLayout>
+    <>
+      <CustomCompareLayout
+        isLoading={isLoading}
+        skeleton={<HomeNetCardSkeleton />}
+        isAnyFilterActive={false}
+        //   onResetFilters={resetFilters}
+        currentResult={currentResult}
+        //   returnTxt="بازگشت به صحفه ی انتخاب نوع اینترنت"
+        //   returnSlug="/internet/internet-details-select"
+      >
+        {dentists.map((pkg, i) => (
+          <AutoRepairCard key={i} {...pkg} onShowModal={setShowModal} />
+        ))}
+      </CustomCompareLayout>
+      {showModal && (
+        <div className="modal-wraper" onClick={handleCloseModal}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h1>انتخاب</h1>
+            <p>
+              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odit
+              porro iure nihil blanditiis praesentium cumque iusto qui quibusdam
+              sint, deleniti minus delectus accusamus, veritatis soluta
+              obcaecati nobis enim eos perspiciatis fuga laboriosam.
+            </p>
+            <Button onClick={handleCloseModal}>بستن</Button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

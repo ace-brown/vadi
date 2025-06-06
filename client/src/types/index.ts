@@ -72,4 +72,5 @@ export type AutoRepairType = {
   address?: string;
   services?: string[];
   image?: string;
+  onShowModal?: (value: boolean) => void;
 };

@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "@/images/logo.jpg";
-
 import {
   Smartphone,
   Car,
@@ -15,7 +15,9 @@ import {
   ChevronDown,
   Home,
 } from "lucide-react";
-import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { AuthContext } from "@/context/auth-context";
 
 const navItems = [
   {
@@ -104,6 +106,8 @@ const navItems = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return (
     <header className="w-full shadow-md rtl text-right">
@@ -113,7 +117,7 @@ export default function Header() {
           <span className="sr-only">Vadi</span>
         </Link>
         <div className="flex items-center gap-4">
-          {/* {!auth.isLoggedIn && (
+          {!auth.isLoggedIn && (
             <>
               <Link to="/signup">
                 <Button>ثبت‌ نام</Button>
@@ -140,7 +144,7 @@ export default function Header() {
                 خروج
               </Button>
             </>
-          )} */}
+          )}
           <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
             {menuOpen ? <X /> : <Menu />}
           </button>
