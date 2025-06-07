@@ -90,61 +90,19 @@ export default function DentalPage() {
 
   // Sort operation
 
-  function handleCloseModal() {
-    setShowModal(false);
-  }
-
-  useEffect(() => {
-    if (showModal) {
-      document.body.style.overflow = "hidden";
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [showModal]);
-
-  useEffect(() => {
-    function handleEsc(e: KeyboardEvent) {
-      if (e.key === "Escape") setShowModal(false);
-    }
-
-    if (showModal) {
-      window.addEventListener("keydown", handleEsc);
-    }
-
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, [showModal]);
-
   return (
-    <>
-      <CustomCompareLayout
-        isLoading={isLoading}
-        skeleton={<HomeNetCardSkeleton />}
-        isAnyFilterActive={false}
-        //   onResetFilters={resetFilters}
-        currentResult={currentResult}
-        //   returnTxt="بازگشت به صحفه ی انتخاب نوع اینترنت"
-        //   returnSlug="/internet/internet-details-select"
-      >
-        {dentists.map((pkg, i) => (
-          <AutoRepairCard key={i} {...pkg} onShowModal={setShowModal} />
-        ))}
-      </CustomCompareLayout>
-      {showModal && (
-        <div className="modal-wraper" onClick={handleCloseModal}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h1>انتخاب</h1>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odit
-              porro iure nihil blanditiis praesentium cumque iusto qui quibusdam
-              sint, deleniti minus delectus accusamus, veritatis soluta
-              obcaecati nobis enim eos perspiciatis fuga laboriosam.
-            </p>
-            <Button onClick={handleCloseModal}>بستن</Button>
-          </div>
-        </div>
-      )}
-    </>
+    <CustomCompareLayout
+      isLoading={isLoading}
+      skeleton={<HomeNetCardSkeleton />}
+      isAnyFilterActive={false}
+      //   onResetFilters={resetFilters}
+      currentResult={currentResult}
+      //   returnTxt="بازگشت به صحفه ی انتخاب نوع اینترنت"
+      //   returnSlug="/internet/internet-details-select"
+    >
+      {dentists.map((pkg, i) => (
+        <AutoRepairCard key={i} {...pkg} />
+      ))}
+    </CustomCompareLayout>
   );
 }

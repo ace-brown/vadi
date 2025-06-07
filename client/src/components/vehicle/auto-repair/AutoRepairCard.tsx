@@ -1,19 +1,18 @@
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AutoRepairType } from "@/types";
 import CardInfoItem from "@/components/common/CardInfoItem";
+import { useNavigate } from "react-router-dom";
 
 export default function AutoRepairCard({
   title,
   address,
   services,
   image,
-  onShowModal,
 }: AutoRepairType) {
+  const navigate = useNavigate();
   function handleOrder() {
-    if (onShowModal) onShowModal(true);
+    navigate("/reservation");
   }
 
   return (

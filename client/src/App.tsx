@@ -26,6 +26,7 @@ import { educationRoutes } from "./routes/educationRoutes";
 import Contact from "./pages/legal/Contact";
 import PrivacyPage from "./pages/legal/Privacy";
 import TermsPage from "./pages/legal/Terms";
+import Reservation from "./pages/Reservation";
 
 function App() {
   const auth = useContext(AuthContext);
@@ -39,6 +40,7 @@ function App() {
         // ---------- Static Pages ----------
         { index: true, element: <HomePage /> },
         { path: "terminal", element: <TerminalPage /> },
+        { path: "reservation", element: <Reservation /> },
         // ---------- Auth ----------
         { path: "login", element: <LoginPage /> },
         { path: "signup", element: <SignupPage /> },
@@ -51,6 +53,7 @@ function App() {
         },
         // ---------- Comparison Routes ----------
         {
+          // Dont forget to add loader for the data fetching
           path: "aesthetic",
           children: aestheticRoutes,
         },
@@ -59,6 +62,7 @@ function App() {
           children: internetRoutes,
         },
         {
+          // Dont forget to add loader for the data fetching
           path: "vehicle",
           children: vehicleRoutes,
         },
@@ -67,6 +71,7 @@ function App() {
           element: <ApplianceRepairPage />,
         },
         {
+          // Dont forget to add loader for the data fetching
           path: "pc-mobile",
           children: PMRoutes,
         },
@@ -75,6 +80,7 @@ function App() {
           children: agricultureRoutes,
         },
         {
+          // Dont forget to add loader for the data fetching
           path: "healthcare/dental",
           element: <DentalPage />,
         },
@@ -87,6 +93,7 @@ function App() {
           element: <DentalPage />,
         },
         {
+          // Dont forget to add loader for the data fetching
           path: "travel",
           children: travelRoutes,
         },
