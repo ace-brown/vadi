@@ -151,7 +151,7 @@ export default function Header() {
         </div>
       </div>
       {/* Desktop Menu */}
-      <nav className="hidden md:block bg-[#023e8a] text-white shadow relative z-50">
+      <nav className="hidden md:block bg-[#023e8a] text-white shadow relative z-101">
         <ul className="flex justify-center space-x-6 p-4 text-sm font-medium">
           {navItems.map(({ label, icon: Icon, submenu, path }, idx) => (
             <li key={idx} className="relative group">
@@ -170,7 +170,7 @@ export default function Header() {
                 </div>
               )}
               {submenu && (
-                <div className="absolute right-0 top-full mt-0 w-max min-w-[100px] bg-[#023e8a] rounded shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 ease-in-out z-50">
+                <div className="absolute right-0 top-full mt-0 w-max min-w-[100px] bg-[#023e8a] rounded shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 ease-in-out z-101">
                   <ul className="flex flex-col py-2 text-right">
                     {submenu?.map((sub, i) => (
                       <li key={i}>

@@ -12,7 +12,12 @@ export default function AutoRepairCard({
 }: AutoRepairType) {
   const navigate = useNavigate();
   function handleOrder() {
-    navigate("/reservation");
+    const searchParams = new URLSearchParams({
+      title: title || "",
+      address: address || "",
+    });
+
+    navigate(`/reservation?${searchParams.toString()}`);
   }
 
   return (
