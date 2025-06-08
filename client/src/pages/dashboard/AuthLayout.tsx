@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 
 export default function AuthLayoutPage() {
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-[50vh] p-6">
       <Outlet />
     </div>
   );

@@ -13,7 +13,6 @@ import TerminalPage from "@/pages/Terminal";
 import LoginPage from "@/pages/dashboard/Login";
 import SignupPage from "@/pages/dashboard/Signup";
 import AuthLayoutPage from "@/pages/dashboard/AuthLayout";
-import SettingsPage from "@/pages/dashboard/Settings";
 import { aestheticRoutes } from "@/routes/aestheticRoutes";
 import { internetRoutes } from "@/routes/internetRoutes";
 import { vehicleRoutes } from "@/routes/vehicleRoutes";
@@ -27,6 +26,7 @@ import Contact from "./pages/legal/Contact";
 import PrivacyPage from "./pages/legal/Privacy";
 import TermsPage from "./pages/legal/Terms";
 import Reservation from "./pages/Reservation";
+import { DashboardPage } from "./pages/dashboard/Dashboard";
 
 function App() {
   const auth = useContext(AuthContext);
@@ -48,8 +48,9 @@ function App() {
         // ---------- Dashboard (Private) ----------
         {
           path: "dashboard",
-          element: auth.isLoggedIn ? <AuthLayoutPage /> : <Navigate to="/" />,
-          children: [{ index: true, element: <SettingsPage /> }],
+          element: <AuthLayoutPage />,
+          // element: auth.isLoggedIn ? <AuthLayoutPage /> : <Navigate to="/" />,
+          children: [{ index: true, element: <DashboardPage /> }],
         },
         // ---------- Comparison Routes ----------
         {
