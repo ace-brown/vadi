@@ -73,3 +73,11 @@ export type AutoRepairType = {
   services?: string[];
   image?: string;
 };
+
+export interface ReservedOne {
+  id: number;
+  reservedFor: string;
+  time?: string;
+  address?: string;
+}
+[];
