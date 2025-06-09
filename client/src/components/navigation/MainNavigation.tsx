@@ -123,7 +123,7 @@ export default function Header() {
                 <Button>ثبت‌ نام</Button>
               </Link>
               <Link to="/login">
-                <Button>ورود</Button>
+                <Button variant="outline">ورود</Button>
               </Link>
             </>
           )}

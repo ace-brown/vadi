@@ -11,15 +11,22 @@ const buttonVariants = cva(
       variant: {
         // default:
         //   "bg-primary text-primary-foreground shadow hover:bg-primary/90",
-        default: "bg-red-600 text-white hover:bg-red-700",
-        destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+        // destructive:
+        // "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+        // outline:
+        // "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+        // secondary:
+        // "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        // ghost: "hover:bg-accent hover:text-accent-foreground",
+        // link: "text-primary underline-offset-4 hover:underline",
+        // default: "bg-red-600 text-white hover:bg-red-700",
+        default: "bg-[#00b4d8] text-white hover:bg-[#0096c7]",
+        destructive: "bg-[#03045e] text-white shadow-sm hover:bg-[#023e8a]",
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "border border-[#00b4d8] text-[#00b4d8] bg-white shadow-sm hover:bg-[#caf0f8]",
+        secondary: "bg-[#90e0ef] text-[#03045e] shadow-sm hover:bg-[#48cae4]",
+        ghost: "text-[#00b4d8] hover:bg-[#caf0f8] hover:text-[#0077b6]",
+        link: "text-[#00b4d8] underline-offset-4 hover:underline hover:text-[#0077b6]",
       },
       size: {
         default: "h-9 px-4 py-2",

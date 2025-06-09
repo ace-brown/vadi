@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { Calendar } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
+import { useNavigate } from "react-router-dom";
 import DateObject from "react-date-object";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,7 +30,7 @@ export default function Reservation() {
   const [selectedDate, setSelectedDate] = useState<any>(null);
   const [selectedTime, setSelectedTime] = useState<string>();
   const [reserved, setReserved] = useState(false);
-
+  const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const title = queryParams.get("title");
@@ -52,6 +53,9 @@ export default function Reservation() {
     setReserved(true);
     toast.success("نوبت با موفقیت رزرو شد");
   }
+
+  console.log("selectedDate: ", selectedDate);
+  console.log("selectedTime: ", selectedTime);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-6 mt-8 w-[95%] mx-auto">
@@ -104,11 +108,18 @@ export default function Reservation() {
         <h1>{title}</h1>
         <p>{address}</p>
         {reserved && (
-          <h2 className="text-xl font-bold text-right mb-4 text-green-500">
-            نوبت شما برای {formatPersianDate(selectedDate)}{" "}
-            {selectedTime ? `ساعت ${englishToPersianDigits(selectedTime)}` : ""}{" "}
-            رزرو شد
-          </h2>
+          <>
+            <h2 className="text-xl font-bold text-right mb-4 text-green-500">
+              نوبت شما برای {formatPersianDate(selectedDate)}{" "}
+              {selectedTime
+                ? `ساعت ${englishToPersianDigits(selectedTime)}`
+                : ""}{" "}
+              رزرو شد
+            </h2>
+            <Button variant="link" onClick={() => navigate("/dashboard")}>
+              مشاهده همه نوبت ها
+            </Button>
+          </>
         )}
       </Card>
     </div>
