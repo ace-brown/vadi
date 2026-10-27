@@ -1,38 +1,38 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
+const multer = require('multer');
 const path = require('path');
 
 const usersRoutes = require('./src/routes/users-routes')
-const mobileTariffRoutes = require('./src/routes/internet/mobile-tariffs-routes')
-const homeTariffRoutes = require('./src/routes/internet/home-tariffs-routes')
-const menSalonPlanRoutes = require('./src/routes/aesthetic/men-salons-routes')
-const womenSalonPlanRoutes = require('./src/routes/aesthetic/women-salons-routes')
-const autoRepairRoutes = require('./src/routes/vehicle/auto-repair-routes')
-const motorcycleRepairRoutes = require('./src/routes/vehicle/motorcycle-repair-routes')
-const applianceRepairRoutes = require('./src/routes/electronics/appliance-repair-routes')
-const mobileRepairRoutes = require('./src/routes/PM/mobile-repair-routes')
-const computerRepairRoutes = require('./src/routes/PM/computer-repair-routes')
-const gardenSuppliesRoutes = require('./src/routes/agriculture/garden-supplies-routes')
-const animalBasedProdRoutes = require('./src/routes/agriculture/animal-based-products-routes')
-const dentalServiceRoutes = require('./src/routes/healthcare/dental-services-routes')
-const bookstoresRoutes = require('./src/routes/education/bookstores-routes')
-const eduCenterRoutes = require('./src/routes/education/education-centers-routes')
 const downloadRoutes = require('./src/routes/download-routes')
+const createResourceRouter = require('./src/routes/resource-routes')
+const resources = require('./src/resources')
 const HttpError = require('./src/models/http-error')
+const { getMongoUri } = require('./src/db')
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware to parse JSON requests
-app.use(express.json());
+app.use(express.json({ limit: '100kb' }));
 
 // Middleware to handle CORS (Cross-Origin Resource Sharing)
-const allowedOrigins = ['https://www.vadi.click', 'http://localhost:3000', 'http://localhost:5173'];
+// Extra origins can be added as a comma-separated CORS_ORIGINS variable
+const allowedOrigins = [
+    'https://www.vadi.click',
+    'https://vadi-gamma.vercel.app',
+    'http://localhost:3000',
+    'http://localhost:5173',
+    ...(process.env.CORS_ORIGINS || '').split(',').map((origin) => origin.trim()).filter(Boolean),
+];
 
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Vary', 'Origin');
     }
     res.setHeader(
         'Access-Control-Allow-Headers',
@@ -47,73 +47,59 @@ app.use((req, res, next) => {
 
 app.use('/uploads/images', express.static(path.join(__dirname, 'uploads', 'images')));
 
-// Download Routes
+// Health check
+app.get('/api/health', (req, res) => {
+    const dbConnected = mongoose.connection.readyState === 1;
+    res.status(dbConnected ? 200 : 503).json({ status: dbConnected ? 'ok' : 'degraded', db: dbConnected });
+});
+
+// Download routes
 app.use('/api/download', downloadRoutes);
 
-// Moible Tariff routes
-app.use('/api/internet/mobile-tariffs', mobileTariffRoutes);
-
-// Home Tariff routes
-app.use('/api/internet/home-tariffs', homeTariffRoutes);
-
-// Men Salon Plan routes
-app.use('/api/aesthetic/men-salon', menSalonPlanRoutes);
-
-// Women Salon Plan routes
-app.use('/api/aesthetic/women-salon', womenSalonPlanRoutes);
-
-// Auto Repair routes
-app.use('/api/vehicle/auto-repair', autoRepairRoutes);
-
-// Motorcycle Repair routes
-app.use('/api/vehicle/motorcycle-repair', motorcycleRepairRoutes);
-
-// Appliance Repair routes
-app.use('/api/electronics/appliance-repair', applianceRepairRoutes);
-
-// Mobile Repair routes
-app.use('/api/pc-mobile/mobile-repair', mobileRepairRoutes);
-
-// Computer Repair routes
-app.use('/api/pc-mobile/computer-repair', computerRepairRoutes);
-
-// Garden Supplies routes
-app.use('/api/agriculture/garden-supplies', gardenSuppliesRoutes);
-
-// Animal-based products routes
-app.use('/api/agriculture/animal-based-products', animalBasedProdRoutes);
-
-// Dental Services routes
-app.use('/api/healthcare/dental', dentalServiceRoutes);
-
-// Bookstores routes
-app.use('/api/education/bookstores', bookstoresRoutes);
-
-// Education Center routes
-app.use('/api/education/centers', eduCenterRoutes);
+// Listing routes (mobile/home tariffs, salons, repairs, ...), see src/resources.js
+resources.forEach(({ path: routePath, model, options }) => {
+    app.use(routePath, createResourceRouter(model, options));
+});
 
 // Users routes
 app.use('/api/users', usersRoutes);
 
-// Middleware to handle wrong routes 
+// Middleware to handle wrong routes
 app.use(function (req, res, next) {
     throw new HttpError('Could not find this route.', 404)
 })
 
 // Middleware to handle errors after they have been sent
 app.use(function (error, req, res, next) {
-    if (res.headerSent) {
+    if (res.headersSent) {
         return next(error);
     }
-    res.status(error.code || 500)
-    res.json({ message: error.message || 'An unknown error occurred!' });
+
+    if (error instanceof mongoose.Error.ValidationError) {
+        const errors = Object.values(error.errors).map((err) => ({ field: err.path, message: err.message }));
+        return res.status(422).json({ message: 'Invalid input, please check your data.', errors });
+    }
+    if (error instanceof mongoose.Error.CastError) {
+        return res.status(400).json({ message: `Invalid value for "${error.path}"` });
+    }
+    if (error instanceof multer.MulterError) {
+        return res.status(400).json({ message: error.message });
+    }
+    if (error.type === 'entity.parse.failed') {
+        return res.status(400).json({ message: 'Malformed JSON body' });
+    }
+
+    const status = error.code >= 400 && error.code < 600 ? error.code : 500;
+    if (status === 500) {
+        console.error(error);
+    }
+    res.status(status).json({ message: status === 500 ? 'An unknown error occurred!' : error.message });
 });
 
 // Connect to MongoDB
 mongoose
-    .connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.SUFFIX}.${process.env.AFTER_SUFFIX}.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority&appName=${process.env.APP_NAME}`)
+    .connect(getMongoUri())
     .then(function () {
         app.listen(port, () => console.log(`Server is running at port ${port}`))
     })
     .catch((err) => { console.log(err) })
-

@@ -1,0 +1,196 @@
+[
+  {
+    "id": 1,
+    "name": "Baden-Württemberg",
+    "cities": [
+      "Stuttgart",
+      "Karlsruhe",
+      "Mannheim",
+      "Freiburg im Breisgau",
+      "Heidelberg",
+      "Ulm",
+      "Heilbronn",
+      "Pforzheim",
+      "Reutlingen",
+      "Tübingen",
+      "Konstanz"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Bavaria",
+    "cities": [
+      "Munich",
+      "Nuremberg",
+      "Augsburg",
+      "Regensburg",
+      "Ingolstadt",
+      "Würzburg",
+      "Fürth",
+      "Erlangen",
+      "Bamberg",
+      "Bayreuth",
+      "Passau"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Berlin",
+    "cities": [
+      "Berlin"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Brandenburg",
+    "cities": [
+      "Potsdam",
+      "Cottbus",
+      "Brandenburg an der Havel",
+      "Frankfurt (Oder)",
+      "Oranienburg"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Bremen",
+    "cities": [
+      "Bremen",
+      "Bremerhaven"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Hamburg",
+    "cities": [
+      "Hamburg"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Hesse",
+    "cities": [
+      "Frankfurt am Main",
+      "Wiesbaden",
+      "Kassel",
+      "Darmstadt",
+      "Offenbach am Main",
+      "Gießen",
+      "Marburg",
+      "Fulda"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Lower Saxony",
+    "cities": [
+      "Hanover",
+      "Braunschweig",
+      "Oldenburg",
+      "Osnabrück",
+      "Wolfsburg",
+      "Göttingen",
+      "Hildesheim",
+      "Lüneburg"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Mecklenburg-Western Pomerania",
+    "cities": [
+      "Rostock",
+      "Schwerin",
+      "Neubrandenburg",
+      "Stralsund",
+      "Greifswald",
+      "Wismar"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "North Rhine-Westphalia",
+    "cities": [
+      "Cologne",
+      "Düsseldorf",
+      "Dortmund",
+      "Essen",
+      "Duisburg",
+      "Bochum",
+      "Wuppertal",
+      "Bielefeld",
+      "Bonn",
+      "Münster",
+      "Aachen",
+      "Mönchengladbach",
+      "Gelsenkirchen"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Rhineland-Palatinate",
+    "cities": [
+      "Mainz",
+      "Ludwigshafen am Rhein",
+      "Koblenz",
+      "Trier",
+      "Kaiserslautern",
+      "Worms"
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Saarland",
+    "cities": [
+      "Saarbrücken",
+      "Neunkirchen",
+      "Homburg",
+      "Völklingen"
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Saxony",
+    "cities": [
+      "Leipzig",
+      "Dresden",
+      "Chemnitz",
+      "Zwickau",
+      "Plauen",
+      "Görlitz"
+    ]
+  },
+  {
+    "id": 14,
+    "name": "Saxony-Anhalt",
+    "cities": [
+      "Magdeburg",
+      "Halle (Saale)",
+      "Dessau-Roßlau",
+      "Wittenberg",
+      "Halberstadt"
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Schleswig-Holstein",
+    "cities": [
+      "Kiel",
+      "Lübeck",
+      "Flensburg",
+      "Neumünster",
+      "Norderstedt"
+    ]
+  },
+  {
+    "id": 16,
+    "name": "Thuringia",
+    "cities": [
+      "Erfurt",
+      "Jena",
+      "Gera",
+      "Weimar",
+      "Gotha",
+      "Eisenach"
+    ]
+  }
+]

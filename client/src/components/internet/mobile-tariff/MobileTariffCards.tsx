@@ -9,9 +9,9 @@ export default function MobileTariffCards() {
   ];
 
   return (
-    <div className="p-6" dir="rtl">
-      <h2 className="text-2xl font-bold mb-6 text-right text-gray-800">
-        تعرفه‌های موبایل
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">
+        Mobile plans
       </h2>
       {dummyTariffInfo.map((tariff, index) => (
         <MobileTariffCard key={index} tariff={tariff} />

@@ -24,36 +24,67 @@ export interface UserType {
   };
 }
 
-export interface MobileNetType {
-  type: string;
-  simPrice: number;
-  validity: string;
-  packagePrice: number;
-  minutes: number;
+// The shape of every list endpoint: GET /api/<category>?<filters>
+export type Range = { min: number | null; max: number | null };
+
+export interface ListingResponse<T> {
+  items: T[];
+  total: number;
+  page: number;
+  pages: number;
+  ranges: Record<string, Range>;
+}
+
+export interface MobilePlanType {
+  _id: string;
+  provider: string;
+  name: string;
+  contractType: "prepaid" | "contract";
+  network: "4G" | "5G";
+  dataGB: number | null; // null means unlimited
+  minutes: number | null; // null means unlimited
+  termMonths: number;
+  monthlyPrice: number;
+  setupFee: number;
   image?: string;
 }
 
-export interface HomeNetType {
-  title: string;
-  speed: string;
-  duration: string;
-  volume: string;
-  netType: string;
-  price: number;
+export interface HomePlanType {
+  _id: string;
+  provider: string;
+  name: string;
+  connectionType: "DSL" | "VDSL" | "Cable" | "Fiber" | "LTE";
+  downloadMbps: number;
+  uploadMbps: number;
+  termMonths: number;
+  monthlyPrice: number;
+  setupFee: number;
   image?: string;
 }
 
-export type MenSalonPlansType = {
+// A physical place: repair shop, clinic, bookstore, salon...
+export interface PlaceType {
+  _id: string;
   title: string;
+  address: string;
+  city: string;
+  state: string;
+  rating?: number;
+  image?: string;
+}
+
+export interface ServicePlaceType extends PlaceType {
+  services: string[];
+}
+
+export type MenSalonType = PlaceType & {
   haircutPrice: number;
   menLiftPrice: number;
   groomMakeupPrice: number;
   curlyHairDoPrice: number;
-  image?: string;
 };
 
-export type WomenSalonPlansType = {
-  title: string;
+export type WomenSalonType = PlaceType & {
   faceCarePrice: number;
   hairBotoxPrice: number;
   hairColorPrice: number;
@@ -64,12 +95,4 @@ export type WomenSalonPlansType = {
   nailExtensionPrice: number;
   manicurePrice: number;
   waxingPrice: number;
-  image?: string;
-};
-
-export type AutoRepairType = {
-  title?: string;
-  address?: string;
-  services?: string[];
-  image?: string;
 };

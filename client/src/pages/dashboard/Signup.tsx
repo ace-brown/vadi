@@ -42,7 +42,7 @@ export default function SignupPage() {
 
     // Check if passwords match
     if (formData.password !== formData.repeatPassword) {
-      setPasswordError("رمزهای عبور مطابقت ندارند");
+      setPasswordError("Passwords do not match");
       return;
     }
 
@@ -56,7 +56,7 @@ export default function SignupPage() {
         {
           "Content-Type": "application/json",
         },
-        "حساب کاربری شما با موفقیت ایجاد شد "
+        "Your account was created successfully"
       );
       auth.login(
         responseData.userId,
@@ -77,14 +77,14 @@ export default function SignupPage() {
       <div className="min-h-[50vh] flex items-start justify-center">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-center text-2xl">ثبت‌ نام</CardTitle>
+            <CardTitle className="text-center text-2xl">Sign up</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit}>
               {/* User Name */}
               <div className="mb-4">
                 <Label htmlFor="username">
-                  نام کاربری <span className="text-red-500">*</span>
+                  Username <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   type="text"
@@ -99,7 +99,7 @@ export default function SignupPage() {
               {/* Full Name */}
               <div className="mb-4">
                 <Label htmlFor="fullName">
-                  نام و نام خانوادگی <span className="text-red-500">*</span>
+                  Full name <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   type="text"
@@ -114,7 +114,7 @@ export default function SignupPage() {
               {/* Email */}
               <div className="mb-4">
                 <Label htmlFor="email">
-                  ایمیل<span className="text-red-500">*</span>
+                  Email<span className="text-red-500">*</span>
                 </Label>
                 <Input
                   type="email"
@@ -129,19 +129,19 @@ export default function SignupPage() {
               {/* Password */}
               <div className="mb-4 relative">
                 <Label htmlFor="password">
-                  رمز عبور<span className="text-red-500">*</span>
+                  Password<span className="text-red-500">*</span>
                 </Label>
                 <Input
                   type={showPassword ? "text" : "password"}
                   id="password"
                   name="password"
                   value={formData.password}
-                  placeholder="رمز عبور باید حداقل 6 حرف باشد"
+                  placeholder="Password must be at least 6 characters"
                   onChange={handleChange}
                   required
                 />
                 <span
-                  className="absolute left-3 top-8 cursor-pointer text-gray-500"
+                  className="absolute right-3 top-8 cursor-pointer text-gray-500"
                   onClick={() => setShowPassword((prev) => !prev)}
                 >
                   {showPassword ? (
@@ -155,19 +155,19 @@ export default function SignupPage() {
               {/* Repeat Password */}
               <div className="mb-4 relative">
                 <Label htmlFor="repeatPassword">
-                  تکرار رمز عبور<span className="text-red-500">*</span>
+                  Repeat password<span className="text-red-500">*</span>
                 </Label>
                 <Input
                   type={showPassword ? "text" : "password"}
                   id="repeatPassword"
                   name="repeatPassword"
                   value={formData.repeatPassword}
-                  placeholder="رمز عبور باید حداقل 6 حرف باشد"
+                  placeholder="Password must be at least 6 characters"
                   onChange={handleChange}
                   required
                 />
                 <span
-                  className="absolute left-3 top-8 cursor-pointer text-gray-500"
+                  className="absolute right-3 top-8 cursor-pointer text-gray-500"
                   onClick={() => setShowPassword((prev) => !prev)}
                 >
                   {showPassword ? (
@@ -183,18 +183,18 @@ export default function SignupPage() {
               {/* Submit Button */}
               <div className="mt-6">
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  ثبت‌ نام
+                  Sign up
                 </Button>
               </div>
             </form>
 
             <p className="text-sm text-center mt-4 text-gray-600">
-              آیا قبلاً حساب کاربری دارید؟
+              Already have an account? 
               <Link
                 to="/login"
                 className="text-indigo-600 hover:underline focus:outline-none"
               >
-                ورود
+                Log in
               </Link>
             </p>
             {error && <p className="text-center text-red-500 mb-8">{error}</p>}

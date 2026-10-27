@@ -8,13 +8,13 @@ export default function AestheticDetailsSelectPage() {
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [salonType, setSalonType] = useState<string>("");
   const salonOptions = [
-    { label: "آرایشگاه مردانه", value: "menBarber" },
-    { label: "آرایشگاه زنانه", value: "womenBarber" },
+    { label: "Men's salon", value: "menBarber" },
+    { label: "Women's salon", value: "womenBarber" },
   ];
 
   function handleSubmit() {
     if (!salonType) {
-      alert("لطفاً نوع آرایشگاه را انتخاب کنید.");
+      alert("Please select a salon type.");
       return;
     }
 
@@ -41,7 +41,7 @@ export default function AestheticDetailsSelectPage() {
 
   return (
     <CustomDetailsSelect
-      title="نوع آرایشگاه"
+      title="Salon type"
       xType={salonType}
       options={salonOptions}
       state={selectedState}

@@ -8,19 +8,19 @@ import img5 from "@/images/travel/img-5.jpg";
 import img6 from "@/images/travel/img-6.jpg";
 
 const dummyData = [
-  { id: 1, title: "بندر عباس", image: img1 },
-  { id: 2, title: "یزد", image: img2 },
-  { id: 3, title: "دشت لوت", image: img3 },
-  { id: 4, title: "لرستان", image: img4 },
-  { id: 5, title: "جزیره قشم", image: img5 },
-  { id: 6, title: "جزیره ابوموسی", image: img6 },
-  { id: 7, title: "شاهرود", image: img3 },
-  { id: 8, title: "جزیره کیش", image: img1 },
+  { id: 1, title: "Rügen Island", image: img1 },
+  { id: 2, title: "Black Forest", image: img2 },
+  { id: 3, title: "Saxon Switzerland", image: img3 },
+  { id: 4, title: "Lake Constance", image: img4 },
+  { id: 5, title: "Sylt", image: img5 },
+  { id: 6, title: "Bavarian Alps", image: img6 },
+  { id: 7, title: "Moselle Valley", image: img3 },
+  { id: 8, title: "Heidelberg Old Town", image: img1 },
 ];
 
 export default function Travel() {
   return (
-    <div dir="rtl" className="p-6">
+    <div className="p-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {dummyData.map((item) => (
           <Card
@@ -34,7 +34,7 @@ export default function Travel() {
             />
             <CardContent className="text-center p-0">
               <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-              <Button>مشاهده</Button>
+              <Button>View</Button>
             </CardContent>
           </Card>
         ))}

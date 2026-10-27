@@ -1,23 +1,5 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const { createPlaceSchema } = require('../schemas/place-schema');
 
-const BookstoreSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: false,
-    },
-    address: {
-        type: String,
-        required: false,
-    },
-    services: {
-        type: [String],
-        required: false,
-    },
-    image: {
-        type: String,
-        required: false,
-    }
-});
-
-const Bookstore = mongoose.model("Bookstore", BookstoreSchema);
+const Bookstore = mongoose.model('Bookstore', createPlaceSchema());
 module.exports = Bookstore;

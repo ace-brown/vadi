@@ -1,23 +1,5 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const { createPlaceSchema } = require('../schemas/place-schema');
 
-const AutoRepairSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: false,
-    },
-    address: {
-        type: String,
-        required: false,
-    },
-    services: {
-        type: [String],
-        required: false,
-    },
-    image: {
-        type: String,
-        required: false,
-    }
-});
-
-const AutoRepair = mongoose.model("AutoRepair", AutoRepairSchema);
+const AutoRepair = mongoose.model('AutoRepair', createPlaceSchema());
 module.exports = AutoRepair;

@@ -8,13 +8,13 @@ export default function EducationDetailsSelectPage() {
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [educationTypes, setEducationTypes] = useState<string>("");
   const educationOptions = [
-    { label: "آموزشگاه ها", value: "eduCenters" },
-    { label: "کتابفروشی ها", value: "bookStores" },
+    { label: "Education centers", value: "eduCenters" },
+    { label: "Bookstores", value: "bookStores" },
   ];
 
   function handleSubmit() {
     if (!educationTypes) {
-      alert("لطفاً نوع خدمات آموزشی را انتخاب کنید.");
+      alert("Please select an education service.");
       return;
     }
 
@@ -43,7 +43,7 @@ export default function EducationDetailsSelectPage() {
 
   return (
     <CustomDetailsSelect
-      title="نوع خدمات آموزشی"
+      title="Education service"
       xType={educationTypes}
       options={educationOptions}
       state={selectedState}

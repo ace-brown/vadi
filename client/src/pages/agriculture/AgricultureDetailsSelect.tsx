@@ -8,13 +8,13 @@ export default function AgricultureDetailsSelectPage() {
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [agricultureType, setAgricultureType] = useState<string>("");
   const agricultureOptions = [
-    { label: "کود و محصولات باغی", value: "gardenSupplies" },
-    { label: "محصولات دامی", value: "animalBasedProducts" },
+    { label: "Fertilizer & garden supplies", value: "gardenSupplies" },
+    { label: "Animal products", value: "animalBasedProducts" },
   ];
 
   function handleSubmit() {
     if (!agricultureType) {
-      alert("لطفاً نوع خدمات کشاورزی را انتخاب کنید.");
+      alert("Please select an agriculture service.");
       return;
     }
 
@@ -43,7 +43,7 @@ export default function AgricultureDetailsSelectPage() {
 
   return (
     <CustomDetailsSelect
-      title="نوع خدمات کشاورزی"
+      title="Agriculture service"
       xType={agricultureType}
       options={agricultureOptions}
       state={selectedState}

@@ -14,47 +14,47 @@ import {
 
 const categoriesItems = [
   {
-    label: "اینترنت",
+    label: "Internet",
     icon: <Wifi className="w-8 h-8 text-blue-600" />,
     link: "/internet/internet-details-select",
   },
   {
-    label: "آرایشی و زیبایی",
+    label: "Beauty & aesthetics",
     icon: <Scissors className="w-8 h-8 text-pink-500" />,
     link: "/aesthetic/aesthetic-details-select",
   },
   {
-    label: "لوازم الکترونیک",
+    label: "Electronics",
     icon: <Tv className="w-8 h-8 text-purple-600" />,
     link: "/electronics/appliance-repair",
   },
   {
-    label: "موبایل و کامپیوتر",
+    label: "Mobile & computer",
     icon: <Smartphone className="w-8 h-8 text-green-600" />,
     link: "/pc-mobile/pc-mobile-details-select",
   },
   {
-    label: "خدمات کشاورزی",
+    label: "Agriculture",
     icon: <Shovel className="w-8 h-8 text-lime-600" />,
     link: "/agriculture/agriculture-details-select",
   },
   {
-    label: "خدمات سلامت",
+    label: "Healthcare",
     icon: <HeartPulse className="w-8 h-8 text-red-600" />,
     link: "/healthcare/dental",
   },
   {
-    label: "وسایل نقلیه",
+    label: "Vehicles",
     icon: <Car className="w-8 h-8 text-yellow-600" />,
     link: "/vehicle/vehicle-details-select",
   },
   {
-    label: "آموزشی",
+    label: "Education",
     icon: <Book className="w-8 h-8 text-indigo-600" />,
     link: "/education/education-details-select",
   },
   // {
-  //   label: "گردشگری",
+  //   label: "Travel",
   //   icon: <Plane className="w-8 h-8 text-cyan-600" />,
   //   link: "#",
   // },
@@ -62,9 +62,9 @@ const categoriesItems = [
 
 export default function CategoryGrid() {
   return (
-    <section className="py-12 px-4" dir="rtl">
+    <section className="py-12 px-4">
       <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">
-        دسته‌بندی‌های مقایسه
+        Comparison categories
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {categoriesItems.map((item, index) => (
@@ -76,7 +76,7 @@ export default function CategoryGrid() {
               {item.icon}
               <h3 className="text-lg font-semibold">{item.label}</h3>
               <Button asChild>
-                <Link to={item.link}>رفتن به صفحه</Link>
+                <Link to={item.link}>Go to page</Link>
               </Button>
             </CardContent>
           </Card>

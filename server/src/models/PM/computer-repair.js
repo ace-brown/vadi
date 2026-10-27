@@ -1,23 +1,5 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const { createPlaceSchema } = require('../schemas/place-schema');
 
-const ComputerRepairSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: false,
-    },
-    address: {
-        type: String,
-        required: false,
-    },
-    services: {
-        type: [String],
-        required: false,
-    },
-    image: {
-        type: String,
-        required: false,
-    }
-});
-
-const ComputerRepair = mongoose.model("ComputerRepair", ComputerRepairSchema);
+const ComputerRepair = mongoose.model('ComputerRepair', createPlaceSchema());
 module.exports = ComputerRepair;

@@ -1,23 +1,5 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const { createPlaceSchema } = require('../schemas/place-schema');
 
-const MotorcycleRepairSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: false,
-    },
-    address: {
-        type: String,
-        required: false,
-    },
-    services: {
-        type: [String],
-        required: false,
-    },
-    image: {
-        type: String,
-        required: false,
-    }
-});
-
-const MotorcycleRepair = mongoose.model("MotorcycleRepair", MotorcycleRepairSchema);
+const MotorcycleRepair = mongoose.model('MotorcycleRepair', createPlaceSchema());
 module.exports = MotorcycleRepair;

@@ -7,6 +7,7 @@ import ApplianceRepairPage from "./electronics/ApplianceRepair";
 import PcMobileDetailsSelectPage from "./pc-mobile/PcMobileDetailsSelect";
 import AgricultureDetailsSelectPage from "./agriculture/AgricultureDetailsSelect";
 import DentalPage from "./healthcare/Dental";
+import EducationDetailsSelectPage from "./education/EducationDetailsSelect";
 
 export default function TerminalPage() {
   const location = useLocation();
@@ -39,8 +40,10 @@ export default function TerminalPage() {
         return <AgricultureDetailsSelectPage />;
       case "healthcare":
         return <DentalPage />;
+      case "education":
+        return <EducationDetailsSelectPage />;
       default:
-        return <p>نوع مشخص نشده است.</p>;
+        return <p>No type specified.</p>;
     }
   }
 

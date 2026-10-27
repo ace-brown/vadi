@@ -5,142 +5,138 @@ export default function TermsPage() {
     <div className="container mx-auto p-6">
       <Card className="p-6">
         <CardHeader>
-          <CardTitle>قوانین و مقررات استفاده از پلتفرم</CardTitle>
+          <CardTitle>Terms and Conditions of Use</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="font-light text-[#b3b3b3] text-right lg:text-[clamp(1rem,2vw,1.5rem)]">
-            به پلتفرم ما خوش آمدید! لطفاً پیش از استفاده از خدمات ما، قوانین و
-            مقررات زیر را به دقت مطالعه کنید. استفاده از این پلتفرم به معنای
-            پذیرش تمام شرایط زیر است.
+          <p className="font-light text-[#b3b3b3] lg:text-[clamp(1rem,2vw,1.5rem)]">
+            Welcome to our platform! Please read the following terms and
+            conditions carefully before using our services. Using this platform
+            means you accept all of the terms below.
           </p>
 
-          <h2 className="mt-6 text-xl font-semibold">۱. شرایط عمومی</h2>
-          <ul className="list-disc pr-6 text-right">
+          <h2 className="mt-6 text-xl font-semibold">1. General Terms</h2>
+          <ul className="list-disc pl-6">
             <li>
-              این پلتفرم با هدف ارائه ابزارها، منابع و راهنمایی‌های لازم برای
-              توسعه و رشد استارتاپ‌ها طراحی شده است.
+              This platform is designed to provide the tools, resources and
+              guidance needed to compare services and make informed choices.
             </li>
             <li>
-              کاربران موظف‌اند از خدمات پلتفرم فقط برای اهداف قانونی و مطابق با
-              قوانین جاری کشور استفاده کنند.
+              Users must use the platform's services only for lawful purposes
+              and in accordance with applicable laws.
             </li>
             <li>
-              حق تغییر، به‌روزرسانی یا اصلاح قوانین و مقررات بدون اطلاع قبلی
-              برای پلتفرم محفوظ است.
-            </li>
-          </ul>
-
-          <h2 className="mt-6 text-xl font-semibold">
-            ۲. ثبت‌نام و حساب کاربری
-          </h2>
-          <ul className="list-disc pr-6 text-right">
-            <li>
-              استفاده از برخی خدمات نیازمند ثبت‌نام و ایجاد حساب کاربری است.
-            </li>
-            <li>
-              کاربران موظف‌اند اطلاعات دقیق، کامل و به‌روز ارائه دهند. مسئولیت
-              صحت اطلاعات واردشده بر عهده کاربران است.
-            </li>
-            <li>
-              هر کاربر تنها می‌تواند یک حساب کاربری داشته باشد. ایجاد چند حساب
-              کاربری بدون مجوز، ممنوع است.
-            </li>
-          </ul>
-
-          <h2 className="mt-6 text-xl font-semibold">۳. مالکیت محتوا</h2>
-          <ul className="list-disc pr-6 text-right">
-            <li>
-              تمام محتوای موجود در پلتفرم، شامل متن‌ها، تصاویر، فیلم‌ها و
-              ابزارها، متعلق به پلتفرم بوده و هرگونه کپی‌برداری بدون اجازه ممنوع
-              است.
-            </li>
-            <li>
-              کاربران می‌توانند محتوای آموزشی و ابزارها را صرفاً برای استفاده
-              شخصی و غیرتجاری دانلود یا استفاده کنند.
-            </li>
-          </ul>
-
-          <h2 className="mt-6 text-xl font-semibold">۴. مسئولیت‌ها</h2>
-          <ul className="list-disc pr-6 text-right">
-            <li>
-              پلتفرم هیچ‌گونه مسئولیتی در قبال نتایج تصمیمات کاربران بر اساس
-              اطلاعات ارائه‌شده در سایت ندارد.
-            </li>
-            <li>
-              هرگونه فعالیت غیرقانونی یا سوءاستفاده از خدمات پلتفرم، منجر به
-              مسدودسازی حساب کاربری فرد خاطی خواهد شد.
-            </li>
-            <li>
-              کاربران مسئول حفظ امنیت اطلاعات حساب کاربری خود هستند. هرگونه
-              استفاده غیرمجاز از حساب، باید فوراً به تیم پشتیبانی اطلاع داده
-              شود.
-            </li>
-          </ul>
-
-          <h2 className="mt-6 text-xl font-semibold">۵. حفظ حریم خصوصی</h2>
-          <ul className="list-disc pr-6 text-right">
-            <li>
-              اطلاعات شخصی کاربران با رعایت اصول محرمانگی جمع‌آوری و ذخیره
-              می‌شود.
-            </li>
-            <li>
-              پلتفرم متعهد است اطلاعات شخصی کاربران را بدون اجازه به اشخاص ثالث
-              ارائه ندهد، مگر در موارد الزامی قانونی.
-            </li>
-          </ul>
-
-          <h2 className="mt-6 text-xl font-semibold">۶. لغو حساب کاربری</h2>
-          <ul className="list-disc pr-6 text-right">
-            <li>
-              کاربران می‌توانند در هر زمان درخواست لغو حساب کاربری خود را ارسال
-              کنند.
-            </li>
-            <li>
-              پلتفرم این حق را دارد که در صورت تخلف از قوانین، حساب کاربر را
-              به‌طور موقت یا دائم غیرفعال کند.
+              The platform reserves the right to change, update or amend these
+              terms and conditions without prior notice.
             </li>
           </ul>
 
           <h2 className="mt-6 text-xl font-semibold">
-            ۷. قوانین مربوط به محتوا و پروژه‌ها
+            2. Registration and User Accounts
           </h2>
-          <ul className="list-disc pr-6 text-right">
+          <ul className="list-disc pl-6">
+            <li>Some services require registering and creating an account.</li>
             <li>
-              کاربران نباید محتوای توهین‌آمیز، غیرقانونی یا مضر منتشر کنند.
+              Users must provide accurate, complete and up-to-date information.
+              Users are responsible for the accuracy of the information they
+              enter.
             </li>
             <li>
-              مسئولیت اطلاعات و محتوای بارگذاری‌شده بر عهده کاربر است و پلتفرم
-              هیچ‌گونه مسئولیتی در قبال آن‌ها ندارد.
-            </li>
-          </ul>
-
-          <h2 className="mt-6 text-xl font-semibold">۸. تغییرات در خدمات</h2>
-          <ul className="list-disc pr-6 text-right">
-            <li>
-              پلتفرم می‌تواند در هر زمان خدمات، ابزارها و یا شرایط استفاده را
-              تغییر دهد.
-            </li>
-            <li>
-              کاربران موظف به پیگیری آخرین تغییرات و مطابقت با قوانین به‌روزشده
-              هستند.
+              Each user may have only one account. Creating multiple accounts
+              without permission is prohibited.
             </li>
           </ul>
 
-          <h2 className="mt-6 text-xl font-semibold">۹. قوانین حل اختلاف</h2>
-          <ul className="list-disc pr-6 text-right">
+          <h2 className="mt-6 text-xl font-semibold">3. Content Ownership</h2>
+          <ul className="list-disc pl-6">
             <li>
-              هرگونه اختلاف ناشی از استفاده از پلتفرم، در ابتدا باید از طریق
-              گفتگو و میانجی‌گری حل شود.
+              All content on the platform, including text, images, videos and
+              tools, belongs to the platform, and copying it without permission
+              is prohibited.
             </li>
             <li>
-              در صورت عدم توافق، موضوع به مراجع قانونی ارجاع داده خواهد شد.
+              Users may download or use educational content and tools solely
+              for personal, non-commercial purposes.
             </li>
           </ul>
 
-          <p className="mt-6 text-right">
-            توجه: استفاده از خدمات این پلتفرم به معنای موافقت کامل شما با تمام
-            موارد ذکرشده است. در صورت هرگونه سؤال، لطفاً با تیم پشتیبانی تماس
-            بگیرید.
+          <h2 className="mt-6 text-xl font-semibold">4. Responsibilities</h2>
+          <ul className="list-disc pl-6">
+            <li>
+              The platform accepts no responsibility for the outcomes of
+              decisions users make based on information provided on the site.
+            </li>
+            <li>
+              Any illegal activity or misuse of the platform's services will
+              result in the offending user's account being suspended.
+            </li>
+            <li>
+              Users are responsible for keeping their account information
+              secure. Any unauthorized use of an account must be reported to
+              the support team immediately.
+            </li>
+          </ul>
+
+          <h2 className="mt-6 text-xl font-semibold">5. Privacy</h2>
+          <ul className="list-disc pl-6">
+            <li>
+              Users' personal information is collected and stored in line with
+              confidentiality principles.
+            </li>
+            <li>
+              The platform is committed to not sharing users' personal
+              information with third parties without permission, except where
+              required by law.
+            </li>
+          </ul>
+
+          <h2 className="mt-6 text-xl font-semibold">6. Account Cancellation</h2>
+          <ul className="list-disc pl-6">
+            <li>Users may request to cancel their account at any time.</li>
+            <li>
+              The platform has the right to temporarily or permanently
+              deactivate a user's account if they violate these terms.
+            </li>
+          </ul>
+
+          <h2 className="mt-6 text-xl font-semibold">
+            7. Rules for Content and Projects
+          </h2>
+          <ul className="list-disc pl-6">
+            <li>Users must not publish offensive, illegal or harmful content.</li>
+            <li>
+              Users are responsible for the information and content they upload,
+              and the platform accepts no responsibility for it.
+            </li>
+          </ul>
+
+          <h2 className="mt-6 text-xl font-semibold">8. Changes to Services</h2>
+          <ul className="list-disc pl-6">
+            <li>
+              The platform may change its services, tools or terms of use at
+              any time.
+            </li>
+            <li>
+              Users are responsible for keeping up with the latest changes and
+              complying with the updated terms.
+            </li>
+          </ul>
+
+          <h2 className="mt-6 text-xl font-semibold">9. Dispute Resolution</h2>
+          <ul className="list-disc pl-6">
+            <li>
+              Any dispute arising from use of the platform should first be
+              resolved through discussion and mediation.
+            </li>
+            <li>
+              If no agreement is reached, the matter will be referred to the
+              competent legal authorities.
+            </li>
+          </ul>
+
+          <p className="mt-6">
+            Note: Using this platform's services means you fully agree to all of
+            the above. If you have any questions, please contact the support
+            team.
           </p>
         </CardContent>
       </Card>

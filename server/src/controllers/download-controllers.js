@@ -15,15 +15,18 @@ const mimeTypes = {
 };
 
 async function downloadDocs(req, res, next) {
-    const { filename } = req.params;
-
-    // Define the path where your files are stored
-    const filePath = path.join(__dirname, '..', 'public', 'docs', filename);
+    // Only allow plain file names, so "../" can't reach files outside the docs folder
+    const filename = path.basename(req.params.filename);
+    const docsDir = path.join(__dirname, '..', 'public', 'docs');
+    const filePath = path.join(docsDir, filename);
+    if (filename !== req.params.filename || !filePath.startsWith(docsDir + path.sep)) {
+        return next(new HttpError('File not found', 404));
+    }
 
     // Check if the file exists
     fs.access(filePath, fs.constants.F_OK, (err) => {
         if (err) {
-            return next(new HttpError('فایل پیدا نشد', 404));
+            return next(new HttpError('File not found', 404));
         }
 
         // Extract the file extension
@@ -33,11 +36,11 @@ async function downloadDocs(req, res, next) {
         const mimeType = mimeTypes[ext];
 
         if (!mimeType) {
-            return next(new HttpError('نوع فایل پشتیبانی نمی‌شود', 415));
+            return next(new HttpError('File type not supported', 415));
         }
 
         // Set appropriate headers for downloading the file
-        res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+        res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(filename)}"`);
         res.setHeader('Content-Type', mimeType);
 
         // Stream the file to the client

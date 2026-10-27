@@ -8,13 +8,13 @@ export default function PcMobileDetailsSelectPage() {
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [repairType, setRepairType] = useState<string>("");
   const PMOptions = [
-    { label: "کامپیوتر و لپ تاپ", value: "pc" },
-    { label: "موبایل", value: "mobile" },
+    { label: "Computer & laptop", value: "pc" },
+    { label: "Mobile", value: "mobile" },
   ];
 
   function handleSubmit() {
     if (!repairType) {
-      alert("لطفاً نوع تعمیرات را انتخاب کنید.");
+      alert("Please select a repair type.");
       return;
     }
 
@@ -41,7 +41,7 @@ export default function PcMobileDetailsSelectPage() {
 
   return (
     <CustomDetailsSelect
-      title="نوع تعمیرات"
+      title="Repair type"
       xType={repairType}
       options={PMOptions}
       state={selectedState}

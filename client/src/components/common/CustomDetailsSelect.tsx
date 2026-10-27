@@ -44,14 +44,14 @@ export default function CustomDetailsSelect({
         <CardContent className="space-y-4 p-6">
           {!isSingleRoute && (
             <div className="space-y-2">
-              <label className="block text-right font-medium">{title}</label>
+              <label className="block font-medium">{title}</label>
               <Select value={xType} onValueChange={onSetXType}>
-                <SelectTrigger className="w-full" style={{ direction: "rtl" }}>
-                  <SelectValue placeholder="انتخاب کنید" />
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Choose" />
                 </SelectTrigger>
                 <SelectContent
                   className="bg-white"
-                  style={{ direction: "rtl" }}
+                 
                 >
                   {options?.map((opt) => (
                     <SelectItem
@@ -77,8 +77,12 @@ export default function CustomDetailsSelect({
           {children}
         </CardContent>
         <div className="px-6 pb-4 pt-0">
+          <p className="text-xs text-gray-500 mb-3">
+            Location is optional. Leave it empty to see results from all of
+            Germany.
+          </p>
           <Button onClick={onSubmit} className="w-full">
-            مقایسه
+            Compare
           </Button>
         </div>
       </Card>

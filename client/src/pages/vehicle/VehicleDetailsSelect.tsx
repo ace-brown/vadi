@@ -8,13 +8,13 @@ export default function VehicleDetailsSelectPage() {
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [vehicleType, setVehicleType] = useState<string>("");
   const vehicleOptions = [
-    { label: "تعمیرات خودرو", value: "autoRepair" },
-    { label: "تعمیرات موتور سیکلت", value: "motorcycleRepair" },
+    { label: "Car repair", value: "autoRepair" },
+    { label: "Motorcycle repair", value: "motorcycleRepair" },
   ];
 
   function handleSubmit() {
     if (!vehicleType) {
-      alert("لطفاً نوع وسیله نقلیه ی خود را انتخاب کنید.");
+      alert("Please select your vehicle type.");
       return;
     }
 
@@ -41,7 +41,7 @@ export default function VehicleDetailsSelectPage() {
 
   return (
     <CustomDetailsSelect
-      title="نوع وسیله نقلیه"
+      title="Vehicle type"
       xType={vehicleType}
       options={vehicleOptions}
       state={selectedState}

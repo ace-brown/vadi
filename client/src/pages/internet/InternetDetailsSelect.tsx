@@ -8,13 +8,13 @@ export default function InternetDetailsSelectPage() {
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [netType, setNetType] = useState<string>("");
   const internetOptions = [
-    { label: "اینترنت خانگی", value: "homeNet" },
-    { label: "اینترنت موبایل", value: "mobileNet" },
+    { label: "Home internet", value: "homeNet" },
+    { label: "Mobile internet", value: "mobileNet" },
   ];
 
   function handleSubmit() {
     if (!netType) {
-      alert("لطفاً نوع اینترنت را انتخاب کنید.");
+      alert("Please select an internet type.");
       return;
     }
 
@@ -41,7 +41,7 @@ export default function InternetDetailsSelectPage() {
 
   return (
     <CustomDetailsSelect
-      title="نوع اینترنت"
+      title="Internet type"
       xType={netType}
       options={internetOptions}
       state={selectedState}

@@ -3,8 +3,7 @@
 @import "tw-animate-css";
 
 body {
-  font-family: "Vazir", sans-serif;
-  text-align: right;
+  font-family: "Rubik", sans-serif;
 }
 
 @layer utilities {

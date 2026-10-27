@@ -27,7 +27,7 @@ export default function EditUserProfile({
     username: profileData?.username || "",
     email: profileData?.email || "",
     bio: profileData?.profile.bio || "",
-    password: profileData?.password || "",
+    password: "",
   });
 
   function handleChange(
@@ -44,14 +44,14 @@ export default function EditUserProfile({
     e.preventDefault();
     try {
       const responseData = await sendRequest(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+        `${import.meta.env.VITE_API_URL}/api/users/${userId}`,
         "PATCH",
         JSON.stringify(formData),
         {
           "Content-Type": "application/json",
           Authorization: "Bearer " + auth.token,
         },
-        "رخ‌نما با موفقیت به‌روزرسانی شد"
+        "Profile updated successfully"
       );
       setProfileData(responseData.user);
       closeDialog();
@@ -64,7 +64,7 @@ export default function EditUserProfile({
       <div>
         <form onSubmit={handleUpdateProfile} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="fullName">نام و نام خانوادگی</Label>
+            <Label htmlFor="fullName">Full name</Label>
             <Input
               id="fullName"
               name="fullName"
@@ -75,7 +75,7 @@ export default function EditUserProfile({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="username">نام کاربری</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
               id="username"
               name="username"
@@ -86,7 +86,7 @@ export default function EditUserProfile({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">رايانامه</Label>
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               name="email"
@@ -97,7 +97,7 @@ export default function EditUserProfile({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="bio">درباره من</Label>
+            <Label htmlFor="bio">About me</Label>
             <Textarea
               id="bio"
               name="bio"
@@ -108,10 +108,12 @@ export default function EditUserProfile({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">رمز عبور</Label>
+            <Label htmlFor="password">New password (leave empty to keep it)</Label>
             <Input
               id="password"
               name="password"
+              type="password"
+              autoComplete="new-password"
               value={formData.password}
               onChange={handleChange}
               className="w-full"
@@ -119,7 +121,7 @@ export default function EditUserProfile({
           </div>
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           <Button type="submit" className="w-full mt-4" disabled={isLoading}>
-            به روز رسانی رخ‌ نما
+            Update profile
           </Button>
         </form>
       </div>

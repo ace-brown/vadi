@@ -5,97 +5,102 @@ export default function PrivacyPage() {
     <div className="container mx-auto mt-6">
       <Card className="p-6">
         <CardHeader>
-          <CardTitle>سیاست حفظ حریم خصوصی</CardTitle>
+          <CardTitle>Privacy Policy</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="font-light text-[#b3b3b3] text-right lg:text-[clamp(1rem,2vw,1.5rem)]">
-            حریم خصوصی شما برای ما اهمیت زیادی دارد. لطفاً این سیاست را به دقت
-            مطالعه کنید تا با نحوه جمع‌آوری، استفاده و حفاظت از اطلاعات شما آشنا
-            شوید.
+          <p className="font-light text-[#b3b3b3] lg:text-[clamp(1rem,2vw,1.5rem)]">
+            Your privacy matters a great deal to us. Please read this policy
+            carefully to understand how your information is collected, used and
+            protected.
           </p>
 
-          <h2 className="mt-6 text-xl font-semibold">۱. جمع‌آوری اطلاعات</h2>
-          <ul className="list-disc pr-6 text-right">
+          <h2 className="mt-6 text-xl font-semibold">
+            1. Information Collection
+          </h2>
+          <ul className="list-disc pl-6">
             <li>
-              ما اطلاعات شخصی شما را تنها زمانی جمع‌آوری می‌کنیم که شما به صورت
-              داوطلبانه آن را در اختیار ما قرار دهید.
+              We collect your personal information only when you voluntarily
+              provide it to us.
             </li>
             <li>
-              اطلاعات جمع‌آوری‌شده ممکن است شامل نام، ایمیل، شماره تماس و سایر
-              جزئیات مرتبط باشد.
+              The information collected may include your name, email, phone
+              number and other related details.
             </li>
             <li>
-              ما از ابزارهای تحلیلی مانند کوکی‌ها برای بهبود تجربه کاربری و
-              تحلیل رفتار کاربران استفاده می‌کنیم.
+              We use analytics tools such as cookies to improve the user
+              experience and analyze user behavior.
             </li>
           </ul>
 
-          <h2 className="mt-6 text-xl font-semibold">۲. استفاده از اطلاعات</h2>
-          <ul className="list-disc pr-6 text-right">
+          <h2 className="mt-6 text-xl font-semibold">2. Use of Information</h2>
+          <ul className="list-disc pl-6">
             <li>
-              اطلاعات جمع‌آوری‌شده ممکن است برای ارسال اطلاعیه‌ها،
-              به‌روزرسانی‌ها یا پیشنهادات شخصی‌شده استفاده شود.
+              The information collected may be used to send notifications,
+              updates or personalized offers.
             </li>
             <li>
-              ما از اطلاعات شما برای بهبود کیفیت خدمات، پشتیبانی مشتری و توسعه
-              محصولات استفاده می‌کنیم.
+              We use your information to improve service quality, customer
+              support and product development.
             </li>
           </ul>
 
           <h2 className="mt-6 text-xl font-semibold">
-            ۳. اشتراک‌گذاری اطلاعات
+            3. Sharing of Information
           </h2>
-          <ul className="list-disc pr-6 text-right">
+          <ul className="list-disc pl-6">
             <li>
-              ما اطلاعات شما را به هیچ شخص ثالثی بدون رضایت شما نخواهیم فروخت یا
-              اجاره خواهیم داد.
+              We will not sell or rent your information to any third party
+              without your consent.
             </li>
             <li>
-              در برخی موارد ممکن است برای رعایت مقررات قانونی یا در صورت درخواست
-              مراجع قانونی اطلاعات شما را به مقامات مربوطه ارسال کنیم.
-            </li>
-          </ul>
-
-          <h2 className="mt-6 text-xl font-semibold">۴. امنیت اطلاعات</h2>
-          <ul className="list-disc pr-6 text-right">
-            <li>
-              ما از تدابیر امنیتی استاندارد برای محافظت از اطلاعات شخصی شما
-              استفاده می‌کنیم.
-            </li>
-            <li>
-              هرچند که هیچ سیستم آنلاین به طور کامل امن نیست، اما ما تمام تلاش
-              خود را برای حفظ اطلاعات شما انجام خواهیم داد.
+              In some cases we may disclose your information to the relevant
+              authorities to comply with legal requirements or at the request of
+              legal authorities.
             </li>
           </ul>
 
-          <h2 className="mt-6 text-xl font-semibold">۵. دسترسی به اطلاعات</h2>
-          <ul className="list-disc pr-6 text-right">
+          <h2 className="mt-6 text-xl font-semibold">4. Information Security</h2>
+          <ul className="list-disc pl-6">
             <li>
-              شما حق دارید که اطلاعات شخصی خود را مشاهده، اصلاح یا درخواست حذف
-              آن را از پلتفرم داشته باشید.
+              We use standard security measures to protect your personal
+              information.
             </li>
-            <li>برای انجام این کار، لطفاً با تیم پشتیبانی ما تماس بگیرید.</li>
+            <li>
+              Although no online system is completely secure, we will do our
+              best to protect your information.
+            </li>
           </ul>
 
           <h2 className="mt-6 text-xl font-semibold">
-            ۶. تغییرات در سیاست حفظ حریم خصوصی
+            5. Access to Your Information
           </h2>
-          <ul className="list-disc pr-6 text-right">
+          <ul className="list-disc pl-6">
             <li>
-              این سیاست ممکن است در آینده تغییر کند. هرگونه تغییر در سیاست حریم
-              خصوصی به طور شفاف در این صفحه اعلام خواهد شد.
+              You have the right to view, correct or request deletion of your
+              personal information from the platform.
+            </li>
+            <li>To do so, please contact our support team.</li>
+          </ul>
+
+          <h2 className="mt-6 text-xl font-semibold">
+            6. Changes to This Privacy Policy
+          </h2>
+          <ul className="list-disc pl-6">
+            <li>
+              This policy may change in the future. Any changes to the privacy
+              policy will be clearly announced on this page.
             </li>
             <li>
-              استفاده ادامه‌دار شما از پلتفرم پس از اعمال تغییرات به معنی پذیرش
-              آن‌هاست.
+              Your continued use of the platform after changes are made means
+              you accept them.
             </li>
           </ul>
 
-          <h2 className="mt-6 text-xl font-semibold">۷. تماس با ما</h2>
-          <p className="text-right pr-6">
-            اگر سوالات یا نگرانی‌هایی در مورد سیاست حفظ حریم خصوصی دارید، لطفاً
-            با تیم پشتیبانی ما از طریق ایمیل یا شماره تماس موجود در وب‌سایت تماس
-            بگیرید.
+          <h2 className="mt-6 text-xl font-semibold">7. Contact Us</h2>
+          <p className="pl-6">
+            If you have questions or concerns about this privacy policy, please
+            contact our support team by email or by the phone number listed on
+            the website.
           </p>
         </CardContent>
       </Card>

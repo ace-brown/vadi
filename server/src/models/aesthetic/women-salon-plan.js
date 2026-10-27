@@ -1,22 +1,19 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const { createPricedPlaceSchema } = require('../schemas/place-schema');
 
-const WomenSalonPlanSchema = new mongoose.Schema({
-    title: String,
-    faceCarePrice: Number,
-    hairBotoxPrice: Number,
-    hairColorPrice: Number,
-    makeupPrice: Number,
-    eyelashExtensionPrice: Number,
-    eyebrowShapePrice: Number,
-    eyebrowLiftPrice: Number,
-    nailExtensionPrice: Number,
-    manicurePrice: Number,
-    waxingPrice: Number,
-    image: {
-        type: String,
-        required: false,
-    },
-});
+const WOMEN_SALON_PRICE_FIELDS = [
+    'faceCarePrice',
+    'hairBotoxPrice',
+    'hairColorPrice',
+    'makeupPrice',
+    'eyelashExtensionPrice',
+    'eyebrowShapePrice',
+    'eyebrowLiftPrice',
+    'nailExtensionPrice',
+    'manicurePrice',
+    'waxingPrice',
+];
 
-const WomenSalonPlan = mongoose.model('WomenSalonPlan', WomenSalonPlanSchema);
+const WomenSalonPlan = mongoose.model('WomenSalonPlan', createPricedPlaceSchema(WOMEN_SALON_PRICE_FIELDS));
 module.exports = WomenSalonPlan;
+module.exports.PRICE_FIELDS = WOMEN_SALON_PRICE_FIELDS;

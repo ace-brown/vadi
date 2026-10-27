@@ -47,12 +47,12 @@ export default function TravelDetailsSelectPage() {
       onSubmit={handleSubmit}
     >
       <div className="space-y-2">
-        <label className="block text-right font-medium"></label>
+        <label className="block font-medium"></label>
         <Select value={travelPoint} onValueChange={setTravelPoint}>
-          <SelectTrigger className="w-full" style={{ direction: "rtl" }}>
-            <SelectValue placeholder="انتخاب کنید" />
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Choose" />
           </SelectTrigger>
-          <SelectContent className="bg-white" style={{ direction: "rtl" }}>
+          <SelectContent className="bg-white">
             {TRAVEL_POINTS?.map((opt) => (
               <SelectItem
                 key={opt.value}

@@ -4,25 +4,25 @@ export default function HowItWorks() {
   const steps = [
     {
       icon: <Search className="w-10 h-10 text-blue-600" />,
-      title: "جستجو کنید",
-      description: "خدمات مورد نظر خود را پیدا کنید",
+      title: "Search",
+      description: "Find the service you need",
     },
     {
       icon: <ListOrdered className="w-10 h-10 text-yellow-500" />,
-      title: "مقایسه کنید",
-      description: "قیمت‌ها، کیفیت و گزینه‌ها را بررسی کنید",
+      title: "Compare",
+      description: "Review prices, quality and options",
     },
     {
       icon: <CheckCircle className="w-10 h-10 text-green-600" />,
-      title: "انتخاب کنید",
-      description: "بهترین گزینه را با اطمینان انتخاب کنید",
+      title: "Choose",
+      description: "Pick the best option with confidence",
     },
   ];
 
   return (
-    <section className="py-16 px-4 bg-gray-50" dir="rtl">
+    <section className="py-16 px-4 bg-gray-50">
       <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">
-        چطور کار می‌کند؟
+        How it works
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-6xl mx-auto text-center">
         {steps.map((step, index) => (

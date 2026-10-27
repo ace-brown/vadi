@@ -18,8 +18,8 @@ export default function FilterSlider({
   formatValue,
 }: FilterSliderProps) {
   return (
-    <div className="mb-4">
-      <label className="block mb-2 text-sm font-semibold text-gray-700">
+    <div className="py-1">
+      <label className="block mb-1 text-sm font-medium text-gray-700">
         {label}
       </label>
       <input
@@ -28,10 +28,12 @@ export default function FilterSlider({
         max={max}
         step={step}
         value={value}
+        disabled={min >= max}
+        aria-label={label}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full cursor-pointer"
+        className="w-full cursor-pointer accent-[#023e8a] disabled:cursor-not-allowed"
       />
-      <p className="text-sm text-gray-600 mt-1">
+      <p className="text-xs text-gray-600 mt-1">
         {formatValue ? formatValue(value) : value}
       </p>
     </div>

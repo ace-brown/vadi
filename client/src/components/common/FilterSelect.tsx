@@ -1,20 +1,25 @@
 type FilterSelectProps = {
+  label?: string;
   options: { label: string; value: string }[];
   value: string;
   onChange: (value: string) => void;
 };
 
 export default function FilterSelect({
+  label = "Sort by",
   options,
   value,
   onChange,
 }: FilterSelectProps) {
   return (
-    <div className="block mb-4 border rounded px-3 py-2 hover:bg-gray-100 transition">
+    <label className="block">
+      <span className="block mb-1 text-sm font-medium text-gray-700">
+        {label}
+      </span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full text-right font-semibold focus:outline-none focus:ring-0"
+        className="w-full border rounded-lg px-3 py-2 text-sm bg-white hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-blue-300"
       >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
@@ -22,6 +27,6 @@ export default function FilterSelect({
           </option>
         ))}
       </select>
-    </div>
+    </label>
   );
 }

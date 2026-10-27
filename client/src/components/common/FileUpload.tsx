@@ -17,7 +17,7 @@ export default function FileUpload() {
         htmlFor="file-upload-input"
         className="cursor-pointer text-blue-500 font-medium hover:underline"
       >
-        آپلود فایل
+        Upload files
       </label>
       <input
         id="file-upload-input"
@@ -29,7 +29,7 @@ export default function FileUpload() {
       />
       {files.length > 0 && (
         <div className="mt-2">
-          <p>فایل‌های انتخاب‌شده:</p>
+          <p>Selected files:</p>
           <ul>
             {files.map((file, index) => (
               <li key={index} className="text-sm text-gray-600">

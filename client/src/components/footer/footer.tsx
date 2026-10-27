@@ -10,37 +10,37 @@ export default function Footer() {
         <ul className="flex gap-6">
           {/* <li>
             <Link href="#" className="hover:text-gray-100">
-              پشتیبانی
+              Support
             </Link>
           </li> */}
           {/* <li>
             <Link href="#" className="hover:text-gray-100">
-              مرکز کمک
+              Help center
             </Link>
           </li> */}
           <li>
             <Link to="/contact" className="hover:text-gray-100">
-              تماس
+              Contact
             </Link>
           </li>
           {/* <li>
             <Link href="#" className="hover:text-gray-100">
-              سؤالات متداول
+              FAQ
             </Link>
           </li> */}
           <li>
             <Link to="/terms" className="hover:text-gray-100">
-              قوانین
+              Terms
             </Link>
           </li>
           <li>
             <Link to="/privacy" className="hover:text-gray-100">
-              حریم خصوصی
+              Privacy
             </Link>
           </li>
         </ul>
         {/* Social media */}
-        <div className="flex items-center space-x-reverse gap-4">
+        <div className="flex items-center gap-4">
           <a
             href="#"
             aria-label="Telegram"
@@ -77,7 +77,8 @@ export default function Footer() {
       </div>
       {/* Footer Bottom */}
       <div className="text-center text-[0.75rem] text-gray-500 mt-2">
-        کلیه حقوق این وبسایت متعلق به ودی است.
+        All rights reserved © Vadi. Listings, providers and prices shown are
+        fictional sample data.
       </div>
     </footer>
   );

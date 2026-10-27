@@ -1,223 +1,126 @@
-import SimCardInfo from "@/components/internet/mobile-tariff/SimCardInfo";
-import { useEffect, useState } from "react";
-import { englishToPersianDigits } from "@/utils/helpers";
-import { MobileNetType } from "@/types";
-import SimCardInfoSkeleton from "@/components/internet/mobile-tariff/SimCardInfoSkeleton";
-import { useHttpClient } from "@/hooks/http-hook";
+import { useState } from "react";
 import CustomCompareLayout from "@/components/common/CustomCompareLayout";
-import FilterSelect from "@/components/common/FilterSelect";
 import FilterCollapse from "@/components/common/FilterCollapse";
-import { useLocation } from "react-router-dom";
-import FilterSlider from "@/components/common/FilterSlider";
+import FilterSelect from "@/components/common/FilterSelect";
+import { MobilePlanCard } from "@/components/listing/PlanCards";
+import { LimitSlider } from "@/components/listing/filters";
+import { useListing } from "@/hooks/use-listing";
+import { MobilePlanType } from "@/types";
+import { formatPrice, joinValues, toggleValue } from "@/utils/helpers";
+
+const CONTRACT_OPTIONS = [
+  { value: "prepaid", label: "Prepaid" },
+  { value: "contract", label: "Contract" },
+];
+
+const TERM_OPTIONS = [
+  { value: "1", label: "Monthly cancellable" },
+  { value: "12", label: "12 months" },
+  { value: "24", label: "24 months" },
+];
+
+const NETWORK_OPTIONS = [
+  { value: "5G", label: "5G" },
+  { value: "4G", label: "4G" },
+];
+
+const SORT_OPTIONS = [
+  { value: "monthlyPrice", label: "Cheapest first" },
+  { value: "-monthlyPrice", label: "Most expensive first" },
+  { value: "setupFee", label: "Lowest setup fee" },
+];
 
 export default function MobileTariffPage() {
-  const MAX_PKG_PRICE = 500000;
-  const MAX_SIM_PRICE = 1000000;
-  const MAX_MINS = 2000;
-  const [simTypeFilter, setSimTypeFilter] = useState<string[]>([]);
-  const [maxPkgPrice, setMaxPkgPrice] = useState(MAX_PKG_PRICE);
-  const [maxSimPrice, setMaxSimPrice] = useState(MAX_SIM_PRICE);
-  const [maxMins, setMaxMins] = useState(MAX_MINS);
-  const [durationFilter, setDurationFilter] = useState<string[]>([]);
-  const [allPackages, setAllPackages] = useState<MobileNetType[]>([]);
-  const [filteredPackages, setFilteredPackages] = useState<MobileNetType[]>([]);
-  const { isLoading, sendRequest } = useHttpClient();
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [contractTypes, setContractTypes] = useState<string[]>([]);
+  const [terms, setTerms] = useState<string[]>([]);
+  const [networks, setNetworks] = useState<string[]>([]);
+  const [minData, setMinData] = useState<number | null>(null);
+  const [maxPrice, setMaxPrice] = useState<number | null>(null);
+  const [sort, setSort] = useState("monthlyPrice");
 
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const currentResult = queryParams.get("currentResult") ?? "";
+  const { items, total, ranges, isLoading, error, retry } =
+    useListing<MobilePlanType>("/api/internet/mobile-tariffs", {
+      contractType: joinValues(contractTypes),
+      termMonths: joinValues(terms),
+      network: joinValues(networks),
+      dataGBMin: minData,
+      monthlyPriceMax: maxPrice,
+      sort,
+    });
 
-  const DURATION_OPTIONS = [
-    "1 ماهه",
-    "3 ماهه",
-    "6 ماهه",
-    "12 ماهه",
-    "18 ماهه",
-    "24 ماهه",
-  ];
-
-  // Check if any filter is active
   const isAnyFilterActive =
-    simTypeFilter.length > 0 ||
-    durationFilter.length > 0 ||
-    maxPkgPrice !== MAX_PKG_PRICE ||
-    maxSimPrice !== MAX_SIM_PRICE ||
-    maxMins !== MAX_MINS;
+    contractTypes.length > 0 ||
+    terms.length > 0 ||
+    networks.length > 0 ||
+    minData !== null ||
+    maxPrice !== null;
 
   function resetFilters() {
-    setSimTypeFilter([]);
-    setDurationFilter([]);
-    setMaxPkgPrice(MAX_PKG_PRICE);
-    setMaxSimPrice(MAX_SIM_PRICE);
-    setMaxMins(MAX_MINS);
+    setContractTypes([]);
+    setTerms([]);
+    setNetworks([]);
+    setMinData(null);
+    setMaxPrice(null);
   }
-
-  function handleNetTypeChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value;
-    setSimTypeFilter(
-      (prev) =>
-        prev.includes(value)
-          ? prev.filter((t) => t !== value) // remove
-          : [...prev, value] // add
-    );
-  }
-
-  function handleDurationChnage(e: React.ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value;
-    setDurationFilter((prev) =>
-      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
-    );
-  }
-
-  async function fetchMobileTariffs() {
-    try {
-      const responseData = await sendRequest(
-        `${import.meta.env.VITE_API_URL}/api/internet/mobile-tariffs`,
-        "GET"
-      );
-
-      if (responseData && Array.isArray(responseData)) {
-        setAllPackages(responseData);
-        setFilteredPackages(responseData);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {}
-  }
-
-  useEffect(() => {
-    fetchMobileTariffs();
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!Array.isArray(allPackages) || allPackages.length === 0) return;
-
-      const filteredData = allPackages.filter((pkg) => {
-        const matchesType =
-          simTypeFilter.length === 0 || simTypeFilter.includes(pkg.type);
-
-        const matchesPkgPrice = pkg.packagePrice <= maxPkgPrice;
-
-        const matchesSimPrice = pkg.simPrice <= maxSimPrice;
-
-        const matchesMins = pkg.minutes <= maxMins;
-
-        const matchesDuration =
-          durationFilter.length === 0 || durationFilter.includes(pkg.validity);
-
-        return (
-          matchesType &&
-          matchesPkgPrice &&
-          matchesSimPrice &&
-          matchesMins &&
-          matchesDuration
-        );
-      });
-
-      setFilteredPackages(filteredData);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [simTypeFilter, maxPkgPrice, allPackages, maxSimPrice, maxMins]);
-
-  // Sort operation
-  const sortedPKGs = [...filteredPackages].sort((a, b) => {
-    return sortOrder === "asc"
-      ? a.packagePrice - b.packagePrice
-      : b.packagePrice - a.packagePrice;
-  });
 
   const filters = (
     <>
-      {/* sort */}
-      <FilterSelect
-        value={sortOrder}
-        onChange={setSortOrder}
-        options={[
-          { value: "asc", label: "ارزان‌ترین" },
-          { value: "desc", label: "گران‌ترین" },
-        ]}
-      />
-
-      {/* نوع سیم کارت */}
+      <FilterSelect value={sort} onChange={setSort} options={SORT_OPTIONS} />
+      <FilterCollapse label="Price & data">
+        <LimitSlider
+          kind="max"
+          label="Monthly price"
+          range={ranges.monthlyPrice}
+          value={maxPrice}
+          onChange={setMaxPrice}
+          format={formatPrice}
+        />
+        <LimitSlider
+          kind="min"
+          label="Data per month"
+          range={ranges.dataGB}
+          value={minData}
+          onChange={setMinData}
+          step={5}
+          format={(v) => `${v} GB`}
+        />
+      </FilterCollapse>
       <FilterCollapse
-        label="نوع سیم کارت"
-        options={["اعتباری", "دائمی"]}
-        selectedValues={simTypeFilter}
-        onChange={(value: string) =>
-          handleNetTypeChange({
-            target: { value },
-          } as React.ChangeEvent<HTMLInputElement>)
-        }
+        label="Plan type"
+        options={CONTRACT_OPTIONS}
+        selectedValues={contractTypes}
+        onChange={(value) => setContractTypes((prev) => toggleValue(prev, value))}
       />
-
-      {/* مدت اعتبار */}
       <FilterCollapse
-        label="مدت اعتبار"
-        options={DURATION_OPTIONS}
-        selectedValues={durationFilter}
-        onChange={(value: string) =>
-          handleDurationChnage({
-            target: { value },
-          } as React.ChangeEvent<HTMLInputElement>)
-        }
+        label="Minimum term"
+        options={TERM_OPTIONS}
+        selectedValues={terms}
+        onChange={(value) => setTerms((prev) => toggleValue(prev, value))}
       />
-
-      {/*  قیمت بسته */}
-      <FilterSlider
-        label="مبلغ بسته"
-        min={0}
-        max={MAX_PKG_PRICE}
-        step={20000}
-        value={maxPkgPrice}
-        onChange={setMaxPkgPrice}
-        formatValue={(v) =>
-          ` حداکثر قیمت: ${englishToPersianDigits(v.toLocaleString())} تومان`
-        }
-      />
-
-      {/* قیمت سیم کارت */}
-      <FilterSlider
-        label="مبلغ سیم کارت"
-        min={0}
-        max={MAX_SIM_PRICE}
-        step={50000}
-        value={maxSimPrice}
-        onChange={setMaxSimPrice}
-        formatValue={(v) =>
-          ` حداکثر قیمت: ${englishToPersianDigits(v.toLocaleString())} تومان`
-        }
-      />
-      {/* مقدار دقیقه */}
-      <FilterSlider
-        label="مقدار دقیقه"
-        min={0}
-        max={MAX_MINS}
-        step={100}
-        value={maxMins}
-        onChange={setMaxMins}
-        formatValue={(v) =>
-          ` حداکثر قیمت: ${englishToPersianDigits(v.toLocaleString())} تومان`
-        }
+      <FilterCollapse
+        label="Network"
+        options={NETWORK_OPTIONS}
+        selectedValues={networks}
+        onChange={(value) => setNetworks((prev) => toggleValue(prev, value))}
       />
     </>
   );
 
   return (
     <CustomCompareLayout
+      title="Mobile plans"
       filters={filters}
       isLoading={isLoading}
-      skeleton={<SimCardInfoSkeleton />}
+      error={error}
+      onRetry={retry}
+      total={total}
       isAnyFilterActive={isAnyFilterActive}
       onResetFilters={resetFilters}
-      currentResult={currentResult}
-      returnTxt="بازگشت به صحفه ی انتخاب نوع اینترنت"
+      returnTxt="Back to internet type selection"
       returnSlug="/internet/internet-details-select"
     >
-      {sortedPKGs?.map((pkg, i) => (
-        <SimCardInfo key={i} {...pkg} />
+      {items.map((plan) => (
+        <MobilePlanCard key={plan._id} {...plan} />
       ))}
     </CustomCompareLayout>
   );

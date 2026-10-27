@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
 
     // If there's no userId, that means the user is not authenticated
     if (!userId) {
-        const error = new HttpError('احراز هویت ناموفق بود', 401);
+        const error = new HttpError('Authentication failed', 401);
         return next(error);
     }
 
@@ -14,15 +14,15 @@ module.exports = (req, res, next) => {
     User.findById(userId)
         .then((user) => {
             if (!user) {
-                throw new Error('کاربر پیدا نشد');
+                throw new Error('User not found');
             }
             if (user.role !== 'admin') {
-                throw new Error('مجوز رد شد: فقط مدیران');
+                throw new Error('Permission denied: admins only');
             }
             next(); // User is authenticated and has the 'admin' role
         })
         .catch((err) => {
-            const error = new HttpError('مجوز رد شد: فقط مدیران', 403);
+            const error = new HttpError('Permission denied: admins only', 403);
             return next(error); // Admin check failed
         });
 };

@@ -5,7 +5,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import provincesData from "@/data/provinces_and_main_cities.json";
+import statesData from "@/data/germany_states_and_cities.json";
 
 type Props = {
   state: string;
@@ -15,8 +15,8 @@ type Props = {
 };
 
 const citiesByState: Record<string, string[]> = {};
-provincesData.forEach((province) => {
-  citiesByState[province.name] = province.cities;
+statesData.forEach((state) => {
+  citiesByState[state.name] = state.cities;
 });
 
 export default function StateCitySelect({
@@ -29,9 +29,7 @@ export default function StateCitySelect({
     <div className="space-y-4">
       {/* State selector */}
       <div className="space-y-2">
-        <label className="block text-right font-medium">
-          استان خود را انتخاب کنید
-        </label>
+        <label className="block text-sm font-medium">State</label>
         <Select
           value={state}
           onValueChange={(value) => {
@@ -39,13 +37,10 @@ export default function StateCitySelect({
             onCityChange(""); // Reset city when state changes
           }}
         >
-          <SelectTrigger className="w-full" style={{ direction: "rtl" }}>
-            <SelectValue placeholder="استان را انتخاب کنید" />
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Any state" />
           </SelectTrigger>
-          <SelectContent
-            className="bg-white shadow-md rounded-md"
-            style={{ direction: "rtl" }}
-          >
+          <SelectContent className="bg-white shadow-md rounded-md">
             {Object.keys(citiesByState).map((stateName) => (
               <SelectItem
                 key={stateName}
@@ -60,19 +55,14 @@ export default function StateCitySelect({
       </div>
 
       {/* City selector */}
-      {state && (
+      {state && citiesByState[state] && (
         <div className="space-y-2">
-          <label className="block text-right font-medium">
-            شهر خود را انتخاب کنید
-          </label>
+          <label className="block text-sm font-medium">City</label>
           <Select value={city} onValueChange={onCityChange}>
-            <SelectTrigger className="w-full" style={{ direction: "rtl" }}>
-              <SelectValue placeholder="شهر را انتخاب کنید" />
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Any city" />
             </SelectTrigger>
-            <SelectContent
-              className="bg-white shadow-md rounded-md"
-              style={{ direction: "rtl" }}
-            >
+            <SelectContent className="bg-white shadow-md rounded-md">
               {citiesByState[state].map((cityName) => (
                 <SelectItem
                   key={cityName}
@@ -85,6 +75,19 @@ export default function StateCitySelect({
             </SelectContent>
           </Select>
         </div>
+      )}
+
+      {state && (
+        <button
+          type="button"
+          className="text-xs text-blue-700 hover:underline"
+          onClick={() => {
+            onStateChange("");
+            onCityChange("");
+          }}
+        >
+          Clear location
+        </button>
       )}
     </div>
   );

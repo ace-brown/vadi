@@ -59,7 +59,7 @@ export default function FileDownload({ fileUrl, fileName }: FileDownloadProps) {
       onClick={handleDownload}
       className="text-blue-500 font-medium hover:underline"
     >
-      دانلود {fileName}
+      Download {fileName}
     </button>
   );
 }

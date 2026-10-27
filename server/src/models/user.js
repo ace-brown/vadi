@@ -12,10 +12,18 @@ const userSchema = new mongoose.Schema({
         avatar: { type: String },
     },
     settings: {
-        language: { type: String, default: 'fa', enum: ['en', 'fa'] },
+        language: { type: String, default: 'en', enum: ['en', 'fa'] },
         notifications: { type: Boolean, default: true },
     },
 });
+
+// Never send the password hash to clients
+function hidePassword(doc, ret) {
+    delete ret.password;
+    return ret;
+}
+userSchema.set('toJSON', { transform: hidePassword });
+userSchema.set('toObject', { transform: hidePassword });
 
 const User = mongoose.model('User', userSchema);
 
