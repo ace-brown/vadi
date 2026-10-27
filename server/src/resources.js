@@ -14,7 +14,10 @@ const Bookstore = require('./models/education/bookstore');
 const EduCenter = require('./models/education/education-center');
 const Provider = require('./models/provider');
 const HttpError = require('./models/http-error');
+const AvailabilityCheck = require('./models/availability-check');
 const { activeOfferFilter } = require('./models/schemas/offer-schema');
+const { recomputeScores, recomputeAllScores } = require('./scoring');
+const { addressFilter } = require('./availability');
 
 const PROVIDER_FIELDS = 'name slug logo website legalName imprintUrl rating ratingSource';
 
@@ -58,12 +61,14 @@ const resources = [
         options: {
             searchFields: ['provider', 'name'],
             matchFields: { provider: 'string', providerId: 'id', contractType: 'string', network: 'string', termMonths: 'number' },
-            rangeFields: ['effectiveMonthlyPrice', 'monthlyPrice', 'dataGB', 'minutes', 'setupFee'],
+            rangeFields: ['effectiveMonthlyPrice', 'monthlyPrice', 'dataGB', 'minutes', 'setupFee', 'score'],
             unlimitedFields: ['dataGB', 'minutes'],
-            sortFields: ['effectiveMonthlyPrice', 'monthlyPrice', 'setupFee', 'provider', 'updatedAt'],
+            sortFields: ['effectiveMonthlyPrice', 'monthlyPrice', 'setupFee', 'provider', 'updatedAt', 'score'],
             defaultSort: 'effectiveMonthlyPrice',
+            facetFields: ['contractType', 'termMonths', 'network'],
             baseFilter: activeOfferFilter,
             populate: { path: 'providerId', select: PROVIDER_FIELDS },
+            afterChange: () => recomputeScores('mobile'),
         },
     },
     {
@@ -72,12 +77,19 @@ const resources = [
         options: {
             searchFields: ['provider', 'name'],
             matchFields: { provider: 'string', providerId: 'id', connectionType: 'string', termMonths: 'number' },
-            rangeFields: ['effectiveMonthlyPrice', 'monthlyPrice', 'downloadMbps', 'uploadMbps', 'setupFee'],
-            sortFields: ['effectiveMonthlyPrice', 'monthlyPrice', 'downloadMbps', 'setupFee', 'provider', 'updatedAt'],
+            rangeFields: ['effectiveMonthlyPrice', 'monthlyPrice', 'downloadMbps', 'uploadMbps', 'setupFee', 'score'],
+            sortFields: ['effectiveMonthlyPrice', 'monthlyPrice', 'downloadMbps', 'setupFee', 'provider', 'updatedAt', 'score'],
             defaultSort: 'effectiveMonthlyPrice',
-            customFilters: { postcode: postcodeFilter },
+            facetFields: ['connectionType', 'termMonths'],
+            // ?street=&houseNumber= (with ?postcode=) narrows results to what's bookable at the address
+            customFilters: { postcode: postcodeFilter, street: addressFilter },
             baseFilter: activeOfferFilter,
             populate: { path: 'providerId', select: PROVIDER_FIELDS },
+            afterChange: async () => {
+                await recomputeScores('home');
+                // Cached address checks are derived from the offers
+                await AvailabilityCheck.deleteMany({});
+            },
         },
     },
     {
@@ -88,6 +100,8 @@ const resources = [
             matchFields: { slug: 'string' },
             sortFields: ['name', 'rating'],
             defaultSort: 'name',
+            // Provider ratings are part of every offer's score
+            afterChange: recomputeAllScores,
             beforeRemove: async (provider) => {
                 const offers = await HomeTariff.countDocuments({ providerId: provider._id })
                     + await MobileTariff.countDocuments({ providerId: provider._id });

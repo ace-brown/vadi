@@ -14,6 +14,9 @@ import Reviews from "@/components/offers/Reviews";
 import { homeOfferFacts, lastCheckedNotice, mobileOfferFacts } from "@/components/offers/offer-details";
 import Seo from "@/components/common/Seo";
 import SaveButton from "@/components/offers/SaveButton";
+import ScoreBreakdown from "@/components/offers/ScoreBreakdown";
+import PriceHistoryChart from "@/components/offers/PriceHistoryChart";
+import PriceAlertBox from "@/components/offers/PriceAlertBox";
 import { CompareContext } from "@/context/compare-context";
 import { useApi } from "@/lib/api";
 import { HomePlanType, MobilePlanType, OfferKind } from "@/types";
@@ -134,9 +137,21 @@ export default function OfferDetailPage({ kind }: { kind: OfferKind }) {
         </div>
       </Card>
 
+      <div className="grid gap-6 md:grid-cols-[1fr_320px]">
+        <Card className="p-6 min-w-0">
+          <PriceHistoryChart kind={kind} offerId={offer._id} />
+        </Card>
+        <Card className="p-6">
+          <PriceAlertBox kind={kind} offerId={offer._id} currentPrice={offer.effectiveMonthlyPrice} />
+        </Card>
+      </div>
+
       <div className="grid gap-6 md:grid-cols-2">
         <Card className="p-6">
           <PriceBreakdown offer={offer} />
+        </Card>
+        <Card className="p-6">
+          <ScoreBreakdown offer={offer} />
         </Card>
         {provider && (
           <Card className="p-6 space-y-3">

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { Bookmark, Columns3, MessageSquare, TrendingDown, TrendingUp, UserRound } from "lucide-react";
+import { BellRing, Bookmark, Columns3, MessageSquare, TrendingDown, TrendingUp, UserRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,7 @@ import { apiFetch, ApiError } from "@/lib/api";
 import { OfferKind, OfferType, ReviewType, UserType } from "@/types";
 import { formatDate, formatPrice } from "@/utils/helpers";
 
-const TABS = ["saved", "comparisons", "reviews", "profile"] as const;
+const TABS = ["saved", "alerts", "comparisons", "reviews", "profile"] as const;
 type Tab = (typeof TABS)[number];
 
 const RESULTS_PATHS: Record<OfferKind, string> = {
@@ -148,6 +148,78 @@ function Watchlist() {
                   </button>
                 </div>
               </div>
+            </div>
+          </Card>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+// ---------- Price alerts ----------
+
+type AlertItem = {
+  kind: OfferKind;
+  offerId: string;
+  targetPrice: number;
+  active: boolean;
+  triggeredAt: string | null;
+  triggeredPrice: number | null;
+  offer: OfferType | null;
+  available: boolean;
+};
+
+function PriceAlerts() {
+  const { t } = useTranslation();
+  const auth = useContext(AuthContext);
+  const { data, error, reload } = useAuthedApi<{ items: AlertItem[] }>("/api/me/price-alerts");
+
+  if (error) return <p className="text-red-600">{error}</p>;
+  if (!data) return <p className="text-gray-500">{t("common.loading")}</p>;
+  if (data.items.length === 0) return <EmptyState text={t("account.alertsEmpty")} />;
+
+  async function remove(item: AlertItem) {
+    await apiFetch(`/api/me/price-alerts/${item.kind}/${item.offerId}`, { method: "DELETE", token: auth.token });
+    reload();
+  }
+
+  return (
+    <ul className="space-y-3">
+      {data.items.map((item) => (
+        <li key={item.offerId}>
+          <Card className="p-4 flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
+            <div className="min-w-0">
+              {item.offer ? (
+                <>
+                  <p className="text-sm text-gray-500">{item.offer.provider}</p>
+                  <Link to={`${RESULTS_PATHS[item.kind]}/${item.offerId}`} className="font-bold hover:underline">
+                    {item.offer.name}
+                  </Link>
+                </>
+              ) : (
+                <p className="font-medium text-gray-500">{t("account.offerGone")}</p>
+              )}
+              <p className="text-sm mt-1">
+                {item.active
+                  ? t("alert.active", { price: formatPrice(item.targetPrice) })
+                  : item.triggeredAt
+                    ? t("alert.triggered", { date: formatDate(item.triggeredAt), price: formatPrice(item.triggeredPrice ?? 0) })
+                    : ""}
+              </p>
+            </div>
+            <div className="flex items-center gap-4">
+              {item.offer && (
+                <p className="text-right">
+                  <span className="block text-xs text-gray-500">{t("offer.effective")}</span>
+                  <span className="font-extrabold">{formatPrice(item.offer.effectiveMonthlyPrice)}</span>
+                </p>
+              )}
+              <Badge variant="outline" className={item.active ? "border-emerald-200 bg-emerald-50 text-emerald-800" : ""}>
+                {formatPrice(item.targetPrice)}
+              </Badge>
+              <button type="button" className="text-sm text-gray-600 hover:text-red-600" onClick={() => remove(item)}>
+                {t("account.remove")}
+              </button>
             </div>
           </Card>
         </li>
@@ -406,6 +478,7 @@ export default function AccountPage() {
 
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: "saved", label: `${t("account.tabs.saved")}${savedIds.size ? ` (${savedIds.size})` : ""}`, icon: <Bookmark className="w-4 h-4" /> },
+    { id: "alerts", label: t("account.tabs.alerts"), icon: <BellRing className="w-4 h-4" /> },
     { id: "comparisons", label: t("account.tabs.comparisons"), icon: <Columns3 className="w-4 h-4" /> },
     { id: "reviews", label: t("account.tabs.reviews"), icon: <MessageSquare className="w-4 h-4" /> },
     { id: "profile", label: t("account.tabs.profile"), icon: <UserRound className="w-4 h-4" /> },
@@ -435,6 +508,7 @@ export default function AccountPage() {
       </div>
       <div role="tabpanel">
         {tab === "saved" && <Watchlist />}
+        {tab === "alerts" && <PriceAlerts />}
         {tab === "comparisons" && <Comparisons />}
         {tab === "reviews" && <MyReviews />}
         {tab === "profile" && <Profile />}

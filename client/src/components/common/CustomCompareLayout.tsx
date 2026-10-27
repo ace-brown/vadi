@@ -16,6 +16,8 @@ type CustomCompareLayoutProps = {
   total?: number;
   // Shown under the title, e.g. "Prices last checked" and "incl. VAT"
   notice?: React.ReactNode;
+  // Shown above the results, e.g. an address check
+  intro?: React.ReactNode;
   // Shown after the results, e.g. a "Show more" button
   footer?: React.ReactNode;
   emptyMessage?: string;
@@ -35,6 +37,7 @@ export default function CustomCompareLayout({
   onRetry,
   total,
   notice,
+  intro,
   footer,
   emptyMessage,
   isAnyFilterActive,
@@ -142,6 +145,7 @@ export default function CustomCompareLayout({
             </Link>
           )}
         </div>
+        {intro}
         {renderResults()}
       </section>
     </div>

@@ -366,3 +366,187 @@ describe('my account', () => {
         expect(res.body.reviews[0].provider.name).toBeTruthy();
     });
 });
+
+describe('Vadi score', () => {
+    test('every active offer has a grade between 1 and 5 with its parts', async () => {
+        const res = await request(app).get('/api/internet/home-tariffs?limit=100');
+        res.body.items.forEach((offer) => {
+            expect(offer.score).toBeGreaterThanOrEqual(1);
+            expect(offer.score).toBeLessThanOrEqual(5);
+            expect(Object.keys(offer.scoreDetails)).toEqual(['price', 'performance', 'flexibility', 'provider']);
+        });
+    });
+
+    test('can sort by score (best first)', async () => {
+        const res = await request(app).get('/api/internet/mobile-tariffs?sort=score');
+        const scores = res.body.items.map((offer) => offer.score);
+        expect(scores).toEqual([...scores].sort((a, b) => a - b));
+    });
+
+    test('is recalculated when an offer gets much cheaper', async () => {
+        const offer = await HomeTariff.findOne({ externalId: 'alpenfunk-lte50' });
+        const before = (await request(app).get(`/api/internet/home-tariffs/${offer._id}`)).body.item.score;
+        await request(app)
+            .patch(`/api/internet/home-tariffs/${offer._id}`)
+            .set('Authorization', `Bearer ${adminToken}`)
+            .send({ monthlyPrice: 5 });
+        const after = (await request(app).get(`/api/internet/home-tariffs/${offer._id}`)).body.item.score;
+        expect(after).toBeLessThan(before);
+    });
+});
+
+describe('facets', () => {
+    test('count each option while ignoring that filter itself', async () => {
+        const all = await request(app).get('/api/internet/mobile-tariffs');
+        const prepaid = await request(app).get('/api/internet/mobile-tariffs?contractType=prepaid');
+        // contractType counts are unaffected by the contractType filter...
+        expect(prepaid.body.facets.contractType).toEqual(all.body.facets.contractType);
+        // ...but the other facets only count prepaid offers
+        const termTotal = Object.values(prepaid.body.facets.termMonths).reduce((a, b) => a + b, 0);
+        expect(termTotal).toBe(prepaid.body.total);
+    });
+});
+
+describe('price history and alerts', () => {
+    const auth = () => ({ Authorization: `Bearer ${userToken}` });
+
+    test('records every change of the effective price', async () => {
+        const offer = await HomeTariff.findOne({ externalId: 'isarlink-vdsl250' });
+        const before = (await request(app).get(`/api/price-history/home/${offer._id}`)).body.history.length;
+
+        await request(app).patch(`/api/internet/home-tariffs/${offer._id}`).set('Authorization', `Bearer ${adminToken}`).send({ monthlyPrice: 44.99 });
+        // Saving without a price change adds nothing
+        await request(app).patch(`/api/internet/home-tariffs/${offer._id}`).set('Authorization', `Bearer ${adminToken}`).send({ name: 'VDSL 250' });
+
+        const res = await request(app).get(`/api/price-history/home/${offer._id}`);
+        expect(res.body.history.length).toBe(before + 1);
+        const item = (await request(app).get(`/api/internet/home-tariffs/${offer._id}`)).body.item;
+        expect(item.previousEffectiveMonthlyPrice).toBeGreaterThan(item.effectiveMonthlyPrice);
+        expect(item.priceChangedAt).toBeTruthy();
+    });
+
+    test('alerts email the user once the target price is reached', async () => {
+        const { outbox } = require('../src/mailer');
+        const offer = await HomeTariff.findOne({ externalId: 'spreewelle-vdsl100' });
+        const target = Math.floor(offer.effectiveMonthlyPrice) - 5;
+
+        const set = await request(app).put(`/api/me/price-alerts/home/${offer._id}`).set(auth()).send({ targetPrice: target });
+        expect(set.status).toBe(200);
+
+        // Price still above the target: nothing sent
+        const { checkPriceAlerts } = require('../src/jobs/price-alerts');
+        let result = await checkPriceAlerts();
+        expect(result.triggered).toBe(0);
+
+        await request(app).patch(`/api/internet/home-tariffs/${offer._id}`).set('Authorization', `Bearer ${adminToken}`).send({ monthlyPrice: 20 });
+
+        // The job endpoint needs the cron secret or an admin
+        process.env.CRON_SECRET = 'cron-secret-123';
+        expect((await request(app).post('/api/jobs/price-alerts')).status).toBe(401);
+        const job = await request(app).get('/api/jobs/price-alerts').set('Authorization', 'Bearer cron-secret-123');
+        expect(job.body.triggered).toBe(1);
+        expect(outbox[outbox.length - 1].to).toBe('jane@test.dev');
+        // Jane switched her language to English in an earlier test
+        expect(outbox[outbox.length - 1].subject).toMatch(/^Price alert: Spreewelle DSL VDSL 100/);
+
+        // Fired alerts switch off
+        result = await checkPriceAlerts();
+        expect(result.triggered).toBe(0);
+        const list = await request(app).get('/api/me/price-alerts').set(auth());
+        expect(list.body.items[0].active).toBe(false);
+        expect(list.body.items[0].triggeredPrice).toBeLessThanOrEqual(target);
+    });
+});
+
+describe('advisor', () => {
+    test('mobile: recommendations meet the needs, with reasons', async () => {
+        const res = await request(app).post('/api/advisor/mobile').send({ dataGB: 40, need5G: true });
+        expect(res.status).toBe(200);
+        expect(res.body.relaxed).toEqual([]);
+        expect(res.body.recommendations.length).toBeGreaterThan(0);
+        res.body.recommendations.forEach(({ offer, reasons }) => {
+            expect(offer.network).toBe('5G');
+            expect(offer.dataGB === null || offer.dataGB >= 40).toBe(true);
+            expect(reasons.map((r) => r.code)).toContain('network5G');
+        });
+        expect(res.body.recommendations[0].labels).toContain('cheapest');
+    });
+
+    test('mobile: relaxes the budget when nothing fits it', async () => {
+        const res = await request(app).post('/api/advisor/mobile').send({ dataGB: 50, budget: 1 });
+        expect(res.body.relaxed).toEqual(['budget']);
+        expect(res.body.recommendations[0].reasons.map((r) => r.code)).toContain('overBudget');
+    });
+
+    test('home: works out the speed needed and relaxes what is impossible', async () => {
+        // Leipzig has no fiber or cable in the sample data, so gaming's low latency can't be met
+        const res = await request(app).post('/api/advisor/home').send({ postcode: '04109', people: 3, usage: ['streaming', 'gaming'] });
+        expect(res.status).toBe(200);
+        expect(res.body.needs.minDownloadMbps).toBe(250);
+        expect(res.body.relaxed).toContain('latency');
+    });
+
+    test('home: rejects a missing postcode', async () => {
+        const res = await request(app).post('/api/advisor/home').send({ people: 2 });
+        expect(res.status).toBe(422);
+    });
+});
+
+describe('address availability', () => {
+    const address = { postcode: '20095', street: 'Mönckebergstraße', houseNumber: '7' };
+
+    test('returns connections per provider and caches the result', async () => {
+        const first = await request(app).post('/api/availability').send(address);
+        expect(first.status).toBe(200);
+        expect(first.body.cached).toBe(false);
+        expect(first.body.providers.length).toBeGreaterThan(0);
+        first.body.providers.forEach((provider) => expect(provider.source).toBe('sample'));
+
+        const second = await request(app).post('/api/availability').send(address);
+        expect(second.body.cached).toBe(true);
+        expect(second.body.providers).toEqual(first.body.providers);
+    });
+
+    test('filters home internet to what is bookable at the address', async () => {
+        const check = await request(app).post('/api/availability').send(address);
+        const byPostcode = await request(app).get('/api/internet/home-tariffs?postcode=20095&limit=100');
+        const byAddress = await request(app).get(`/api/internet/home-tariffs?postcode=20095&street=${encodeURIComponent(address.street)}&houseNumber=7&limit=100`);
+
+        expect(byAddress.body.total).toBeLessThanOrEqual(byPostcode.body.total);
+        byAddress.body.items.forEach((offer) => {
+            const provider = check.body.providers.find((p) => p.providerId === offer.providerId._id);
+            const connection = provider.connections.find((c) => c.connectionType === offer.connectionType);
+            expect(connection).toBeTruthy();
+            expect(offer.downloadMbps).toBeLessThanOrEqual(connection.maxDownloadMbps);
+        });
+    });
+
+    test('rejects incomplete addresses', async () => {
+        const res = await request(app).post('/api/availability').send({ postcode: '20095', street: '', houseNumber: '7' });
+        expect(res.status).toBe(400);
+    });
+});
+
+describe('caching and docs', () => {
+    test('public lists are cacheable and support ETags', async () => {
+        const first = await request(app).get('/api/internet/mobile-tariffs');
+        expect(first.headers['cache-control']).toMatch(/public, max-age=60/);
+        expect(first.headers.etag).toBeTruthy();
+        const second = await request(app).get('/api/internet/mobile-tariffs').set('If-None-Match', first.headers.etag);
+        expect(second.status).toBe(304);
+    });
+
+    test('personal data is never cached', async () => {
+        const res = await request(app).get('/api/me/saved-offers').set('Authorization', `Bearer ${userToken}`);
+        expect(res.headers['cache-control']).toBe('private, no-store');
+    });
+
+    test('serves the OpenAPI description and Swagger UI', async () => {
+        const spec = await request(app).get('/api/openapi.json');
+        expect(spec.body.openapi).toBe('3.0.3');
+        expect(spec.body.paths['/api/advisor/mobile']).toBeTruthy();
+        const docs = await request(app).get('/api/docs/');
+        expect(docs.status).toBe(200);
+        expect(docs.text).toMatch(/swagger/i);
+    });
+});

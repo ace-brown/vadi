@@ -6,7 +6,8 @@ const DEFAULT_LIMIT = 50;
 const RANGES_CACHE_MS = 60 * 1000;
 const PROTECTED_FIELDS = [
     '_id', '__v', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy',
-    'totalCost24', 'effectiveMonthlyPrice',
+    'totalCost24', 'effectiveMonthlyPrice', 'previousEffectiveMonthlyPrice', 'priceChangedAt',
+    'score', 'scoreDetails',
 ];
 
 // Wrap async handlers so rejected promises reach the error middleware
@@ -31,7 +32,8 @@ function parseNumber(value, name) {
 //   ?q=text                 search in config.searchFields
 //   ?city=Berlin,Hamburg    exact (case-insensitive) match on config.matchFields
 //   ?monthlyPriceMax=30     range on config.rangeFields (<field>Min / <field>Max)
-function buildFilter(query, config) {
+//   anything in config.customFilters, which may be async and see the whole query
+async function buildFilter(query, config) {
     const conditions = [];
 
     const term = typeof query.q === 'string' ? query.q.trim().slice(0, 100) : '';
@@ -62,7 +64,8 @@ function buildFilter(query, config) {
 
     for (const [param, buildCondition] of Object.entries(config.customFilters)) {
         if (query[param] === undefined || query[param] === '') continue;
-        conditions.push(buildCondition(String(query[param])));
+        const condition = await buildCondition(String(query[param]), query);
+        if (condition) conditions.push(condition);
     }
 
     for (const field of config.rangeFields) {
@@ -117,6 +120,26 @@ async function getRanges(Model, config, baseFilter) {
     return ranges;
 }
 
+// Count matches per value of each facet field. Each facet ignores its own filter
+// ("disjunctive" facets), so the counts show what ticking another option would add.
+async function getFacets(Model, config, query, visible) {
+    const counts = await Promise.all(config.facetFields.map(async (field) => {
+        const { [field]: _ignored, ...otherFilters } = query;
+        const filter = await buildFilter(otherFilters, config);
+        const match = Object.keys(visible).length > 0 ? { $and: [visible, filter] } : filter;
+        const rows = await Model.aggregate([
+            { $match: match },
+            { $group: { _id: `$${field}`, count: { $sum: 1 } } },
+        ]);
+        // Sorted, so identical results give identical responses (and ETags)
+        const sorted = rows
+            .map((row) => [String(row._id), row.count])
+            .sort(([a], [b]) => a.localeCompare(b, 'en', { numeric: true }));
+        return [field, Object.fromEntries(sorted)];
+    }));
+    return Object.fromEntries(counts);
+}
+
 function getBodyData(req, Model) {
     const data = { ...req.body };
     PROTECTED_FIELDS.forEach((field) => delete data[field]);
@@ -150,6 +173,10 @@ function createResourceControllers(Model, options = {}) {
         populate: null,
         // Called before deleting; throw an HttpError to prevent it
         beforeRemove: null,
+        // Called after any create, update or delete (e.g. to recalculate scores)
+        afterChange: null,
+        // Fields whose values are counted for the filter UI (see getFacets)
+        facetFields: [],
         ...options,
     };
     let rangesCache = null;
@@ -179,20 +206,21 @@ function createResourceControllers(Model, options = {}) {
 
     // GET / — list with search, filters, sorting and pagination
     async function list(req, res) {
-        const queryFilter = buildFilter(req.query, config);
+        const queryFilter = await buildFilter(req.query, config);
         const visible = visibleFilter(req);
         const filter = Object.keys(visible).length > 0 ? { $and: [visible, queryFilter] } : queryFilter;
         const sort = buildSort(req.query.sort, config);
         const limit = Math.min(MAX_LIMIT, Math.max(1, parseNumber(req.query.limit, 'limit') ?? DEFAULT_LIMIT));
         const page = Math.max(1, Math.floor(parseNumber(req.query.page, 'page') ?? 1));
 
-        const [items, total, ranges] = await Promise.all([
+        const [items, total, ranges, facets] = await Promise.all([
             withPopulate(Model.find(filter).sort(sort).skip((page - 1) * limit).limit(limit)),
             Model.countDocuments(filter),
             cachedRanges(),
+            getFacets(Model, config, req.query, visible),
         ]);
 
-        res.json({ items, total, page, pages: Math.ceil(total / limit), ranges });
+        res.json({ items, total, page, pages: Math.ceil(total / limit), ranges, facets });
     }
 
     // GET /:id
@@ -213,6 +241,7 @@ function createResourceControllers(Model, options = {}) {
         }
         const item = await Model.create(data);
         rangesCache = null;
+        if (config.afterChange) await config.afterChange();
         res.status(201).json({ item });
     }
 
@@ -228,6 +257,7 @@ function createResourceControllers(Model, options = {}) {
         item.set(getBodyData(req, Model));
         await item.save();
         rangesCache = null;
+        if (config.afterChange) await config.afterChange();
         res.json({ item });
     }
 
@@ -243,6 +273,7 @@ function createResourceControllers(Model, options = {}) {
         }
         await item.deleteOne();
         rangesCache = null;
+        if (config.afterChange) await config.afterChange();
         res.json({ message: 'Deleted successfully' });
     }
 

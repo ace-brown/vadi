@@ -12,6 +12,7 @@ const mongoose = require('mongoose');
 
 const { getMongoUri } = require('../src/db');
 const { importFeed } = require('../src/import-offers');
+const { checkPriceAlerts } = require('../src/jobs/price-alerts');
 
 async function main() {
     const file = process.argv.slice(2).find((arg) => !arg.startsWith('--'));
@@ -27,6 +28,10 @@ async function main() {
     const summary = await importFeed(feed, { dryRun });
     console.log(`Providers: ${summary.providers.created} new, ${summary.providers.updated} updated`);
     console.log(`Offers: ${summary.offers.created} new, ${summary.offers.updated} updated, ${summary.offers.deactivated} switched off`);
+    if (!dryRun) {
+        const alerts = await checkPriceAlerts();
+        console.log(`Price alerts: ${alerts.triggered} of ${alerts.checked} triggered`);
+    }
     if (summary.errors.length > 0) {
         console.error(`${summary.errors.length} error(s):\n  ${summary.errors.join('\n  ')}`);
         process.exitCode = 1;

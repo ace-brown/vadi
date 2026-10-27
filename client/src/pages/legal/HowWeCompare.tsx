@@ -23,6 +23,26 @@ export default function HowWeComparePage() {
             oder Geschwindigkeit. Die Hervorhebungen „Am günstigsten“, „Am schnellsten“ und „Meiste Daten“
             werden allein aus den Tarifdaten berechnet.
           </p>
+          <h2>Die Vadi-Note</h2>
+          <p>
+            Zusätzlich bekommt jedes Angebot eine Note wie in der Schule, von 1,0 (sehr gut) bis 5,0
+            (mangelhaft). Sie vergleicht das Angebot mit allen aktuellen Angeboten derselben Art und setzt
+            sich so zusammen:
+          </p>
+          <ul>
+            <li><strong>Preis (50 %)</strong>: der Effektivpreis – je günstiger, desto besser</li>
+            <li><strong>Leistung (30 %)</strong>: Download- und Upload-Geschwindigkeit bzw. Datenvolumen, 5G und Telefonie-Flat</li>
+            <li><strong>Flexibilität (10 %)</strong>: monatlich kündbar ist am besten, 24 Monate Laufzeit am schlechtesten</li>
+            <li><strong>Anbieter (10 %)</strong>: die redaktionelle Bewertung des Anbieters</li>
+          </ul>
+          <p>Die Note wird bei jeder Preis- oder Angebotsänderung neu berechnet. Die Einzelwerte stehen auf jeder Angebotsseite.</p>
+          <h2>Tarifberater, Verfügbarkeit und Preisalarm</h2>
+          <p>
+            Der Tarifberater empfiehlt die günstigsten Angebote, die alle deine Angaben erfüllen. Passt keins,
+            lockern wir zuerst das Budget und dann die weniger wichtigen Wünsche – und sagen dir, was wir gelockert
+            haben. Die Adressprüfung fragt die Verfügbarkeit beim Anbieter ab (bei den Beispieldaten simuliert).
+            Ein Preisalarm benachrichtigt dich per E-Mail, sobald der Effektivpreis deinen Wunschpreis erreicht.
+          </p>
           <h2>Keine gekauften Platzierungen</h2>
           <p>
             Anbieter können ihre Position in den Ergebnissen nicht kaufen. Gesponserte Platzierungen gibt
@@ -64,6 +84,25 @@ export default function HowWeComparePage() {
             This makes plans with teaser prices, high setup fees or different contract lengths fair to
             compare. You can change the sorting at any time, e.g. to monthly price or speed. The labels
             "Cheapest", "Fastest" and "Most data" are calculated from the plan data alone.
+          </p>
+          <h2>The Vadi score</h2>
+          <p>
+            Every offer also gets a grade like a German school mark, from 1.0 (very good) to 5.0 (poor). It
+            compares the offer with all current offers of the same kind and is made up of:
+          </p>
+          <ul>
+            <li><strong>Price (50%)</strong>: the effective price – the cheaper, the better</li>
+            <li><strong>Performance (30%)</strong>: download and upload speed, or data volume, 5G and unlimited calls</li>
+            <li><strong>Flexibility (10%)</strong>: monthly cancellable is best, a 24-month term worst</li>
+            <li><strong>Provider (10%)</strong>: the provider's editorial rating</li>
+          </ul>
+          <p>The score is recalculated whenever a price or offer changes. The parts are shown on every offer page.</p>
+          <h2>Tariff advisor, availability and price alerts</h2>
+          <p>
+            The tariff advisor recommends the cheapest offers that meet all your answers. If none do, we relax
+            the budget first and then the less important wishes, and tell you what we relaxed. The address
+            check asks the provider about availability (simulated for the sample data). A price alert emails
+            you as soon as the effective price reaches your target.
           </p>
           <h2>No paid rankings</h2>
           <p>

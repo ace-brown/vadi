@@ -61,6 +61,7 @@ export function useListing<T>(endpoint: string, params: Params) {
     items: data?.items ?? [],
     total: data?.total ?? 0,
     ranges: data?.ranges ?? {},
+    facets: data?.facets ?? {},
     isLoading,
     error,
     retry,

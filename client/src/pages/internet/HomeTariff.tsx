@@ -11,6 +11,7 @@ import OfferCard from "@/components/offers/OfferCard";
 import CompareBar from "@/components/offers/CompareBar";
 import { highlightsFor, homeOfferFacts, lastCheckedNotice } from "@/components/offers/offer-details";
 import Seo from "@/components/common/Seo";
+import AvailabilityBox from "@/components/offers/AvailabilityBox";
 import { useListing } from "@/hooks/use-listing";
 import { useUrlParams } from "@/hooks/use-url-params";
 import { HomePlanType } from "@/types";
@@ -22,22 +23,32 @@ export default function HomeTariffPage() {
   const { t } = useTranslation();
   const url = useUrlParams();
   const postcode = url.get("postcode");
+  const street = url.get("street");
+  const houseNumber = url.get("houseNumber");
+  const hasAddress = /^\d{5}$/.test(postcode) && !!street && !!houseNumber;
   const connectionTypes = url.getList("connectionType");
   const terms = url.getList("termMonths");
   const minSpeed = url.getNumber("downloadMbpsMin");
   const maxPrice = url.getNumber("effectiveMonthlyPriceMax");
   const sort = url.get("sort") || "effectiveMonthlyPrice";
   const [postcodeInput, setPostcodeInput] = useState(postcode);
+  const [streetInput, setStreetInput] = useState(street);
+  const [houseNumberInput, setHouseNumberInput] = useState(houseNumber);
   const [limit, setLimit] = useState(PAGE_SIZE);
 
   // Keep the input in step with the URL (e.g. after "Clear filters")
   useEffect(() => setPostcodeInput(postcode), [postcode]);
+  useEffect(() => setStreetInput(street), [street]);
+  useEffect(() => setHouseNumberInput(houseNumber), [houseNumber]);
   const postcodeInvalid = postcodeInput !== "" && !/^\d{5}$/.test(postcodeInput);
 
-  const { items, total, ranges, isLoading, error, retry } = useListing<HomePlanType>(
+  const { items, total, ranges, facets, isLoading, error, retry } = useListing<HomePlanType>(
     "/api/internet/home-tariffs",
     {
       postcode,
+      // The exact address check needs all three
+      street: hasAddress ? street : null,
+      houseNumber: hasAddress ? houseNumber : null,
       connectionType: connectionTypes.join(","),
       termMonths: terms.join(","),
       downloadMbpsMin: minSpeed,
@@ -51,7 +62,7 @@ export default function HomeTariffPage() {
     !!postcode || connectionTypes.length > 0 || terms.length > 0 || minSpeed !== null || maxPrice !== null;
 
   function resetFilters() {
-    url.set({ postcode: null, connectionType: null, termMonths: null, downloadMbpsMin: null, effectiveMonthlyPriceMax: null });
+    url.set({ postcode: null, street: null, houseNumber: null, connectionType: null, termMonths: null, downloadMbpsMin: null, effectiveMonthlyPriceMax: null });
   }
 
   const highlights = highlightsFor(items, [
@@ -66,7 +77,9 @@ export default function HomeTariffPage() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (!postcodeInvalid) url.set({ postcode: postcodeInput });
+          if (!postcodeInvalid) {
+            url.set({ postcode: postcodeInput, street: streetInput.trim(), houseNumber: houseNumberInput.trim() });
+          }
         }}
         className="space-y-1"
       >
@@ -92,6 +105,37 @@ export default function HomeTariffPage() {
           </Button>
         </div>
         {postcodeInvalid && <p className="text-xs text-red-600">{t("filters.postcodeInvalid")}</p>}
+        <div className="flex gap-2 pt-1">
+          <Input
+            aria-label={t("availability.street")}
+            placeholder={t("availability.street")}
+            autoComplete="address-line1"
+            value={streetInput}
+            onChange={(e) => setStreetInput(e.target.value)}
+          />
+          <Input
+            aria-label={t("availability.houseNumber")}
+            placeholder={t("availability.houseNumber")}
+            className="w-20"
+            value={houseNumberInput}
+            onChange={(e) => setHouseNumberInput(e.target.value)}
+          />
+        </div>
+        <div className="flex items-center justify-between gap-2">
+          <Button type="submit" size="sm" variant="outline" disabled={postcodeInvalid || !postcodeInput || !streetInput.trim() || !houseNumberInput.trim()}>
+            {t("availability.check")}
+          </Button>
+          {street && (
+            <button
+              type="button"
+              className="text-xs text-blue-700 hover:underline"
+              onClick={() => url.set({ street: null, houseNumber: null })}
+            >
+              {t("availability.clear")}
+            </button>
+          )}
+        </div>
+        {!street && <p className="text-xs text-gray-500">{t("availability.hint")}</p>}
       </form>
       <FilterSelect
         value={sort}
@@ -101,6 +145,7 @@ export default function HomeTariffPage() {
           { value: "-effectiveMonthlyPrice", label: t("filters.sort.effectiveDesc") },
           { value: "monthlyPrice", label: t("filters.sort.monthly") },
           { value: "-downloadMbps", label: t("filters.sort.fastest") },
+          { value: "score", label: t("filters.sort.score") },
           { value: "setupFee", label: t("filters.sort.setupFee") },
         ]}
       />
@@ -131,7 +176,7 @@ export default function HomeTariffPage() {
           { value: "VDSL", label: "VDSL" },
           { value: "DSL", label: "DSL" },
           { value: "LTE", label: t("filters.lte") },
-        ]}
+        ].map((option) => ({ ...option, count: facets.connectionType?.[option.value] ?? 0 }))}
         selectedValues={connectionTypes}
         onChange={(value) => url.set({ connectionType: toggleValue(connectionTypes, value) })}
       />
@@ -141,7 +186,7 @@ export default function HomeTariffPage() {
           { value: "1", label: t("term.monthly") },
           { value: "12", label: t("term.months", { count: 12 }) },
           { value: "24", label: t("term.months", { count: 24 }) },
-        ]}
+        ].map((option) => ({ ...option, count: facets.termMonths?.[option.value] ?? 0 }))}
         selectedValues={terms}
         onChange={(value) => url.set({ termMonths: toggleValue(terms, value) })}
       />
@@ -155,6 +200,7 @@ export default function HomeTariffPage() {
       <Seo title={t("nav.homeInternet")} description={t("home.subtitle")} />
       <CustomCompareLayout
         title={postcode ? `${t("nav.homeInternet")} · ${postcode}` : t("nav.homeInternet")}
+        intro={hasAddress ? <AvailabilityBox postcode={postcode} street={street} houseNumber={houseNumber} /> : undefined}
         filters={filters}
         isLoading={isLoading}
         error={error}
@@ -169,7 +215,7 @@ export default function HomeTariffPage() {
             <Link to="/how-we-compare" className="text-blue-700 hover:underline">
               {t("common.howSorted")}
             </Link>
-            {postcode && <p className="mt-1">{t("offer.availabilityNote")}</p>}
+            {postcode && !hasAddress && <p className="mt-1">{t("offer.availabilityNote")}</p>}
           </>
         }
         footer={

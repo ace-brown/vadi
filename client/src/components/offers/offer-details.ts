@@ -51,6 +51,21 @@ export function highlightsFor<T extends OfferType>(items: T[], extra: { label: s
   return labels;
 }
 
+// Name of a Vadi score, like German school grades
+export function gradeName(score: number) {
+  const key = score <= 1.5 ? "veryGood" : score <= 2.5 ? "good" : score <= 3.5 ? "satisfactory" : score <= 4.5 ? "sufficient" : "poor";
+  return i18n.t(`score.grades.${key}`);
+}
+
+// A price drop in the last 30 days, worth pointing out
+export function recentPriceDrop(offer: OfferType) {
+  if (!offer.previousEffectiveMonthlyPrice || !offer.priceChangedAt) return null;
+  const days = (Date.now() - new Date(offer.priceChangedAt).getTime()) / (24 * 60 * 60 * 1000);
+  return offer.previousEffectiveMonthlyPrice > offer.effectiveMonthlyPrice && days <= 30
+    ? offer.previousEffectiveMonthlyPrice
+    : null;
+}
+
 // Most recent "prices checked" date among the offers
 export function lastCheckedNotice(items: OfferType[]) {
   const dates = items

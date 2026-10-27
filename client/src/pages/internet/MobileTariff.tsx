@@ -28,7 +28,7 @@ export default function MobileTariffPage() {
   const sort = url.get("sort") || "effectiveMonthlyPrice";
   const [limit, setLimit] = useState(PAGE_SIZE);
 
-  const { items, total, ranges, isLoading, error, retry } = useListing<MobilePlanType>(
+  const { items, total, ranges, facets, isLoading, error, retry } = useListing<MobilePlanType>(
     "/api/internet/mobile-tariffs",
     {
       contractType: contractTypes.join(","),
@@ -67,6 +67,7 @@ export default function MobileTariffPage() {
           { value: "-effectiveMonthlyPrice", label: t("filters.sort.effectiveDesc") },
           { value: "monthlyPrice", label: t("filters.sort.monthly") },
           { value: "setupFee", label: t("filters.sort.setupFee") },
+          { value: "score", label: t("filters.sort.score") },
         ]}
       />
       <FilterCollapse label={t("filters.priceAndData")}>
@@ -93,7 +94,7 @@ export default function MobileTariffPage() {
         options={[
           { value: "prepaid", label: t("offer.prepaid") },
           { value: "contract", label: t("offer.contract") },
-        ]}
+        ].map((option) => ({ ...option, count: facets.contractType?.[option.value] ?? 0 }))}
         selectedValues={contractTypes}
         onChange={(value) => url.set({ contractType: toggleValue(contractTypes, value) })}
       />
@@ -103,7 +104,7 @@ export default function MobileTariffPage() {
           { value: "1", label: t("term.monthly") },
           { value: "12", label: t("term.months", { count: 12 }) },
           { value: "24", label: t("term.months", { count: 24 }) },
-        ]}
+        ].map((option) => ({ ...option, count: facets.termMonths?.[option.value] ?? 0 }))}
         selectedValues={terms}
         onChange={(value) => url.set({ termMonths: toggleValue(terms, value) })}
       />
@@ -112,7 +113,7 @@ export default function MobileTariffPage() {
         options={[
           { value: "5G", label: "5G" },
           { value: "4G", label: "4G" },
-        ]}
+        ].map((option) => ({ ...option, count: facets.network?.[option.value] ?? 0 }))}
         selectedValues={networks}
         onChange={(value) => url.set({ network: toggleValue(networks, value) })}
       />

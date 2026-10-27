@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const User = require('../models/user');
 const Review = require('../models/review');
+const PriceAlert = require('../models/price-alert');
 const HomeTariff = require('../models/internet/home-tariff');
 const MobileTariff = require('../models/internet/mobile-tariff');
 const HttpError = require('../models/http-error');
@@ -155,6 +156,56 @@ router.delete('/comparisons/:id', asyncHandler(async (req, res) => {
     user.comparisons = user.comparisons.filter((comparison) => String(comparison._id) !== req.params.id);
     if (user.comparisons.length === before) throw new HttpError('Comparison not found', 404);
     await user.save();
+    res.json({ message: 'Deleted successfully' });
+}));
+
+// GET /api/me/price-alerts — alerts with the offer's current price
+router.get('/price-alerts', asyncHandler(async (req, res) => {
+    const alerts = await PriceAlert.find({ user: req.userData.userId }).sort({ createdAt: -1 });
+    const offers = await loadOffers(alerts.map((alert) => ({ kind: alert.offerType, offer: alert.offer })));
+    res.json({
+        items: alerts.map((alert) => {
+            const found = offers.get(String(alert.offer));
+            return {
+                kind: alert.offerType,
+                offerId: alert.offer,
+                targetPrice: alert.targetPrice,
+                active: alert.active,
+                triggeredAt: alert.triggeredAt,
+                triggeredPrice: alert.triggeredPrice,
+                offer: found ? found.offer : null,
+                available: found ? found.available : false,
+            };
+        }),
+    });
+}));
+
+// PUT /api/me/price-alerts/:kind/:id — { targetPrice }: create or update (and re-arm) an alert
+router.put('/price-alerts/:kind/:id', asyncHandler(async (req, res) => {
+    const Model = offerModel(req.params.kind);
+    checkId(req.params.id);
+    const targetPrice = Number(req.body?.targetPrice);
+    if (!Number.isFinite(targetPrice) || targetPrice <= 0 || targetPrice > 1000) {
+        throw new HttpError('targetPrice must be a number between 0 and 1000', 422);
+    }
+    if (!(await Model.exists({ $and: [{ _id: req.params.id }, activeOfferFilter()] }))) {
+        throw new HttpError('Offer not found', 404);
+    }
+    const alert = await PriceAlert.findOneAndUpdate(
+        { user: req.userData.userId, offer: req.params.id },
+        {
+            $set: { offerType: req.params.kind, targetPrice, active: true, triggeredAt: null, triggeredPrice: null },
+        },
+        { upsert: true, new: true, runValidators: true }
+    );
+    res.json({ alert });
+}));
+
+// DELETE /api/me/price-alerts/:kind/:id
+router.delete('/price-alerts/:kind/:id', asyncHandler(async (req, res) => {
+    offerModel(req.params.kind);
+    checkId(req.params.id);
+    await PriceAlert.deleteOne({ user: req.userData.userId, offer: req.params.id });
     res.json({ message: 'Deleted successfully' });
 }));
 

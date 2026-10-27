@@ -33,6 +33,8 @@ export interface ListingResponse<T> {
   page: number;
   pages: number;
   ranges: Record<string, Range>;
+  // Counts per value of each facet field, e.g. { connectionType: { Fiber: 2, VDSL: 3 } }
+  facets?: Record<string, Record<string, number>>;
 }
 
 export interface ProviderType {
@@ -63,6 +65,11 @@ export interface OfferType {
   bonus: number;
   totalCost24: number;
   effectiveMonthlyPrice: number;
+  previousEffectiveMonthlyPrice?: number | null;
+  priceChangedAt?: string | null;
+  // Vadi score: 1.0 (best) to 5.0, and its parts (0–100)
+  score?: number | null;
+  scoreDetails?: { price: number; performance: number; flexibility: number; provider: number } | null;
   affiliateUrl?: string | null;
   active: boolean;
   validFrom?: string | null;

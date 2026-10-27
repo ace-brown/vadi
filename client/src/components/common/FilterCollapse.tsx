@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-type Option = { value: string; label: string };
+// count: how many results this option would give (shown in brackets)
+type Option = { value: string; label: string; count?: number };
 
 type FilterCollapseProps = {
   label: string;
@@ -52,9 +53,13 @@ export default function FilterCollapse({
                 className="accent-[#023e8a]"
                 value={option.value}
                 checked={selectedValues.includes(option.value)}
+                disabled={option.count === 0 && !selectedValues.includes(option.value)}
                 onChange={() => onChange?.(option.value)}
               />
-              <span>{option.label}</span>
+              <span className={option.count === 0 ? "text-gray-400" : ""}>{option.label}</span>
+              {option.count !== undefined && (
+                <span className="ml-auto text-xs text-gray-500 tabular-nums">{option.count}</span>
+              )}
             </label>
           ))}
           {children}

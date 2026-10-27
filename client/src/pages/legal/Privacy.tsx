@@ -52,10 +52,20 @@ export default function PrivacyPage() {
             Du kannst dein Konto jederzeit löschen lassen.
           </p>
 
+          <h2>5a. Preisalarme und Adressprüfung</h2>
+          <p>
+            Für einen Preisalarm speichern wir das Angebot und deinen Wunschpreis in deinem Konto und schicken
+            dir eine E-Mail an deine Konto-Adresse, sobald der Preis erreicht ist (Art. 6 Abs. 1 lit. b DSGVO).
+            Du kannst Alarme jederzeit in deinem Konto löschen. Für die Adressprüfung verarbeiten wir
+            Postleitzahl, Straße und Hausnummer; das Ergebnis speichern wir bis zu 7 Tage nur unter einem
+            Hash-Wert der Adresse, ohne Bezug zu deiner Person.
+          </p>
+
           <h2>6. Empfänger und Hosting</h2>
           <ul>
             <li>Vercel Inc. (Hosting der Webseite und der API), USA – Übermittlung auf Grundlage des EU-US Data Privacy Framework bzw. von Standardvertragsklauseln.</li>
             <li>MongoDB Inc. (Datenbank „MongoDB Atlas“) – Auftragsverarbeitung gemäß Art. 28 DSGVO.</li>
+            <li>Ein E-Mail-Versanddienst für Preisalarme (Auftragsverarbeitung gemäß Art. 28 DSGVO) – <em>Anbieter vor dem Start eintragen</em>.</li>
           </ul>
 
           <h2>7. Speicherdauer</h2>
@@ -112,10 +122,19 @@ export default function PrivacyPage() {
             has been checked. You can have your account deleted at any time.
           </p>
 
+          <h2>5a. Price alerts and address checks</h2>
+          <p>
+            For a price alert we store the offer and your target price in your account and email your account
+            address once the price is reached (Art. 6(1)(b) GDPR). You can delete alerts at any time in your
+            account. For the address check we process postcode, street and house number; the result is kept for
+            up to 7 days under a hash of the address only, not linked to you.
+          </p>
+
           <h2>6. Recipients and hosting</h2>
           <ul>
             <li>Vercel Inc. (hosting of the website and API), USA – transfers based on the EU-US Data Privacy Framework or standard contractual clauses.</li>
             <li>MongoDB Inc. (database "MongoDB Atlas") – data processing agreement under Art. 28 GDPR.</li>
+            <li>An email delivery service for price alerts (data processing agreement under Art. 28 GDPR) – <em>name the provider before launch</em>.</li>
           </ul>
 
           <h2>7. Retention</h2>

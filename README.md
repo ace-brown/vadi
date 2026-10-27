@@ -125,7 +125,11 @@ Optional:
 
 ```
 CORS_ORIGINS=https://my-frontend.example   # extra allowed origins, comma-separated
-CLIENT_URL=https://www.vadi.click          # where offers without a partner link redirect to
+CLIENT_URL=https://www.vadi.click          # links in emails; redirect target for offers without a partner link
+SMTP_URL=smtps://user:pass@smtp.example.com:465  # for price alert emails (logged to the console if unset)
+MAIL_FROM="Vadi <no-reply@vadi.click>"
+CRON_SECRET=a_long_random_string           # lets a scheduler call /api/jobs/price-alerts
+AVAILABILITY_SAMPLE=true                   # simulate address checks for the sample data; false = postcode estimate
 ADMIN_EMAIL=you@example.com                # used by npm run seed to create an admin
 ADMIN_PASSWORD=change_me
 ```
@@ -196,9 +200,12 @@ See `server/seed/example-feed.json` for the format. Offers are matched by `exter
 - `npm run dev` - Start development server with auto-reload
 - `npm run seed` - Load the sample data (see above)
 - `npm run import` - Import offers from a feed file (see above)
+- `npm run alerts` - Email users whose price alert target was reached (run on a schedule)
 - `npm test` - API tests (uses an in-memory MongoDB, no setup needed)
 
 ## API
+
+Interactive documentation: **`/api/docs`** (OpenAPI description at `/api/openapi.json`). Public reads are cacheable for 60 seconds, send ETags and are gzip-compressed.
 
 Every listing endpoint supports the same operations:
 
@@ -222,13 +229,22 @@ List query parameters (what each category allows is defined in `server/src/resou
 
 Offers (home and mobile) also accept `?postcode=10115` (home internet coverage), are sorted by `effectiveMonthlyPrice` by default, include their provider, and only show active, currently valid offers; admins can add `?includeInactive=true`.
 
-The response is `{ items, total, page, pages, ranges }`, where `ranges` holds the min/max of each range field across the whole collection (the client uses it to size its sliders).
+The response is `{ items, total, page, pages, ranges, facets }`: `ranges` holds the min/max of each range field across all visible items (the client sizes its sliders with it), and `facets` counts the results per filter option, each ignoring its own filter.
+
+Offers carry an `effectiveMonthlyPrice` (average over 24 months including fees and bonuses) and a `score` ("Vadi score", 1.0 best to 5.0) with `scoreDetails`; both can be used for sorting. Home internet also accepts `?street=&houseNumber=` (with `postcode`) to show only offers bookable at that address.
+
+Comparison tools:
+
+- `POST /api/advisor/mobile`, `POST /api/advisor/home` - needs-based recommendations with reasons
+- `POST /api/availability` - connections per provider at an address (cached 7 days)
+- `GET /api/price-history/:kind/:id` - effective price over time
+- `GET|POST /api/jobs/price-alerts` - send due price alert emails (admin or `Authorization: Bearer $CRON_SECRET`)
 
 "Go to offer": `GET /api/go/home/:id` and `GET /api/go/mobile/:id` log the click (without IP or user) and redirect to the offer's `affiliateUrl`; `GET /api/go/stats?days=30` (admin) returns click counts.
 
 Reviews: `GET /api/reviews?provider=<id>` (approved reviews with average), `POST /api/reviews` (logged in, published after moderation), `GET /api/reviews/moderation?status=pending`, `PATCH /api/reviews/:id` with `{ status }`, `DELETE /api/reviews/:id` (admin).
 
-My account (logged in): `GET /api/me/saved-offers`, `PUT|DELETE /api/me/saved-offers/:kind/:id` (watchlist with saved vs. current price), `GET|POST /api/me/comparisons`, `DELETE /api/me/comparisons/:id` (saved comparisons), `GET /api/me/reviews` (own reviews with status).
+My account (logged in): `GET /api/me/price-alerts`, `PUT|DELETE /api/me/price-alerts/:kind/:id` with `{ targetPrice }`, `GET /api/me/saved-offers`, `PUT|DELETE /api/me/saved-offers/:kind/:id` (watchlist with saved vs. current price), `GET|POST /api/me/comparisons`, `DELETE /api/me/comparisons/:id` (saved comparisons), `GET /api/me/reviews` (own reviews with status).
 
 Other endpoints: `POST /api/users/signup`, `POST /api/users/login`, `GET|PATCH|DELETE /api/users/:uid` (your own account, or any account for admins), `GET /api/users` and `PATCH /api/users/:uid/role` (admin), `GET /api/health`.
 

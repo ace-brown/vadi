@@ -8,13 +8,15 @@
     "dev": "nodemon index.js",
     "seed": "node scripts/seed.js",
     "import": "node scripts/import-offers.js",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "alerts": "node scripts/check-price-alerts.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "compression": "^1.8.2",
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.1",
@@ -24,6 +26,8 @@
     "mongoose": "^8.9.2",
     "multer": "^1.4.5-lts.2",
     "nanoid": "^5.0.9",
+    "nodemailer": "^6.10.1",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

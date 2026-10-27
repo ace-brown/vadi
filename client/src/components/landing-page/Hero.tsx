@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Smartphone, Wifi } from "lucide-react";
+import { Smartphone, Sparkles, Wifi } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -150,6 +150,10 @@ export default function Hero() {
           </div>
         </form>
       </div>
+      <Link to="/advisor" className="inline-flex items-center gap-2 mt-5 text-[#023e8a] font-medium hover:underline">
+        <Sparkles className="w-4 h-4" />
+        {t("advisor.cta")}
+      </Link>
     </section>
   );
 }

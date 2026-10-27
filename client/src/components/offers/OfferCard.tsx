@@ -12,6 +12,8 @@ import { goToOfferUrl } from "@/lib/api";
 import { OfferKind, OfferType } from "@/types";
 import { formatPrice } from "@/utils/helpers";
 import SaveButton from "./SaveButton";
+import ScoreBadge from "./ScoreBadge";
+import { recentPriceDrop } from "./offer-details";
 
 type Props = {
   kind: OfferKind;
@@ -61,21 +63,30 @@ export default function OfferCard({ kind, offer, tags, stats, highlights = [] }:
   const provider = offer.providerId;
   const isSelected = selected[kind].includes(offer._id);
   const detailsPath = `/internet/${kind === "home" ? "home-tariff" : "mobile-tariff"}/${offer._id}`;
+  const droppedFrom = recentPriceDrop(offer);
 
   return (
     <Card className="p-4 hover:shadow-md transition-shadow">
-      {highlights.length > 0 && (
-        <div className="flex gap-2 -mt-1 mb-1">
+      {(highlights.length > 0 || droppedFrom) && (
+        <div className="flex flex-wrap gap-2 -mt-1 mb-1">
           {highlights.map((label) => (
             <Badge key={label} className="bg-emerald-600 text-white border-transparent">
               {label}
             </Badge>
           ))}
+          {droppedFrom && (
+            <Badge variant="outline" className="border-emerald-300 bg-emerald-50 text-emerald-800">
+              ↓ {t("offer.priceDropped")} · {t("offer.priceWas", { price: formatPrice(droppedFrom) })}
+            </Badge>
+          )}
         </div>
       )}
       <div className="flex flex-col md:flex-row gap-4 md:items-center">
         <div className="flex gap-4 flex-1 min-w-0">
-          <CardImage src={provider?.logo} alt={`${offer.provider} logo`} contain />
+          <div className="flex flex-col items-center gap-2 shrink-0">
+            <CardImage src={provider?.logo} alt={`${offer.provider} logo`} contain />
+            <ScoreBadge score={offer.score} />
+          </div>
           <div className="flex-1 min-w-0 space-y-3">
             <div>
               <p className="flex items-center gap-2 text-sm text-gray-500">

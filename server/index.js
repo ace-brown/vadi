@@ -2,6 +2,8 @@ require('dotenv').config();
 
 const express = require('express');
 const helmet = require('helmet');
+const compression = require('compression');
+const swaggerUi = require('swagger-ui-express');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const multer = require('multer');
@@ -11,6 +13,9 @@ const usersRoutes = require('./src/routes/users-routes')
 const goRoutes = require('./src/routes/go-routes')
 const reviewsRoutes = require('./src/routes/reviews-routes')
 const meRoutes = require('./src/routes/me-routes')
+const toolsRoutes = require('./src/routes/tools-routes')
+const jobsRoutes = require('./src/routes/jobs-routes')
+const openapi = require('./src/openapi')
 const createResourceRouter = require('./src/routes/resource-routes')
 const resources = require('./src/resources')
 const HttpError = require('./src/models/http-error')
@@ -24,6 +29,8 @@ app.set('trust proxy', 1);
 
 // Security headers. Images are loaded by the frontend from another origin.
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+
+app.use(compression());
 
 // Middleware to parse JSON requests
 app.use(express.json({ limit: '100kb' }));
@@ -57,6 +64,24 @@ app.use((req, res, next) => {
 
 app.use('/uploads/images', express.static(path.join(__dirname, 'uploads', 'images')));
 
+// HTTP caching: anonymous reads of public data may be cached briefly by browsers and
+// CDNs (Express adds ETags, so unchanged responses come back as 304). Anything
+// personal is never cached.
+const PRIVATE_PATHS = /^\/(me|users|jobs|go|health)(\/|$)/;
+app.use('/api', (req, res, next) => {
+    if (req.method === 'GET' && !req.headers.authorization && !PRIVATE_PATHS.test(req.path)) {
+        res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+    } else {
+        res.set('Cache-Control', 'private, no-store');
+    }
+    res.vary('Authorization');
+    next();
+});
+
+// API documentation
+app.get('/api/openapi.json', (req, res) => res.json(openapi));
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openapi, { customSiteTitle: 'Vadi API' }));
+
 // Health check
 app.get('/api/health', (req, res) => {
     const dbConnected = mongoose.connection.readyState === 1;
@@ -73,6 +98,22 @@ const strictLimiter = rateLimit({
 });
 app.use(['/api/users/login', '/api/users/signup'], strictLimiter);
 app.post('/api/reviews', strictLimiter);
+
+// Address checks and the advisor are heavier than normal reads
+const toolsLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    limit: process.env.NODE_ENV === 'test' ? 1000 : 30,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    message: { message: 'Too many requests, please slow down.' },
+});
+app.use(['/api/availability', '/api/advisor'], toolsLimiter);
+
+// Advisor, address availability, price history
+app.use('/api', toolsRoutes);
+
+// Scheduled jobs (price alerts)
+app.use('/api/jobs', jobsRoutes);
 
 // "Go to offer" redirects and click statistics
 app.use('/api/go', goRoutes);

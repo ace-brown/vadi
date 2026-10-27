@@ -45,6 +45,18 @@ const offerFields = {
     // Calculated on save
     totalCost24: { type: Number },
     effectiveMonthlyPrice: { type: Number, index: true },
+    // Set when the effective price changes, for "price dropped" labels
+    previousEffectiveMonthlyPrice: { type: Number, default: null },
+    priceChangedAt: { type: Date, default: null },
+    // Vadi score (German school grade: 1.0 best, 5.0 worst) and its parts (0–100 each),
+    // recalculated for all offers of a kind whenever offers change (see src/scoring.js)
+    score: { type: Number, default: null, index: true },
+    scoreDetails: {
+        price: Number,
+        performance: Number,
+        flexibility: Number,
+        provider: Number,
+    },
     affiliateUrl: { type: String, trim: true, maxlength: 1000, validate: httpUrl },
     active: { type: Boolean, default: true, index: true },
     validFrom: { type: Date, default: null },
@@ -54,8 +66,14 @@ const offerFields = {
     updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 };
 
-function createOfferSchema(extraFields) {
+// kind: 'home' or 'mobile', stored with the price history
+function createOfferSchema(extraFields, kind) {
     const schema = new mongoose.Schema({ ...offerFields, ...extraFields }, { timestamps: true });
+
+    // Remember the price as loaded, to detect changes on save
+    schema.post('init', function () {
+        this.$locals.loadedEffectivePrice = this.effectiveMonthlyPrice;
+    });
 
     schema.pre('validate', async function () {
         if (this.promoMonths > 0 && this.regularPrice === null) {
@@ -74,6 +92,27 @@ function createOfferSchema(extraFields) {
                 this.provider = provider.name;
             }
         }
+    });
+
+    schema.pre('save', function () {
+        const before = this.$locals.loadedEffectivePrice;
+        this.$locals.priceChanged = this.isNew || before !== this.effectiveMonthlyPrice;
+        if (!this.isNew && this.$locals.priceChanged) {
+            this.previousEffectiveMonthlyPrice = before;
+            this.priceChangedAt = new Date();
+        }
+    });
+
+    // Keep a history of effective prices
+    schema.post('save', async function () {
+        if (!this.$locals.priceChanged) return;
+        this.$locals.loadedEffectivePrice = this.effectiveMonthlyPrice;
+        await mongoose.model('PriceHistory').create({
+            offerType: kind,
+            offer: this._id,
+            effectiveMonthlyPrice: this.effectiveMonthlyPrice,
+            monthlyPrice: this.monthlyPrice,
+        });
     });
 
     schema.index({ active: 1, effectiveMonthlyPrice: 1 });

@@ -17,6 +17,7 @@ import MobileTariffPage from "@/pages/internet/MobileTariff";
 import OfferDetailPage from "@/pages/internet/OfferDetail";
 import ComparePage from "@/pages/internet/Compare";
 import PartnerRedirectPage from "@/pages/PartnerRedirect";
+import AdvisorPage from "@/pages/Advisor";
 import ContactPage from "@/pages/legal/Contact";
 import PrivacyPage from "@/pages/legal/Privacy";
 import TermsPage from "@/pages/legal/Terms";
@@ -47,6 +48,7 @@ const router = createBrowserRouter([
         { path: "internet/mobile-tariff/:id", element: <OfferDetailPage kind="mobile" /> },
         { path: "internet/internet-details-select", element: <Navigate to="/" replace /> },
         { path: "compare/:kind", element: <ComparePage /> },
+        { path: "advisor", element: <AdvisorPage /> },
         { path: "partner-redirect", element: <PartnerRedirectPage /> },
 
         // ---------- Auth & account ----------

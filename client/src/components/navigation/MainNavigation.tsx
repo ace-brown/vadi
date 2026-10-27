@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Home, Info, Menu, Smartphone, Wifi, X } from "lucide-react";
+import { Home, Info, Menu, Smartphone, Sparkles, Wifi, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuthContext } from "@/context/auth-context";
 import { LANGUAGES } from "@/i18n";
@@ -12,6 +12,7 @@ const navItems = [
   { key: "nav.home", icon: Home, path: "/" },
   { key: "nav.homeInternet", icon: Wifi, path: "/internet/home-tariff" },
   { key: "nav.mobilePlans", icon: Smartphone, path: "/internet/mobile-tariff" },
+  { key: "nav.advisor", icon: Sparkles, path: "/advisor" },
   { key: "nav.howWeCompare", icon: Info, path: "/how-we-compare" },
 ];
 

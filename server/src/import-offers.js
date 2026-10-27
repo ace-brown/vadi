@@ -1,6 +1,8 @@
 const Provider = require('./models/provider');
 const HomeTariff = require('./models/internet/home-tariff');
 const MobileTariff = require('./models/internet/mobile-tariff');
+const AvailabilityCheck = require('./models/availability-check');
+const { recomputeAllScores } = require('./scoring');
 
 const OFFER_TYPES = [
     { key: 'homeTariffs', Model: HomeTariff },
@@ -81,6 +83,10 @@ async function importFeed(feed, { dryRun = false, now = new Date() } = {}) {
         }
     }
 
+    if (!dryRun) {
+        await recomputeAllScores();
+        await AvailabilityCheck.deleteMany({});
+    }
     return summary;
 }
 

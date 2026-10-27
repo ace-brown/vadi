@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { createOfferSchema } = require('../schemas/offer-schema');
+require('../price-history');
 
 const homeTariffSchema = createOfferSchema({
     connectionType: { type: String, required: true, enum: ['DSL', 'VDSL', 'Cable', 'Fiber', 'LTE'], index: true },
@@ -13,7 +14,7 @@ const homeTariffSchema = createOfferSchema({
             default: [],
         },
     },
-});
+}, 'home');
 
 const HomeTariff = mongoose.model('HomeTariff', homeTariffSchema);
 module.exports = HomeTariff;
