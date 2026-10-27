@@ -1,112 +1,96 @@
-import { useContext } from "react";
-import { AuthContext } from "@/context/auth-context";
 import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
 } from "react-router-dom";
 
+import RequireAuth from "@/components/common/RequireAuth";
 import HomePage from "@/pages/Home";
 import RootLayout from "@/pages/Root";
 import ErrorPage from "@/pages/Error";
-import TerminalPage from "@/pages/Terminal";
 import LoginPage from "@/pages/dashboard/Login";
 import SignupPage from "@/pages/dashboard/Signup";
-import AuthLayoutPage from "@/pages/dashboard/AuthLayout";
-import SettingsPage from "@/pages/dashboard/Settings";
+import AccountPage from "@/pages/dashboard/Account";
+import AdminPage from "@/pages/admin/Admin";
+import HomeTariffPage from "@/pages/internet/HomeTariff";
+import MobileTariffPage from "@/pages/internet/MobileTariff";
+import OfferDetailPage from "@/pages/internet/OfferDetail";
+import ComparePage from "@/pages/internet/Compare";
+import PartnerRedirectPage from "@/pages/PartnerRedirect";
+import ContactPage from "@/pages/legal/Contact";
+import PrivacyPage from "@/pages/legal/Privacy";
+import TermsPage from "@/pages/legal/Terms";
+import ImpressumPage from "@/pages/legal/Impressum";
+import HowWeComparePage from "@/pages/legal/HowWeCompare";
 import { aestheticRoutes } from "@/routes/aestheticRoutes";
-import { internetRoutes } from "@/routes/internetRoutes";
 import { vehicleRoutes } from "@/routes/vehicleRoutes";
-import { travelRoutes } from "./routes/travelRoutes";
-import ApplianceRepairPage from "./pages/electronics/ApplianceRepair";
-import { PMRoutes } from "./routes/PMRoutes";
-import { agricultureRoutes } from "./routes/agricultureRoutes";
-import DentalPage from "./pages/healthcare/Dental";
-import { educationRoutes } from "./routes/educationRoutes";
-import Contact from "./pages/legal/Contact";
-import PrivacyPage from "./pages/legal/Privacy";
-import TermsPage from "./pages/legal/Terms";
+import { PMRoutes } from "@/routes/PMRoutes";
+import { agricultureRoutes } from "@/routes/agricultureRoutes";
+import { educationRoutes } from "@/routes/educationRoutes";
+import ApplianceRepairPage from "@/pages/electronics/ApplianceRepair";
+import DentalPage from "@/pages/healthcare/Dental";
 
-function App() {
-  const auth = useContext(AuthContext);
-  const router = createBrowserRouter([
-    // ---------------- Public Routes ----------------
+// Created once: rebuilding the router on every render (e.g. after logging in)
+// would cancel navigations that are in progress
+const router = createBrowserRouter([
     {
       path: "/",
       element: <RootLayout />,
       errorElement: <ErrorPage />,
       children: [
-        // ---------- Static Pages ----------
         { index: true, element: <HomePage /> },
-        { path: "terminal", element: <TerminalPage /> },
-        // ---------- Auth ----------
+
+        // ---------- Comparison (launch categories) ----------
+        { path: "internet/home-tariff", element: <HomeTariffPage /> },
+        { path: "internet/home-tariff/:id", element: <OfferDetailPage kind="home" /> },
+        { path: "internet/mobile-tariff", element: <MobileTariffPage /> },
+        { path: "internet/mobile-tariff/:id", element: <OfferDetailPage kind="mobile" /> },
+        { path: "internet/internet-details-select", element: <Navigate to="/" replace /> },
+        { path: "compare/:kind", element: <ComparePage /> },
+        { path: "partner-redirect", element: <PartnerRedirectPage /> },
+
+        // ---------- Auth & account ----------
         { path: "login", element: <LoginPage /> },
         { path: "signup", element: <SignupPage /> },
+        {
+          path: "account",
+          element: (
+            <RequireAuth>
+              <AccountPage />
+            </RequireAuth>
+          ),
+        },
+        { path: "dashboard", element: <Navigate to="/account" replace /> },
+        {
+          path: "admin",
+          element: (
+            <RequireAuth admin>
+              <AdminPage />
+            </RequireAuth>
+          ),
+        },
 
-        // ---------- Dashboard (Private) ----------
-        {
-          path: "dashboard",
-          element: auth.isLoggedIn ? <AuthLayoutPage /> : <Navigate to="/" />,
-          children: [{ index: true, element: <SettingsPage /> }],
-        },
-        // ---------- Comparison Routes ----------
-        {
-          path: "aesthetic",
-          children: aestheticRoutes,
-        },
-        {
-          path: "internet",
-          children: internetRoutes,
-        },
-        {
-          path: "vehicle",
-          children: vehicleRoutes,
-        },
-        {
-          path: "electronics/appliance-repair",
-          element: <ApplianceRepairPage />,
-        },
-        {
-          path: "pc-mobile",
-          children: PMRoutes,
-        },
-        {
-          path: "agriculture",
-          children: agricultureRoutes,
-        },
-        {
-          path: "healthcare/dental",
-          element: <DentalPage />,
-        },
-        {
-          path: "education",
-          children: educationRoutes,
-        },
-        {
-          path: "healthcare/dental",
-          element: <DentalPage />,
-        },
-        {
-          path: "travel",
-          children: travelRoutes,
-        },
-        // ---------- Footer Routes ----------
-        {
-          path: "/contact",
-          element: <Contact />,
-        },
-        {
-          path: "/privacy",
-          element: <PrivacyPage />,
-        },
-        {
-          path: "/terms",
-          element: <TermsPage />,
-        },
+        // ---------- Legal & info ----------
+        { path: "how-we-compare", element: <HowWeComparePage /> },
+        { path: "impressum", element: <ImpressumPage /> },
+        { path: "privacy", element: <PrivacyPage /> },
+        { path: "terms", element: <TermsPage /> },
+        { path: "contact", element: <ContactPage /> },
+
+        // ---------- Other categories ----------
+        // Not linked from the navigation until they have real data
+        { path: "aesthetic", children: aestheticRoutes },
+        { path: "vehicle", children: vehicleRoutes },
+        { path: "electronics/appliance-repair", element: <ApplianceRepairPage /> },
+        { path: "pc-mobile", children: PMRoutes },
+        { path: "agriculture", children: agricultureRoutes },
+        { path: "healthcare/dental", element: <DentalPage /> },
+        { path: "education", children: educationRoutes },
       ],
     },
-  ]);
+]);
 
+function App() {
   return <RouterProvider router={router} />;
 }
 

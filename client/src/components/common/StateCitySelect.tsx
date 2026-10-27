@@ -6,6 +6,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import statesData from "@/data/germany_states_and_cities.json";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   state: string;
@@ -25,11 +26,12 @@ export default function StateCitySelect({
   onStateChange,
   onCityChange,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <div className="space-y-4">
       {/* State selector */}
       <div className="space-y-2">
-        <label className="block text-sm font-medium">State</label>
+        <label className="block text-sm font-medium">{t("filters.state")}</label>
         <Select
           value={state}
           onValueChange={(value) => {
@@ -38,7 +40,7 @@ export default function StateCitySelect({
           }}
         >
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Any state" />
+            <SelectValue placeholder={t("filters.anyState")} />
           </SelectTrigger>
           <SelectContent className="bg-white shadow-md rounded-md">
             {Object.keys(citiesByState).map((stateName) => (
@@ -57,10 +59,10 @@ export default function StateCitySelect({
       {/* City selector */}
       {state && citiesByState[state] && (
         <div className="space-y-2">
-          <label className="block text-sm font-medium">City</label>
+          <label className="block text-sm font-medium">{t("filters.city")}</label>
           <Select value={city} onValueChange={onCityChange}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Any city" />
+              <SelectValue placeholder={t("filters.anyCity")} />
             </SelectTrigger>
             <SelectContent className="bg-white shadow-md rounded-md">
               {citiesByState[state].map((cityName) => (
@@ -86,7 +88,7 @@ export default function StateCitySelect({
             onCityChange("");
           }}
         >
-          Clear location
+          {t("filters.clearLocation")}
         </button>
       )}
     </div>

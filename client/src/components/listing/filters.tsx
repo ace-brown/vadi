@@ -4,6 +4,7 @@ import FilterCollapse from "@/components/common/FilterCollapse";
 import FilterSlider from "@/components/common/FilterSlider";
 import StateCitySelect from "@/components/common/StateCitySelect";
 import { Range } from "@/types";
+import { useTranslation } from "react-i18next";
 
 export function SearchFilter({
   value,
@@ -35,8 +36,9 @@ export function LocationFilter(props: {
   onStateChange: (state: string) => void;
   onCityChange: (city: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
-    <FilterCollapse label="Location">
+    <FilterCollapse label={t("filters.location")}>
       <StateCitySelect {...props} />
     </FilterCollapse>
   );
@@ -61,6 +63,7 @@ export function LimitSlider({
   step?: number;
   format: (value: number) => string;
 }) {
+  const { t } = useTranslation();
   if (!range || range.min === null || range.max === null) return null;
   const min = Math.floor(range.min / step) * step;
   const max = Math.ceil(range.max / step) * step;
@@ -79,10 +82,10 @@ export function LimitSlider({
       }}
       formatValue={(v) =>
         value === null
-          ? "Any"
+          ? t("common.any")
           : kind === "max"
-            ? `Up to ${format(v)}`
-            : `At least ${format(v)}`
+            ? t("common.upTo", { value: format(v) })
+            : t("common.atLeast", { value: format(v) })
       }
     />
   );

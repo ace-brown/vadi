@@ -1,15 +1,34 @@
 import { Mail } from "lucide-react";
+import { SITE } from "@/config/site";
+import LegalPage from "./LegalPage";
+
+function Email() {
+  return (
+    <p className="flex items-center gap-2">
+      <Mail className="text-[#023e8a]" />
+      <a href={`mailto:${SITE.email}`} className="break-all">
+        {SITE.email}
+      </a>
+    </p>
+  );
+}
 
 export default function ContactPage() {
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-2xl">
-      <h1 className="text-2xl font-bold text-center mb-4 text-[#023e8a]">
-        Contact us
-      </h1>
-      <div className="flex items-center justify-center gap-2 text-gray-700">
-        <Mail className="text-[#023e8a]" />
-        <span className="text-md break-all">kazem_abdi@yahoo.com</span>
-      </div>
-    </div>
+    <LegalPage
+      title={{ de: "Kontakt", en: "Contact" }}
+      de={
+        <>
+          <p>Fragen, Hinweise auf falsche Preise oder Anbieter, die gelistet werden möchten: schreib uns.</p>
+          <Email />
+        </>
+      }
+      en={
+        <>
+          <p>Questions, wrong prices, or a provider that wants to be listed: write to us.</p>
+          <Email />
+        </>
+      }
+    />
   );
 }

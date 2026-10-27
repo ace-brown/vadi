@@ -1,11 +1,12 @@
 // Fill the database with the German sample data.
 //
-//   npm run seed              insert data into empty collections only
-//   npm run seed -- --reset   delete the listings first, then insert
+//   npm run seed                   insert data into empty collections only
+//   npm run seed -- --reset        delete listings, providers, reviews and clicks first
 //   npm run seed -- --admin-only   only create/promote the admin user
 //
 // If ADMIN_EMAIL and ADMIN_PASSWORD are set, an admin user is created
 // (or an existing user with that email is promoted and its password reset).
+// Users are never deleted. With NODE_ENV=production, --reset also needs --force.
 require('dotenv').config();
 
 const mongoose = require('mongoose');
@@ -14,7 +15,14 @@ const bcrypt = require('bcryptjs');
 const { getMongoUri } = require('../src/db');
 const resources = require('../src/resources');
 const User = require('../src/models/user');
-const { data } = require('../seed/data');
+const Provider = require('../src/models/provider');
+const Review = require('../src/models/review');
+const Click = require('../src/models/click');
+const { importFeed } = require('../src/import-offers');
+const { data, providers } = require('../seed/data');
+
+// Offers go through the import, which needs providers to exist first
+const OFFER_MODELS = ['HomeTariff', 'MobileTariff'];
 
 async function seedAdmin() {
     const { ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
@@ -47,6 +55,9 @@ async function seedAdmin() {
 
 async function main() {
     const reset = process.argv.includes('--reset');
+    if (reset && process.env.NODE_ENV === 'production' && !process.argv.includes('--force')) {
+        throw new Error('Refusing to --reset with NODE_ENV=production. Add --force if you really mean it.');
+    }
 
     await mongoose.connect(getMongoUri());
     console.log(`Connected to database "${mongoose.connection.db.databaseName}".`);
@@ -75,11 +86,28 @@ async function main() {
                 'Run "npm run seed -- --reset" to replace it.'
             );
         }
+    } else {
+        for (const model of [...models, Review, Click]) {
+            await model.deleteMany({});
+        }
     }
 
+    // Providers and offers
+    const summary = await importFeed({
+        providers,
+        homeTariffs: data.HomeTariff,
+        mobileTariffs: data.MobileTariff,
+    });
+    if (summary.errors.length > 0) {
+        throw new Error(`Some offers could not be imported:\n  ${summary.errors.join('\n  ')}`);
+    }
+    console.log(`  ${Provider.collection.name}: ${providers.length}`);
+    console.log(`  offers: ${summary.offers.created}`);
+
+    // Everything else
     for (const model of models) {
+        if (model === Provider || OFFER_MODELS.includes(model.modelName)) continue;
         const rows = data[model.modelName] || [];
-        if (reset) await model.deleteMany({});
         await model.insertMany(rows);
         console.log(`  ${model.collection.name}: ${rows.length}`);
     }

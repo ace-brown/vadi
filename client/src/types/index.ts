@@ -19,7 +19,7 @@ export interface UserType {
     avatar?: string;
   };
   settings?: {
-    language?: "en" | "fa";
+    language?: "de" | "en";
     notifications?: boolean;
   };
 }
@@ -35,31 +35,67 @@ export interface ListingResponse<T> {
   ranges: Record<string, Range>;
 }
 
-export interface MobilePlanType {
+export interface ProviderType {
   _id: string;
+  name: string;
+  slug: string;
+  logo?: string;
+  website?: string;
+  legalName?: string;
+  imprintUrl?: string;
+  description?: string;
+  rating?: number;
+  ratingSource?: string;
+}
+
+// Fields shared by home internet and mobile offers
+export interface OfferType {
+  _id: string;
+  providerId: ProviderType; // populated by the API
   provider: string;
   name: string;
+  termMonths: number;
+  monthlyPrice: number;
+  promoMonths: number;
+  regularPrice: number | null;
+  setupFee: number;
+  hardwareFee: number;
+  bonus: number;
+  totalCost24: number;
+  effectiveMonthlyPrice: number;
+  affiliateUrl?: string | null;
+  active: boolean;
+  validFrom?: string | null;
+  validUntil?: string | null;
+  lastCheckedAt?: string | null;
+  updatedAt?: string;
+}
+
+export interface MobilePlanType extends OfferType {
   contractType: "prepaid" | "contract";
   network: "4G" | "5G";
   dataGB: number | null; // null means unlimited
   minutes: number | null; // null means unlimited
-  termMonths: number;
-  monthlyPrice: number;
-  setupFee: number;
-  image?: string;
 }
 
-export interface HomePlanType {
-  _id: string;
-  provider: string;
-  name: string;
+export interface HomePlanType extends OfferType {
   connectionType: "DSL" | "VDSL" | "Cable" | "Fiber" | "LTE";
   downloadMbps: number;
   uploadMbps: number;
-  termMonths: number;
-  monthlyPrice: number;
-  setupFee: number;
-  image?: string;
+  coverage: { nationwide: boolean; postcodePrefixes: string[] };
+}
+
+export type OfferKind = "home" | "mobile";
+
+export interface ReviewType {
+  _id: string;
+  authorName: string;
+  rating: number;
+  title?: string;
+  text: string;
+  createdAt: string;
+  status?: "pending" | "approved" | "rejected";
+  provider?: { _id: string; name: string };
 }
 
 // A physical place: repair shop, clinic, bookstore, salon...

@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
+const Review = require("../models/review");
 
 const SALT_ROUNDS = 12;
 
@@ -251,6 +252,7 @@ async function deleteUser(req, res, next) {
             return next(new HttpError("Could not find a user for the provided ID", 404));
         }
 
+        await Review.deleteMany({ user: user._id });
         await user.deleteOne();
 
         res.status(200).json({ message: "User and all related data deleted successfully" });

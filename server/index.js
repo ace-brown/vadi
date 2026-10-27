@@ -1,12 +1,16 @@
 require('dotenv').config();
 
 const express = require('express');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 
 const usersRoutes = require('./src/routes/users-routes')
-const downloadRoutes = require('./src/routes/download-routes')
+const goRoutes = require('./src/routes/go-routes')
+const reviewsRoutes = require('./src/routes/reviews-routes')
+const meRoutes = require('./src/routes/me-routes')
 const createResourceRouter = require('./src/routes/resource-routes')
 const resources = require('./src/resources')
 const HttpError = require('./src/models/http-error')
@@ -14,6 +18,12 @@ const { getMongoUri } = require('./src/db')
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+// Behind Vercel's proxy: use the real client IP for rate limiting
+app.set('trust proxy', 1);
+
+// Security headers. Images are loaded by the frontend from another origin.
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
 // Middleware to parse JSON requests
 app.use(express.json({ limit: '100kb' }));
@@ -38,7 +48,7 @@ app.use((req, res, next) => {
         'Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content-Type, Accept, Authorization'
     );
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
     if (req.method === 'OPTIONS') {
         return res.sendStatus(204); // Preflight response
     }
@@ -53,8 +63,25 @@ app.get('/api/health', (req, res) => {
     res.status(dbConnected ? 200 : 503).json({ status: dbConnected ? 'ok' : 'degraded', db: dbConnected });
 });
 
-// Download routes
-app.use('/api/download', downloadRoutes);
+// Slow down password guessing and spam sign-ups / reviews
+const strictLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: process.env.NODE_ENV === 'test' ? 1000 : 20,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    message: { message: 'Too many attempts, please try again in a few minutes.' },
+});
+app.use(['/api/users/login', '/api/users/signup'], strictLimiter);
+app.post('/api/reviews', strictLimiter);
+
+// "Go to offer" redirects and click statistics
+app.use('/api/go', goRoutes);
+
+// Provider reviews
+app.use('/api/reviews', reviewsRoutes);
+
+// The logged-in user's watchlist, saved comparisons and reviews
+app.use('/api/me', meRoutes);
 
 // Listing routes (mobile/home tariffs, salons, repairs, ...), see src/resources.js
 resources.forEach(({ path: routePath, model, options }) => {
@@ -96,10 +123,19 @@ app.use(function (error, req, res, next) {
     res.status(status).json({ message: status === 500 ? 'An unknown error occurred!' : error.message });
 });
 
-// Connect to MongoDB
-mongoose
-    .connect(getMongoUri())
-    .then(function () {
-        app.listen(port, () => console.log(`Server is running at port ${port}`))
-    })
-    .catch((err) => { console.log(err) })
+// Connect to MongoDB. Queries made before the connection is ready are queued.
+const connection = mongoose.connect(getMongoUri());
+
+// Run a server when started directly (node index.js); on Vercel and in tests the
+// exported app is used instead
+if (require.main === module) {
+    connection
+        .then(function () {
+            app.listen(port, () => console.log(`Server is running at port ${port}`))
+        })
+        .catch((err) => { console.log(err) })
+} else {
+    connection.catch((err) => { console.error(err) })
+}
+
+module.exports = app;

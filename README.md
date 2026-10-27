@@ -1,6 +1,8 @@
 # Vadi - Local Services Comparison
 
-Vadi is a full-stack site for comparing local services and prices in Germany: internet and mobile plans, salons, car and motorcycle repair, appliance and phone/computer repair, garden supplies and farm shops, dentists, bookstores and education centers. Visitors filter and sort listings by location, price, rating and features.
+Vadi is a full-stack comparison site for Germany. The launch version compares **home internet and mobile plans**: offers are ranked by their effective monthly price over 24 months (promo prices, setup and hardware fees and bonuses included), can be filtered and compared side by side, and link to the provider through a tracked "go to offer" redirect. The site is in German with an English switch.
+
+Other categories (salons, repairs, dentists, education, agriculture) still exist in the code and API but are not linked from the site until they have real data.
 
 The bundled data (`npm run seed`) is fictional sample data: business and provider names are made up, addresses use real German street names, and prices are in euros.
 
@@ -44,9 +46,11 @@ vadi/
         ├── models/       # Mongoose schemas with validation
         ├── routes/       # API routes
         ├── middleware/   # Auth, admin check, uploads
-        └── resources.js  # Which listing endpoints exist and how they can be filtered
-    ├── seed/data.js      # German sample data
-    └── scripts/seed.js   # npm run seed
+        ├── resources.js  # Which listing endpoints exist and how they can be filtered
+        └── import-offers.js  # Feed import used by npm run import / seed
+    ├── seed/             # German sample data and an example import feed
+    ├── scripts/          # seed.js, import-offers.js
+    └── tests/            # API tests (npm test)
 ```
 
 ## Categories
@@ -121,6 +125,7 @@ Optional:
 
 ```
 CORS_ORIGINS=https://my-frontend.example   # extra allowed origins, comma-separated
+CLIENT_URL=https://www.vadi.click          # where offers without a partner link redirect to
 ADMIN_EMAIL=you@example.com                # used by npm run seed to create an admin
 ADMIN_PASSWORD=change_me
 ```
@@ -143,7 +148,16 @@ npm run seed -- --reset      # replace existing listings with the sample data
 npm run seed -- --admin-only # only create/promote the ADMIN_EMAIL user to admin
 ```
 
-Users are never deleted by the seed script.
+Users are never deleted by the seed script. With `NODE_ENV=production`, `--reset` also requires `--force`.
+
+### Importing offers
+
+```bash
+npm run import -- path/to/feed.json            # create/update providers and offers
+npm run import -- path/to/feed.json --dry-run  # validate only
+```
+
+See `server/seed/example-feed.json` for the format. Offers are matched by `externalId`; offers of a provider that are missing from its feed are switched off.
 
 ### Running Locally
 
@@ -181,6 +195,8 @@ Users are never deleted by the seed script.
 - `npm start` - Start production server
 - `npm run dev` - Start development server with auto-reload
 - `npm run seed` - Load the sample data (see above)
+- `npm run import` - Import offers from a feed file (see above)
+- `npm test` - API tests (uses an in-memory MongoDB, no setup needed)
 
 ## API
 
@@ -194,7 +210,7 @@ Every listing endpoint supports the same operations:
 | `PATCH` | `/api/<category>/:id` | Admin |
 | `DELETE` | `/api/<category>/:id` | Admin |
 
-Categories: `internet/mobile-tariffs`, `internet/home-tariffs`, `aesthetic/men-salon`, `aesthetic/women-salon`, `vehicle/auto-repair`, `vehicle/motorcycle-repair`, `electronics/appliance-repair`, `pc-mobile/mobile-repair`, `pc-mobile/computer-repair`, `agriculture/garden-supplies`, `agriculture/animal-based-products`, `healthcare/dental`, `education/bookstores`, `education/centers`.
+Categories: `internet/mobile-tariffs`, `internet/home-tariffs`, `providers`, `aesthetic/men-salon`, `aesthetic/women-salon`, `vehicle/auto-repair`, `vehicle/motorcycle-repair`, `electronics/appliance-repair`, `pc-mobile/mobile-repair`, `pc-mobile/computer-repair`, `agriculture/garden-supplies`, `agriculture/animal-based-products`, `healthcare/dental`, `education/bookstores`, `education/centers`.
 
 List query parameters (what each category allows is defined in `server/src/resources.js`):
 
@@ -204,7 +220,15 @@ List query parameters (what each category allows is defined in `server/src/resou
 - `sort=<field>` or `sort=-<field>` for descending, e.g. `?sort=-rating`
 - `page` and `limit` (default 50, max 100)
 
+Offers (home and mobile) also accept `?postcode=10115` (home internet coverage), are sorted by `effectiveMonthlyPrice` by default, include their provider, and only show active, currently valid offers; admins can add `?includeInactive=true`.
+
 The response is `{ items, total, page, pages, ranges }`, where `ranges` holds the min/max of each range field across the whole collection (the client uses it to size its sliders).
+
+"Go to offer": `GET /api/go/home/:id` and `GET /api/go/mobile/:id` log the click (without IP or user) and redirect to the offer's `affiliateUrl`; `GET /api/go/stats?days=30` (admin) returns click counts.
+
+Reviews: `GET /api/reviews?provider=<id>` (approved reviews with average), `POST /api/reviews` (logged in, published after moderation), `GET /api/reviews/moderation?status=pending`, `PATCH /api/reviews/:id` with `{ status }`, `DELETE /api/reviews/:id` (admin).
+
+My account (logged in): `GET /api/me/saved-offers`, `PUT|DELETE /api/me/saved-offers/:kind/:id` (watchlist with saved vs. current price), `GET|POST /api/me/comparisons`, `DELETE /api/me/comparisons/:id` (saved comparisons), `GET /api/me/reviews` (own reviews with status).
 
 Other endpoints: `POST /api/users/signup`, `POST /api/users/login`, `GET|PATCH|DELETE /api/users/:uid` (your own account, or any account for admins), `GET /api/users` and `PATCH /api/users/:uid/role` (admin), `GET /api/health`.
 

@@ -1,115 +1,91 @@
-import { Link, useLocation } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Home, Info, Menu, Smartphone, Wifi, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AuthContext } from "@/context/auth-context";
+import { LANGUAGES } from "@/i18n";
 
-import {
-  Smartphone,
-  Car,
-  Scissors,
-  Tv,
-  Wifi,
-  HeartPulse,
-  Shovel,
-  Book,
-  Menu,
-  X,
-  ChevronDown,
-  Home,
-} from "lucide-react";
-import { useEffect, useState } from "react";
-
+// Only the launch categories are shown; the other category pages still exist
+// (see App.tsx) and can be added back here once they have real data
 const navItems = [
-  {
-    label: "Home",
-    icon: Home,
-    path: "/",
-  },
-  {
-    label: "Internet",
-    icon: Wifi,
-    submenu: [
-      { label: "Home internet", path: "/internet/home-tariff" },
-      { label: "Mobile internet", path: "/internet/mobile-tariff" },
-    ],
-  },
-  {
-    label: "Beauty & aesthetics",
-    icon: Scissors,
-    submenu: [
-      { label: "Women's salon", path: "/aesthetic/women-salon" },
-      { label: "Men's salon", path: "/aesthetic/men-salon" },
-    ],
-  },
-  {
-    label: "Electronics",
-    icon: Tv,
-    submenu: [
-      {
-        label: "Home appliance repair",
-        path: "/electronics/appliance-repair",
-      },
-    ],
-  },
-  {
-    label: "Mobile & computer",
-    icon: Smartphone,
-    submenu: [
-      { label: "Mobile repair", path: "/pc-mobile/mobile-repair" },
-      {
-        label: "Computer & laptop repair",
-        path: "/pc-mobile/computer-repair",
-      },
-    ],
-  },
-  {
-    label: "Agriculture",
-    icon: Shovel,
-    submenu: [
-      { label: "Fertilizer & garden supplies", path: "/agriculture/garden-supplies" },
-      { label: "Animal products", path: "/agriculture/animal-based-products" },
-    ],
-  },
-  {
-    label: "Healthcare",
-    icon: HeartPulse,
-    submenu: [{ label: "Dentistry", path: "/healthcare/dental" }],
-  },
-  {
-    label: "Vehicles",
-    icon: Car,
-    submenu: [
-      { label: "Car repair", path: "/vehicle/auto-repair" },
-      {
-        label: "Motorcycle repair",
-        path: "/vehicle/motorcycle-repair",
-      },
-    ],
-  },
-  {
-    label: "Education",
-    icon: Book,
-    submenu: [
-      { label: "Education centers", path: "/education/centers" },
-      { label: "Bookstores", path: "/education/bookstores" },
-    ],
-  },
-  // {
-  //   label: "Travel",
-  //   icon: Plane,
-  //   submenu: [
-  //     { label: "Domestic tours", path: "/travel/travel-details-select" },
-  //     { label: "International tours", path: "/travel/international" },
-  //   ],
-  // },
+  { key: "nav.home", icon: Home, path: "/" },
+  { key: "nav.homeInternet", icon: Wifi, path: "/internet/home-tariff" },
+  { key: "nav.mobilePlans", icon: Smartphone, path: "/internet/mobile-tariff" },
+  { key: "nav.howWeCompare", icon: Info, path: "/how-we-compare" },
 ];
 
-type NavItem = (typeof navItems)[number];
+function isActive(path: string, pathname: string) {
+  return path === "/" ? pathname === "/" : pathname.startsWith(path);
+}
 
-// A top-level item is active when its own path or one of its submenu paths is open
-function isItemActive(item: NavItem, pathname: string) {
-  if (item.path) return pathname === item.path;
-  return !!item.submenu?.some((sub) => pathname.startsWith(sub.path));
+function LanguageSwitch() {
+  const { t, i18n } = useTranslation();
+  return (
+    <div role="group" aria-label={t("common.language")} className="flex rounded-md border overflow-hidden text-xs font-semibold">
+      {LANGUAGES.map((language) => (
+        <button
+          key={language}
+          type="button"
+          aria-pressed={i18n.language === language}
+          onClick={() => i18n.changeLanguage(language)}
+          className={`px-2 py-1 uppercase ${
+            i18n.language === language ? "bg-[#023e8a] text-white" : "bg-white text-gray-600 hover:bg-gray-100"
+          }`}
+        >
+          {language}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function AccountLinks({ onNavigate }: { onNavigate?: () => void }) {
+  const { t } = useTranslation();
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  if (!auth.isLoggedIn) {
+    return (
+      <>
+        <Link to="/login" className="text-sm font-medium hover:underline" onClick={onNavigate}>
+          {t("nav.logIn")}
+        </Link>
+        <Button asChild size="sm">
+          <Link to="/signup" onClick={onNavigate}>
+            {t("nav.signUp")}
+          </Link>
+        </Button>
+      </>
+    );
+  }
+  return (
+    <>
+      {auth.role === "admin" && (
+        <Link to="/admin" className="text-sm font-medium hover:underline" onClick={onNavigate}>
+          {t("nav.admin")}
+        </Link>
+      )}
+      <Link to="/account" className="text-sm font-medium hover:underline" onClick={onNavigate}>
+        {t("nav.account")}
+      </Link>
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => {
+          auth.logout();
+          onNavigate?.();
+          navigate("/");
+        }}
+      >
+        {t("nav.logOut")}
+      </Button>
+    </>
+  );
 }
 
 export default function Header() {
+  const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const { pathname } = useLocation();
 
@@ -120,48 +96,22 @@ export default function Header() {
 
   return (
     <header className="w-full shadow-md">
-      <div className="bg-white p-4 flex justify-between items-center border-b">
+      <div className="bg-white px-4 py-3 flex justify-between items-center border-b">
         <Link to="/" className="flex items-center gap-2">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#023e8a] text-white font-extrabold">
             V
           </span>
-          <span className="text-lg font-extrabold tracking-tight text-[#023e8a]">
-            Vadi
-          </span>
+          <span className="text-lg font-extrabold tracking-tight text-[#023e8a]">Vadi</span>
         </Link>
         <div className="flex items-center gap-4">
-          {/* {!auth.isLoggedIn && (
-            <>
-              <Link to="/signup">
-                <Button>Sign up</Button>
-              </Link>
-              <Link to="/login">
-                <Button>Log in</Button>
-              </Link>
-            </>
-          )}
-          {auth.isLoggedIn && (
-            <>
-              <Link to="/dashboard">
-                <Avatar className="cursor-pointer">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-              </Link>
-              <Button
-                onClick={() => {
-                  auth.logout();
-                  navigate("/");
-                }}
-              >
-                Log out
-              </Button>
-            </>
-          )} */}
+          <LanguageSwitch />
+          <div className="hidden md:flex items-center gap-4">
+            <AccountLinks />
+          </div>
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label={menuOpen ? t("nav.closeMenu") : t("nav.openMenu")}
             aria-expanded={menuOpen}
           >
             {menuOpen ? <X /> : <Menu />}
@@ -169,95 +119,43 @@ export default function Header() {
         </div>
       </div>
       {/* Desktop Menu */}
-      <nav className="hidden md:block bg-[#023e8a] text-white shadow relative z-50">
-        <ul className="flex flex-wrap justify-center gap-x-2 gap-y-1 px-4 py-2 text-sm font-medium">
-          {navItems.map((item, idx) => {
-            const { label, icon: Icon, submenu, path } = item;
-            const itemClass = `flex items-center gap-1 rounded-md px-3 py-2 transition hover:bg-[#0077b6] ${
-              isItemActive(item, pathname) ? "bg-[#0077b6]" : ""
-            }`;
-            return (
-              <li key={idx} className="relative group">
-                {path ? (
-                  <Link to={path} className={itemClass}>
-                    <Icon size={16} />
-                    {label}
-                  </Link>
-                ) : (
-                  <button type="button" className={`${itemClass} cursor-default`}>
-                    <Icon size={16} />
-                    {label}
-                    <ChevronDown size={14} className="opacity-70" />
-                  </button>
-                )}
-                {submenu && (
-                  <div className="absolute left-0 top-full pt-1 w-max min-w-[180px] opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition duration-200 ease-in-out z-50">
-                    <ul className="flex flex-col py-2 bg-[#023e8a] rounded-md shadow-lg">
-                      {submenu.map((sub, i) => (
-                        <li key={i}>
-                          <Link
-                            to={sub.path}
-                            className={`block px-4 py-2 text-sm hover:bg-[#0077b6] ${
-                              pathname.startsWith(sub.path) ? "bg-[#0077b6]" : ""
-                            }`}
-                          >
-                            {sub.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </li>
-            );
-          })}
+      <nav className="hidden md:block bg-[#023e8a] text-white shadow">
+        <ul className="flex flex-wrap justify-center gap-x-2 px-4 py-2 text-sm font-medium">
+          {navItems.map(({ key, icon: Icon, path }) => (
+            <li key={path}>
+              <Link
+                to={path}
+                aria-current={isActive(path, pathname) ? "page" : undefined}
+                className={`flex items-center gap-1 rounded-md px-3 py-2 transition hover:bg-[#0077b6] ${
+                  isActive(path, pathname) ? "bg-[#0077b6]" : ""
+                }`}
+              >
+                <Icon size={16} />
+                {t(key)}
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
       {/* Mobile Menu */}
       {menuOpen && (
         <nav className="md:hidden bg-white p-4 border-b">
           <ul className="flex flex-col gap-4 text-sm font-medium text-gray-700">
-            {navItems.map((item, idx) => (
-              <li key={idx}>
-                {item.path ? (
-                  <Link
-                    to={item.path}
-                    className={`block ${isItemActive(item, pathname) ? "text-[#023e8a] font-bold" : ""}`}
-                  >
-                    {item.label}
-                  </Link>
-                ) : (
-                  <details className="group" open={isItemActive(item, pathname)}>
-                    <summary
-                      className={`flex justify-between items-center cursor-pointer ${
-                        isItemActive(item, pathname) ? "text-[#023e8a] font-bold" : ""
-                      }`}
-                    >
-                      {item.label}
-                      <ChevronDown
-                        className="transition-transform group-open:rotate-180"
-                        size={16}
-                      />
-                    </summary>
-                    <ul className="mt-2 ps-4 text-sm text-gray-600">
-                      {item.submenu?.map(({ label: subLabel, path }, i) => (
-                        <li key={i} className="py-1">
-                          <Link
-                            to={path}
-                            className={`block w-full ${
-                              pathname.startsWith(path) ? "text-[#023e8a] font-semibold" : ""
-                            }`}
-                          >
-                            {subLabel}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                )}
+            {navItems.map(({ key, path }) => (
+              <li key={path}>
+                <Link
+                  to={path}
+                  aria-current={isActive(path, pathname) ? "page" : undefined}
+                  className={`block ${isActive(path, pathname) ? "text-[#023e8a] font-bold" : ""}`}
+                >
+                  {t(key)}
+                </Link>
               </li>
             ))}
           </ul>
+          <div className="flex flex-wrap items-center gap-4 mt-4 pt-4 border-t">
+            <AccountLinks onNavigate={() => setMenuOpen(false)} />
+          </div>
         </nav>
       )}
     </header>

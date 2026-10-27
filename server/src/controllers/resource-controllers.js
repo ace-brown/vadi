@@ -3,7 +3,11 @@ const HttpError = require('../models/http-error');
 
 const MAX_LIMIT = 100;
 const DEFAULT_LIMIT = 50;
-const PROTECTED_FIELDS = ['_id', '__v', 'createdAt', 'updatedAt'];
+const RANGES_CACHE_MS = 60 * 1000;
+const PROTECTED_FIELDS = [
+    '_id', '__v', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy',
+    'totalCost24', 'effectiveMonthlyPrice',
+];
 
 // Wrap async handlers so rejected promises reach the error middleware
 function asyncHandler(handler) {
@@ -47,10 +51,18 @@ function buildFilter(query, config) {
         if (type === 'number') {
             const numbers = values.map((value) => parseNumber(value, field));
             conditions.push({ [field]: { $in: numbers } });
+        } else if (type === 'id') {
+            values.forEach((value) => checkId(value));
+            conditions.push({ [field]: { $in: values } });
         } else {
             const patterns = values.map((value) => new RegExp(`^${escapeRegex(value)}$`, 'i'));
             conditions.push({ [field]: { $in: patterns } });
         }
+    }
+
+    for (const [param, buildCondition] of Object.entries(config.customFilters)) {
+        if (query[param] === undefined || query[param] === '') continue;
+        conditions.push(buildCondition(String(query[param])));
     }
 
     for (const field of config.rangeFields) {
@@ -85,7 +97,7 @@ function buildSort(sortParam, config) {
 
 // Smallest and largest value of every range field across the whole collection,
 // so the client can size its sliders without hard-coding prices
-async function getRanges(Model, config) {
+async function getRanges(Model, config, baseFilter) {
     if (config.rangeFields.length === 0) return {};
 
     const group = { _id: null };
@@ -93,7 +105,7 @@ async function getRanges(Model, config) {
         group[`${field}__min`] = { $min: `$${field}` };
         group[`${field}__max`] = { $max: `$${field}` };
     });
-    const [stats] = await Model.aggregate([{ $group: group }]);
+    const [stats] = await Model.aggregate([{ $match: baseFilter }, { $group: group }]);
 
     const ranges = {};
     config.rangeFields.forEach((field) => {
@@ -105,11 +117,15 @@ async function getRanges(Model, config) {
     return ranges;
 }
 
-function getBodyData(req) {
+function getBodyData(req, Model) {
     const data = { ...req.body };
     PROTECTED_FIELDS.forEach((field) => delete data[field]);
     if (req.file) {
         data.image = `uploads/images/${req.file.filename}`;
+    }
+    // Remember which admin last changed the item
+    if (Model.schema.path('updatedBy') && req.userData) {
+        data.updatedBy = req.userData.userId;
     }
     return data;
 }
@@ -128,23 +144,52 @@ function createResourceControllers(Model, options = {}) {
         unlimitedFields: [],
         sortFields: [],
         defaultSort: '_id',
+        customFilters: {},
+        // Filter applied to what visitors see (admins can pass ?includeInactive=true)
+        baseFilter: null,
+        populate: null,
+        // Called before deleting; throw an HttpError to prevent it
+        beforeRemove: null,
         ...options,
     };
+    let rangesCache = null;
+
+    function visibleFilter(req) {
+        const isAdmin = req.userData?.role === 'admin';
+        if (!config.baseFilter || (isAdmin && req.query.includeInactive === 'true')) {
+            return {};
+        }
+        return config.baseFilter();
+    }
+
+    async function cachedRanges() {
+        if (!rangesCache || rangesCache.expires < Date.now()) {
+            const filter = config.baseFilter ? config.baseFilter() : {};
+            rangesCache = { value: await getRanges(Model, config, filter), expires: Date.now() + RANGES_CACHE_MS };
+        }
+        return rangesCache.value;
+    }
+
+    function withPopulate(query) {
+        return config.populate ? query.populate(config.populate) : query;
+    }
     if (!config.sortFields.includes(config.defaultSort.replace(/^-/, ''))) {
         config.sortFields = [...config.sortFields, config.defaultSort.replace(/^-/, '')];
     }
 
     // GET / — list with search, filters, sorting and pagination
     async function list(req, res) {
-        const filter = buildFilter(req.query, config);
+        const queryFilter = buildFilter(req.query, config);
+        const visible = visibleFilter(req);
+        const filter = Object.keys(visible).length > 0 ? { $and: [visible, queryFilter] } : queryFilter;
         const sort = buildSort(req.query.sort, config);
         const limit = Math.min(MAX_LIMIT, Math.max(1, parseNumber(req.query.limit, 'limit') ?? DEFAULT_LIMIT));
         const page = Math.max(1, Math.floor(parseNumber(req.query.page, 'page') ?? 1));
 
         const [items, total, ranges] = await Promise.all([
-            Model.find(filter).sort(sort).skip((page - 1) * limit).limit(limit),
+            withPopulate(Model.find(filter).sort(sort).skip((page - 1) * limit).limit(limit)),
             Model.countDocuments(filter),
-            getRanges(Model, config),
+            cachedRanges(),
         ]);
 
         res.json({ items, total, page, pages: Math.ceil(total / limit), ranges });
@@ -153,7 +198,7 @@ function createResourceControllers(Model, options = {}) {
     // GET /:id
     async function getOne(req, res) {
         checkId(req.params.id);
-        const item = await Model.findById(req.params.id);
+        const item = await withPopulate(Model.findOne({ $and: [{ _id: req.params.id }, visibleFilter(req)] }));
         if (!item) {
             throw new HttpError('Could not find an item for the provided ID', 404);
         }
@@ -162,30 +207,42 @@ function createResourceControllers(Model, options = {}) {
 
     // POST / — admin only
     async function create(req, res) {
-        const item = await Model.create(getBodyData(req));
+        const data = getBodyData(req, Model);
+        if (Model.schema.path('createdBy') && req.userData) {
+            data.createdBy = req.userData.userId;
+        }
+        const item = await Model.create(data);
+        rangesCache = null;
         res.status(201).json({ item });
     }
 
     // PATCH /:id — admin only
     async function update(req, res) {
         checkId(req.params.id);
-        const item = await Model.findByIdAndUpdate(req.params.id, getBodyData(req), {
-            new: true,
-            runValidators: true,
-        });
+        const item = await Model.findById(req.params.id);
         if (!item) {
             throw new HttpError('Could not find an item for the provided ID', 404);
         }
+        // Load, change and save (rather than findByIdAndUpdate) so save hooks run,
+        // e.g. recalculating an offer's effective price
+        item.set(getBodyData(req, Model));
+        await item.save();
+        rangesCache = null;
         res.json({ item });
     }
 
     // DELETE /:id — admin only
     async function remove(req, res) {
         checkId(req.params.id);
-        const item = await Model.findByIdAndDelete(req.params.id);
+        const item = await Model.findById(req.params.id);
         if (!item) {
             throw new HttpError('Could not find an item for the provided ID', 404);
         }
+        if (config.beforeRemove) {
+            await config.beforeRemove(item);
+        }
+        await item.deleteOne();
+        rangesCache = null;
         res.json({ message: 'Deleted successfully' });
     }
 

@@ -12,9 +12,24 @@ const userSchema = new mongoose.Schema({
         avatar: { type: String },
     },
     settings: {
-        language: { type: String, default: 'en', enum: ['en', 'fa'] },
+        language: { type: String, default: 'de', enum: ['de', 'en'] },
         notifications: { type: Boolean, default: true },
     },
+    // Watchlist: offers the user saved, with the effective price at the time
+    savedOffers: [{
+        _id: false,
+        kind: { type: String, required: true, enum: ['home', 'mobile'] },
+        offer: { type: mongoose.Schema.Types.ObjectId, required: true },
+        savedPrice: { type: Number, required: true },
+        savedAt: { type: Date, default: Date.now },
+    }],
+    // Saved side-by-side comparisons
+    comparisons: [{
+        kind: { type: String, required: true, enum: ['home', 'mobile'] },
+        offers: [{ type: mongoose.Schema.Types.ObjectId }],
+        name: { type: String, trim: true, maxlength: 80 },
+        createdAt: { type: Date, default: Date.now },
+    }],
 });
 
 // Never send the password hash to clients

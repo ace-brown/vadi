@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ListingResponse } from "@/types";
+import { apiFetch } from "@/lib/api";
 
 type Params = Record<string, string | number | null | undefined>;
 
@@ -31,24 +32,15 @@ export function useListing<T>(endpoint: string, params: Params) {
     const timer = setTimeout(
       async () => {
         try {
-          const response = await fetch(
-            `${import.meta.env.VITE_API_URL}${endpoint}?${query}`,
-            { signal: controller.signal }
-          );
-          const body = await response.json();
-          if (!response.ok) {
-            throw new Error(body.message || "Something went wrong.");
-          }
+          const body = await apiFetch<ListingResponse<T>>(`${endpoint}?${query}`, {
+            signal: controller.signal,
+          });
           setData(body);
           setError(null);
           hasLoaded.current = true;
         } catch (err) {
           if (err instanceof DOMException && err.name === "AbortError") return;
-          setError(
-            err instanceof Error && err.message !== "Failed to fetch"
-              ? err.message
-              : "Could not reach the server. Please try again."
-          );
+          setError(err instanceof Error ? err.message : String(err));
         }
         if (!controller.signal.aborted) {
           setIsLoading(false);

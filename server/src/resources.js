@@ -12,6 +12,25 @@ const AnimalBasedProducts = require('./models/agriculture/animal-based-products'
 const DentalService = require('./models/healthcare/dental-service');
 const Bookstore = require('./models/education/bookstore');
 const EduCenter = require('./models/education/education-center');
+const Provider = require('./models/provider');
+const HttpError = require('./models/http-error');
+const { activeOfferFilter } = require('./models/schemas/offer-schema');
+
+const PROVIDER_FIELDS = 'name slug logo website legalName imprintUrl rating ratingSource';
+
+// ?postcode=10115 keeps nationwide offers and offers whose coverage includes the postcode
+function postcodeFilter(postcode) {
+    if (!/^\d{5}$/.test(postcode)) {
+        throw new HttpError('Postcode must have 5 digits', 400);
+    }
+    const prefixes = [1, 2, 3, 4, 5].map((length) => postcode.slice(0, length));
+    return {
+        $or: [
+            { 'coverage.nationwide': true },
+            { 'coverage.postcodePrefixes': { $in: prefixes } },
+        ],
+    };
+}
 
 // What each kind of listing can be searched, filtered and sorted by
 const placeOptions = {
@@ -38,11 +57,13 @@ const resources = [
         model: MobileTariff,
         options: {
             searchFields: ['provider', 'name'],
-            matchFields: { provider: 'string', contractType: 'string', network: 'string', termMonths: 'number' },
-            rangeFields: ['monthlyPrice', 'dataGB', 'minutes', 'setupFee'],
+            matchFields: { provider: 'string', providerId: 'id', contractType: 'string', network: 'string', termMonths: 'number' },
+            rangeFields: ['effectiveMonthlyPrice', 'monthlyPrice', 'dataGB', 'minutes', 'setupFee'],
             unlimitedFields: ['dataGB', 'minutes'],
-            sortFields: ['monthlyPrice', 'setupFee', 'provider'],
-            defaultSort: 'monthlyPrice',
+            sortFields: ['effectiveMonthlyPrice', 'monthlyPrice', 'setupFee', 'provider', 'updatedAt'],
+            defaultSort: 'effectiveMonthlyPrice',
+            baseFilter: activeOfferFilter,
+            populate: { path: 'providerId', select: PROVIDER_FIELDS },
         },
     },
     {
@@ -50,10 +71,30 @@ const resources = [
         model: HomeTariff,
         options: {
             searchFields: ['provider', 'name'],
-            matchFields: { provider: 'string', connectionType: 'string', termMonths: 'number' },
-            rangeFields: ['monthlyPrice', 'downloadMbps', 'uploadMbps', 'setupFee'],
-            sortFields: ['monthlyPrice', 'downloadMbps', 'setupFee', 'provider'],
-            defaultSort: 'monthlyPrice',
+            matchFields: { provider: 'string', providerId: 'id', connectionType: 'string', termMonths: 'number' },
+            rangeFields: ['effectiveMonthlyPrice', 'monthlyPrice', 'downloadMbps', 'uploadMbps', 'setupFee'],
+            sortFields: ['effectiveMonthlyPrice', 'monthlyPrice', 'downloadMbps', 'setupFee', 'provider', 'updatedAt'],
+            defaultSort: 'effectiveMonthlyPrice',
+            customFilters: { postcode: postcodeFilter },
+            baseFilter: activeOfferFilter,
+            populate: { path: 'providerId', select: PROVIDER_FIELDS },
+        },
+    },
+    {
+        path: '/api/providers',
+        model: Provider,
+        options: {
+            searchFields: ['name', 'legalName'],
+            matchFields: { slug: 'string' },
+            sortFields: ['name', 'rating'],
+            defaultSort: 'name',
+            beforeRemove: async (provider) => {
+                const offers = await HomeTariff.countDocuments({ providerId: provider._id })
+                    + await MobileTariff.countDocuments({ providerId: provider._id });
+                if (offers > 0) {
+                    throw new HttpError(`This provider still has ${offers} offer(s). Delete or move them first.`, 409);
+                }
+            },
         },
     },
     { path: '/api/aesthetic/men-salon', model: MenSalonPlan, options: salonOptions(MenSalonPlan.PRICE_FIELDS) },

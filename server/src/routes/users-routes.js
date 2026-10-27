@@ -49,7 +49,7 @@ router.patch('/:uid', [
     check('password').optional({ values: 'falsy' }).isLength({ min: 6, max: 128 }),
     check('bio').optional().isString().isLength({ max: 1000 }),
     check('avatar').optional().isString().isLength({ max: 300 }),
-    check('language').optional().isIn(['en', 'fa']),
+    check('language').optional().isIn(['de', 'en']),
     check('notifications').optional().isBoolean(),
 ], usersControllers.updateUser)
 

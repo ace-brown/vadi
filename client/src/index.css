@@ -2,8 +2,38 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Make the shadcn color variables available as Tailwind colors (bg-primary, border-border, ...) */
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+}
+
 body {
   font-family: "Rubik", sans-serif;
+  background: #f8fafc;
+}
+
+/* Tailwind 4 makes borders currentColor by default; use the theme's light gray */
+*,
+::before,
+::after {
+  border-color: hsl(var(--border));
 }
 
 @layer utilities {

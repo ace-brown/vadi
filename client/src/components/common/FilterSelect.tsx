@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 type FilterSelectProps = {
   label?: string;
   options: { label: string; value: string }[];
@@ -6,15 +8,16 @@ type FilterSelectProps = {
 };
 
 export default function FilterSelect({
-  label = "Sort by",
+  label,
   options,
   value,
   onChange,
 }: FilterSelectProps) {
+  const { t } = useTranslation();
   return (
     <label className="block">
       <span className="block mb-1 text-sm font-medium text-gray-700">
-        {label}
+        {label ?? t("common.sortBy")}
       </span>
       <select
         value={value}

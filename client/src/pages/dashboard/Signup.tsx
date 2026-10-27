@@ -1,24 +1,24 @@
 import React, { useContext, useState } from "react";
-import { Toaster } from "sonner";
-import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import Container from "@/components/common/Container";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-import { useHttpClient } from "@/hooks/http-hook";
+import Seo from "@/components/common/Seo";
 import { AuthContext } from "@/context/auth-context";
+import { apiFetch, ApiError } from "@/lib/api";
+import type { AuthResponse } from "./Login";
 
 export default function SignupPage() {
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
-  const [passwordError, setPasswordError] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
-  const { isLoading, error, sendRequest } = useHttpClient();
-
-  // State to manage form data
   const [formData, setFormData] = useState({
     username: "",
     fullName: "",
@@ -27,180 +27,100 @@ export default function SignupPage() {
     repeatPassword: "",
   });
 
-  // Handle input changes
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
-  // Handle form submission
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
-    // Check if passwords match
     if (formData.password !== formData.repeatPassword) {
-      setPasswordError("Passwords do not match");
+      setError(t("auth.passwordsMismatch"));
       return;
     }
-
-    setPasswordError("");
-
+    setError(null);
+    setIsLoading(true);
     try {
-      const responseData = await sendRequest(
-        `${import.meta.env.VITE_API_URL}/api/users/signup`,
-        "POST",
-        JSON.stringify(formData),
-        {
-          "Content-Type": "application/json",
-        },
-        "Your account was created successfully"
-      );
-      auth.login(
-        responseData.userId,
-        responseData.fullName,
-        responseData.username,
-        responseData.role,
-        responseData.token
-      );
-      navigate("/dashboard");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {}
+      const { username, fullName, email, password } = formData;
+      const data = await apiFetch<AuthResponse>("/api/users/signup", {
+        method: "POST",
+        body: { username, fullName, email, password },
+      });
+      auth.login(data.userId, data.fullName, data.username, data.role, data.token);
+      toast.success(t("auth.accountCreated"));
+      navigate("/account");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : String(err));
+      setIsLoading(false);
+    }
   }
 
+  const fields: { name: keyof typeof formData; label: string; type: string; autoComplete: string }[] = [
+    { name: "username", label: t("auth.username"), type: "text", autoComplete: "username" },
+    { name: "fullName", label: t("auth.fullName"), type: "text", autoComplete: "name" },
+    { name: "email", label: t("auth.email"), type: "email", autoComplete: "email" },
+  ];
+
   return (
-    <div>
-      {isLoading && <LoadingSpinner asOverlay />}
-      <Toaster position="top-center" richColors />
-      <div className="min-h-[50vh] flex items-start justify-center">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="text-center text-2xl">Sign up</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit}>
-              {/* User Name */}
-              <div className="mb-4">
-                <Label htmlFor="username">
-                  Username <span className="text-red-500">*</span>
-                </Label>
+    <div className="min-h-[50vh] flex items-start justify-center mt-10">
+      <Seo title={t("auth.signup")} />
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-center text-2xl">{t("auth.signup")}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {fields.map((field) => (
+              <div key={field.name} className="space-y-2">
+                <Label htmlFor={field.name}>{field.label}</Label>
                 <Input
-                  type="text"
-                  id="username"
-                  name="username"
-                  value={formData.username}
+                  id={field.name}
+                  name={field.name}
+                  type={field.type}
+                  autoComplete={field.autoComplete}
+                  value={formData[field.name]}
                   onChange={handleChange}
                   required
                 />
               </div>
-
-              {/* Full Name */}
-              <div className="mb-4">
-                <Label htmlFor="fullName">
-                  Full name <span className="text-red-500">*</span>
-                </Label>
+            ))}
+            {(["password", "repeatPassword"] as const).map((name) => (
+              <div key={name} className="space-y-2 relative">
+                <Label htmlFor={name}>{name === "password" ? t("auth.password") : t("auth.repeatPassword")}</Label>
                 <Input
-                  type="text"
-                  id="fullName"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              {/* Email */}
-              <div className="mb-4">
-                <Label htmlFor="email">
-                  Email<span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              {/* Password */}
-              <div className="mb-4 relative">
-                <Label htmlFor="password">
-                  Password<span className="text-red-500">*</span>
-                </Label>
-                <Input
+                  id={name}
+                  name={name}
                   type={showPassword ? "text" : "password"}
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  placeholder="Password must be at least 6 characters"
+                  autoComplete="new-password"
+                  minLength={6}
+                  placeholder={t("auth.minChars")}
+                  value={formData[name]}
                   onChange={handleChange}
                   required
                 />
-                <span
-                  className="absolute right-3 top-8 cursor-pointer text-gray-500"
+                <button
+                  type="button"
+                  className="absolute right-3 top-8 text-gray-500"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   onClick={() => setShowPassword((prev) => !prev)}
                 >
-                  {showPassword ? (
-                    <FaEye size={20} />
-                  ) : (
-                    <FaEyeSlash size={20} />
-                  )}
-                </span>
+                  {showPassword ? <FaEye size={20} /> : <FaEyeSlash size={20} />}
+                </button>
               </div>
-
-              {/* Repeat Password */}
-              <div className="mb-4 relative">
-                <Label htmlFor="repeatPassword">
-                  Repeat password<span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  id="repeatPassword"
-                  name="repeatPassword"
-                  value={formData.repeatPassword}
-                  placeholder="Password must be at least 6 characters"
-                  onChange={handleChange}
-                  required
-                />
-                <span
-                  className="absolute right-3 top-8 cursor-pointer text-gray-500"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                >
-                  {showPassword ? (
-                    <FaEye size={20} />
-                  ) : (
-                    <FaEyeSlash size={20} />
-                  )}
-                </span>
-              </div>
-              {passwordError && (
-                <p className="text-sm text-red-500">{passwordError}</p>
-              )}
-              {/* Submit Button */}
-              <div className="mt-6">
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  Sign up
-                </Button>
-              </div>
-            </form>
-
-            <p className="text-sm text-center mt-4 text-gray-600">
-              Already have an account? 
-              <Link
-                to="/login"
-                className="text-indigo-600 hover:underline focus:outline-none"
-              >
-                Log in
-              </Link>
-            </p>
-            {error && <p className="text-center text-red-500 mb-8">{error}</p>}
-          </CardContent>
-        </Card>
-      </div>
+            ))}
+            {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {t("auth.signup")}
+            </Button>
+          </form>
+          <p className="text-sm text-center mt-4 text-gray-600">
+            {t("auth.haveAccount")}{" "}
+            <Link to="/login" className="text-blue-700 hover:underline">
+              {t("auth.login")}
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }

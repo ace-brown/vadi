@@ -1,0 +1,49 @@
+{
+  "providers": [
+    {
+      "slug": "example-net",
+      "name": "Example Net",
+      "legalName": "Example Net GmbH",
+      "website": "https://www.example.com",
+      "imprintUrl": "https://www.example.com/impressum",
+      "logo": "uploads/images/providers/isarlink.svg",
+      "rating": 4.1,
+      "ratingSource": "Editorial rating"
+    }
+  ],
+  "homeTariffs": [
+    {
+      "externalId": "example-net-fiber-300",
+      "providerSlug": "example-net",
+      "name": "Fiber 300",
+      "connectionType": "Fiber",
+      "downloadMbps": 300,
+      "uploadMbps": 150,
+      "termMonths": 24,
+      "monthlyPrice": 24.99,
+      "promoMonths": 6,
+      "regularPrice": 44.99,
+      "setupFee": 0,
+      "hardwareFee": 0,
+      "bonus": 50,
+      "coverage": { "nationwide": false, "postcodePrefixes": ["10", "80"] },
+      "affiliateUrl": "https://www.example.com/offer/fiber-300?partner=vadi",
+      "validUntil": "2027-12-31T23:59:59Z"
+    }
+  ],
+  "mobileTariffs": [
+    {
+      "externalId": "example-net-mobile-30",
+      "providerSlug": "example-net",
+      "name": "Mobile 30",
+      "contractType": "contract",
+      "network": "5G",
+      "dataGB": 30,
+      "minutes": null,
+      "termMonths": 24,
+      "monthlyPrice": 14.99,
+      "setupFee": 19.99,
+      "affiliateUrl": "https://www.example.com/offer/mobile-30?partner=vadi"
+    }
+  ]
+}

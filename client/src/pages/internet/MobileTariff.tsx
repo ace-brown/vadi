@@ -1,127 +1,166 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import CustomCompareLayout from "@/components/common/CustomCompareLayout";
 import FilterCollapse from "@/components/common/FilterCollapse";
 import FilterSelect from "@/components/common/FilterSelect";
-import { MobilePlanCard } from "@/components/listing/PlanCards";
+import { Button } from "@/components/ui/button";
 import { LimitSlider } from "@/components/listing/filters";
+import OfferCard from "@/components/offers/OfferCard";
+import CompareBar from "@/components/offers/CompareBar";
+import { highlightsFor, lastCheckedNotice, mobileOfferFacts } from "@/components/offers/offer-details";
+import Seo from "@/components/common/Seo";
 import { useListing } from "@/hooks/use-listing";
+import { useUrlParams } from "@/hooks/use-url-params";
 import { MobilePlanType } from "@/types";
-import { formatPrice, joinValues, toggleValue } from "@/utils/helpers";
+import { formatPrice, toggleValue } from "@/utils/helpers";
 
-const CONTRACT_OPTIONS = [
-  { value: "prepaid", label: "Prepaid" },
-  { value: "contract", label: "Contract" },
-];
-
-const TERM_OPTIONS = [
-  { value: "1", label: "Monthly cancellable" },
-  { value: "12", label: "12 months" },
-  { value: "24", label: "24 months" },
-];
-
-const NETWORK_OPTIONS = [
-  { value: "5G", label: "5G" },
-  { value: "4G", label: "4G" },
-];
-
-const SORT_OPTIONS = [
-  { value: "monthlyPrice", label: "Cheapest first" },
-  { value: "-monthlyPrice", label: "Most expensive first" },
-  { value: "setupFee", label: "Lowest setup fee" },
-];
+const PAGE_SIZE = 20;
 
 export default function MobileTariffPage() {
-  const [contractTypes, setContractTypes] = useState<string[]>([]);
-  const [terms, setTerms] = useState<string[]>([]);
-  const [networks, setNetworks] = useState<string[]>([]);
-  const [minData, setMinData] = useState<number | null>(null);
-  const [maxPrice, setMaxPrice] = useState<number | null>(null);
-  const [sort, setSort] = useState("monthlyPrice");
+  const { t } = useTranslation();
+  const url = useUrlParams();
+  const contractTypes = url.getList("contractType");
+  const terms = url.getList("termMonths");
+  const networks = url.getList("network");
+  const minData = url.getNumber("dataGBMin");
+  const maxPrice = url.getNumber("effectiveMonthlyPriceMax");
+  const sort = url.get("sort") || "effectiveMonthlyPrice";
+  const [limit, setLimit] = useState(PAGE_SIZE);
 
-  const { items, total, ranges, isLoading, error, retry } =
-    useListing<MobilePlanType>("/api/internet/mobile-tariffs", {
-      contractType: joinValues(contractTypes),
-      termMonths: joinValues(terms),
-      network: joinValues(networks),
+  const { items, total, ranges, isLoading, error, retry } = useListing<MobilePlanType>(
+    "/api/internet/mobile-tariffs",
+    {
+      contractType: contractTypes.join(","),
+      termMonths: terms.join(","),
+      network: networks.join(","),
       dataGBMin: minData,
-      monthlyPriceMax: maxPrice,
+      effectiveMonthlyPriceMax: maxPrice,
       sort,
-    });
+      limit,
+    }
+  );
 
   const isAnyFilterActive =
-    contractTypes.length > 0 ||
-    terms.length > 0 ||
-    networks.length > 0 ||
-    minData !== null ||
-    maxPrice !== null;
+    contractTypes.length > 0 || terms.length > 0 || networks.length > 0 || minData !== null || maxPrice !== null;
 
   function resetFilters() {
-    setContractTypes([]);
-    setTerms([]);
-    setNetworks([]);
-    setMinData(null);
-    setMaxPrice(null);
+    url.set({ contractType: null, termMonths: null, network: null, dataGBMin: null, effectiveMonthlyPriceMax: null });
   }
+
+  const highlights = highlightsFor(items, [
+    {
+      label: t("offer.mostData"),
+      pick: (list) =>
+        list.find((item) => item.dataGB === null) ??
+        list.reduce((best, item) => ((item.dataGB ?? 0) > (best.dataGB ?? 0) ? item : best)),
+    },
+  ]);
 
   const filters = (
     <>
-      <FilterSelect value={sort} onChange={setSort} options={SORT_OPTIONS} />
-      <FilterCollapse label="Price & data">
+      <FilterSelect
+        value={sort}
+        onChange={(value) => url.set({ sort: value === "effectiveMonthlyPrice" ? null : value })}
+        options={[
+          { value: "effectiveMonthlyPrice", label: t("filters.sort.effective") },
+          { value: "-effectiveMonthlyPrice", label: t("filters.sort.effectiveDesc") },
+          { value: "monthlyPrice", label: t("filters.sort.monthly") },
+          { value: "setupFee", label: t("filters.sort.setupFee") },
+        ]}
+      />
+      <FilterCollapse label={t("filters.priceAndData")}>
         <LimitSlider
           kind="max"
-          label="Monthly price"
-          range={ranges.monthlyPrice}
+          label={t("filters.maxEffective")}
+          range={ranges.effectiveMonthlyPrice}
           value={maxPrice}
-          onChange={setMaxPrice}
+          onChange={(value) => url.set({ effectiveMonthlyPriceMax: value })}
           format={formatPrice}
         />
         <LimitSlider
           kind="min"
-          label="Data per month"
+          label={t("filters.minData")}
           range={ranges.dataGB}
           value={minData}
-          onChange={setMinData}
+          onChange={(value) => url.set({ dataGBMin: value })}
           step={5}
           format={(v) => `${v} GB`}
         />
       </FilterCollapse>
       <FilterCollapse
-        label="Plan type"
-        options={CONTRACT_OPTIONS}
+        label={t("filters.planType")}
+        options={[
+          { value: "prepaid", label: t("offer.prepaid") },
+          { value: "contract", label: t("offer.contract") },
+        ]}
         selectedValues={contractTypes}
-        onChange={(value) => setContractTypes((prev) => toggleValue(prev, value))}
+        onChange={(value) => url.set({ contractType: toggleValue(contractTypes, value) })}
       />
       <FilterCollapse
-        label="Minimum term"
-        options={TERM_OPTIONS}
+        label={t("filters.minTerm")}
+        options={[
+          { value: "1", label: t("term.monthly") },
+          { value: "12", label: t("term.months", { count: 12 }) },
+          { value: "24", label: t("term.months", { count: 24 }) },
+        ]}
         selectedValues={terms}
-        onChange={(value) => setTerms((prev) => toggleValue(prev, value))}
+        onChange={(value) => url.set({ termMonths: toggleValue(terms, value) })}
       />
       <FilterCollapse
-        label="Network"
-        options={NETWORK_OPTIONS}
+        label={t("filters.network")}
+        options={[
+          { value: "5G", label: "5G" },
+          { value: "4G", label: "4G" },
+        ]}
         selectedValues={networks}
-        onChange={(value) => setNetworks((prev) => toggleValue(prev, value))}
+        onChange={(value) => url.set({ network: toggleValue(networks, value) })}
       />
     </>
   );
 
+  const checked = lastCheckedNotice(items);
+
   return (
-    <CustomCompareLayout
-      title="Mobile plans"
-      filters={filters}
-      isLoading={isLoading}
-      error={error}
-      onRetry={retry}
-      total={total}
-      isAnyFilterActive={isAnyFilterActive}
-      onResetFilters={resetFilters}
-      returnTxt="Back to internet type selection"
-      returnSlug="/internet/internet-details-select"
-    >
-      {items.map((plan) => (
-        <MobilePlanCard key={plan._id} {...plan} />
-      ))}
-    </CustomCompareLayout>
+    <>
+      <Seo title={t("nav.mobilePlans")} description={t("home.subtitle")} />
+      <CustomCompareLayout
+        title={t("nav.mobilePlans")}
+        filters={filters}
+        isLoading={isLoading}
+        error={error}
+        onRetry={retry}
+        total={total}
+        isAnyFilterActive={isAnyFilterActive}
+        onResetFilters={resetFilters}
+        notice={
+          <>
+            {checked && `${checked} · `}
+            {t("common.vatNote")} ·{" "}
+            <Link to="/how-we-compare" className="text-blue-700 hover:underline">
+              {t("common.howSorted")}
+            </Link>
+          </>
+        }
+        footer={
+          items.length < total && (
+            <Button variant="outline" className="self-center" onClick={() => setLimit((value) => value + PAGE_SIZE)}>
+              {t("common.showMore")}
+            </Button>
+          )
+        }
+      >
+        {items.map((offer) => (
+          <OfferCard
+            key={offer._id}
+            kind="mobile"
+            offer={offer}
+            highlights={highlights[offer._id]}
+            {...mobileOfferFacts(offer)}
+          />
+        ))}
+      </CustomCompareLayout>
+      <CompareBar kind="mobile" />
+    </>
   );
 }

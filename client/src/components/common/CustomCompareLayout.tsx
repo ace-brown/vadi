@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CornerUpLeft, SlidersHorizontal, SearchX, TriangleAlert } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import ListingCardSkeleton from "@/components/listing/ListingCardSkeleton";
 
@@ -13,6 +14,10 @@ type CustomCompareLayoutProps = {
   error?: string | null;
   onRetry?: () => void;
   total?: number;
+  // Shown under the title, e.g. "Prices last checked" and "incl. VAT"
+  notice?: React.ReactNode;
+  // Shown after the results, e.g. a "Show more" button
+  footer?: React.ReactNode;
   emptyMessage?: string;
   isAnyFilterActive?: boolean;
   returnTxt?: string;
@@ -29,12 +34,15 @@ export default function CustomCompareLayout({
   error,
   onRetry,
   total,
-  emptyMessage = "No results match your filters.",
+  notice,
+  footer,
+  emptyMessage,
   isAnyFilterActive,
   returnTxt,
   returnSlug,
   onResetFilters,
 }: CustomCompareLayoutProps) {
+  const { t } = useTranslation();
   const [showFilters, setShowFilters] = useState(false);
   const isEmpty = React.Children.count(children) === 0;
 
@@ -47,7 +55,7 @@ export default function CustomCompareLayout({
         <div className="flex flex-col items-center gap-3 text-center py-16 text-gray-600">
           <TriangleAlert className="w-10 h-10 text-red-500" />
           <p className="text-lg">{error}</p>
-          {onRetry && <Button onClick={onRetry}>Try again</Button>}
+          {onRetry && <Button onClick={onRetry}>{t("common.retry")}</Button>}
         </div>
       );
     }
@@ -55,10 +63,10 @@ export default function CustomCompareLayout({
       return (
         <div className="flex flex-col items-center gap-3 text-center py-16 text-gray-600">
           <SearchX className="w-10 h-10 text-gray-400" />
-          <p className="text-lg">{emptyMessage}</p>
+          <p className="text-lg">{emptyMessage ?? t("common.noResults")}</p>
           {isAnyFilterActive && onResetFilters && (
             <Button variant="outline" onClick={onResetFilters}>
-              Clear filters
+              {t("common.clearFilters")}
             </Button>
           )}
         </div>
@@ -72,6 +80,7 @@ export default function CustomCompareLayout({
         }`}
       >
         {children}
+        {footer}
       </div>
     );
   }
@@ -87,7 +96,7 @@ export default function CustomCompareLayout({
           aria-expanded={showFilters}
         >
           <SlidersHorizontal className="w-4 h-4" />
-          {showFilters ? "Hide filters" : "Show filters"}
+          {showFilters ? t("common.hideFilters") : t("common.showFilters")}
         </button>
         <div
           className={`${
@@ -95,14 +104,14 @@ export default function CustomCompareLayout({
           } lg:block mt-3 lg:mt-0 bg-white p-4 rounded-xl border`}
         >
           <div className="flex items-center justify-between gap-4 mb-4">
-            <h2 className="font-bold text-lg text-gray-800">Filters</h2>
+            <h2 className="font-bold text-lg text-gray-800">{t("common.filters")}</h2>
             {isAnyFilterActive && (
               <button
                 type="button"
                 className="text-xs text-red-500 font-bold"
                 onClick={onResetFilters}
               >
-                Clear filters
+                {t("common.clearFilters")}
               </button>
             )}
           </div>
@@ -118,9 +127,10 @@ export default function CustomCompareLayout({
             <p className="text-sm text-gray-500" aria-live="polite">
               {subtitle ??
                 (isLoading && isEmpty
-                  ? "Loading…"
-                  : `${total ?? 0} ${total === 1 ? "result" : "results"}`)}
+                  ? t("common.loading")
+                  : t("common.results", { count: total ?? 0 }))}
             </p>
+            {notice && <div className="text-xs text-gray-500 mt-1">{notice}</div>}
           </div>
           {returnTxt && (
             <Link

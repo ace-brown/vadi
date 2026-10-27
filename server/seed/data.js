@@ -167,31 +167,52 @@ const womenSalons = salons([
         { faceCarePrice: 45, hairBotoxPrice: 80, hairColorPrice: 60, makeupPrice: 50, eyelashExtensionPrice: 70, eyebrowShapePrice: 12, eyebrowLiftPrice: 35, nailExtensionPrice: 45, manicurePrice: 25, waxingPrice: 20 }],
 ]);
 
+const RATING_SOURCE = 'Sample editorial rating (fictional data)';
+
+const providers = [
+    { slug: 'elbstrom', name: 'Elbstrom Glasfaser', legalName: 'Elbstrom Glasfaser GmbH (fictional)', logo: img('providers/elbstrom.svg'), rating: 4.4, ratingSource: RATING_SOURCE, description: 'Regional fiber network in Hamburg and Berlin.' },
+    { slug: 'kranich', name: 'Kranich Kabel', legalName: 'Kranich Kabel GmbH (fictional)', logo: img('providers/kranich.svg'), rating: 3.9, ratingSource: RATING_SOURCE, description: 'Cable internet in large cities.' },
+    { slug: 'spreewelle', name: 'Spreewelle DSL', legalName: 'Spreewelle Telekommunikation AG (fictional)', logo: img('providers/spreewelle.svg'), rating: 4.1, ratingSource: RATING_SOURCE, description: 'Nationwide DSL and VDSL.' },
+    { slug: 'isarlink', name: 'Isarlink', legalName: 'Isarlink Internet GmbH (fictional)', logo: img('providers/isarlink.svg'), rating: 4.0, ratingSource: RATING_SOURCE, description: 'Flexible VDSL plans without long contracts.' },
+    { slug: 'alpenfunk', name: 'Alpenfunk', legalName: 'Alpenfunk Mobilfunk GmbH (fictional)', logo: img('providers/alpenfunk.svg'), rating: 3.7, ratingSource: RATING_SOURCE, description: 'Home internet over the mobile network.' },
+    { slug: 'moewe', name: 'Möwe Mobil', legalName: 'Möwe Mobil GmbH (fictional)', logo: img('providers/moewe.svg'), rating: 4.2, ratingSource: RATING_SOURCE, description: 'Prepaid SIM cards without a contract.' },
+    { slug: 'fuchs', name: 'Fuchs Mobile', legalName: 'Fuchs Mobile Deutschland GmbH (fictional)', logo: img('providers/fuchs.svg'), rating: 4.3, ratingSource: RATING_SOURCE, description: '5G contract plans.' },
+    { slug: 'igel', name: 'Igel Mobil', legalName: 'Igel Mobil GmbH (fictional)', logo: img('providers/igel.svg'), rating: 3.8, ratingSource: RATING_SOURCE, description: 'Budget plans, monthly cancellable.' },
+    { slug: 'biber', name: 'Biber Mobile', legalName: 'Biber Mobile GmbH (fictional)', logo: img('providers/biber.svg'), rating: 4.0, ratingSource: RATING_SOURCE, description: 'Large data plans on 5G.' },
+];
+
+// Postcode prefixes where the fictional fiber and cable networks are available
+const FIBER_AREAS = ['10', '12', '13', '20', '21', '22'];
+const CABLE_AREAS = ['10', '12', '20', '22', '50', '51', '60', '80', '81'];
+const NATIONWIDE = { nationwide: true, postcodePrefixes: [] };
+
+// providerSlug is replaced with the provider's ID by the seed script
 const homeTariffs = [
-    { provider: 'Elbstrom Glasfaser', name: 'Glasfaser 500', connectionType: 'Fiber', downloadMbps: 500, uploadMbps: 250, termMonths: 24, monthlyPrice: 44.99, setupFee: 0, image: img('providers/elbstrom.svg') },
-    { provider: 'Elbstrom Glasfaser', name: 'Glasfaser 1000', connectionType: 'Fiber', downloadMbps: 1000, uploadMbps: 500, termMonths: 24, monthlyPrice: 64.99, setupFee: 0, image: img('providers/elbstrom.svg') },
-    { provider: 'Kranich Kabel', name: 'Kabel 250', connectionType: 'Cable', downloadMbps: 250, uploadMbps: 25, termMonths: 24, monthlyPrice: 34.99, setupFee: 49.99, image: img('providers/kranich.svg') },
-    { provider: 'Kranich Kabel', name: 'Kabel 1000', connectionType: 'Cable', downloadMbps: 1000, uploadMbps: 50, termMonths: 24, monthlyPrice: 54.99, setupFee: 49.99, image: img('providers/kranich.svg') },
-    { provider: 'Spreewelle DSL', name: 'VDSL 100', connectionType: 'VDSL', downloadMbps: 100, uploadMbps: 40, termMonths: 24, monthlyPrice: 39.99, setupFee: 69.99, image: img('providers/spreewelle.svg') },
-    { provider: 'Spreewelle DSL', name: 'DSL 16 Flex', connectionType: 'DSL', downloadMbps: 16, uploadMbps: 2.4, termMonths: 1, monthlyPrice: 29.99, setupFee: 69.99, image: img('providers/spreewelle.svg') },
-    { provider: 'Isarlink', name: 'VDSL 50 Flex', connectionType: 'VDSL', downloadMbps: 50, uploadMbps: 10, termMonths: 1, monthlyPrice: 36.99, setupFee: 0, image: img('providers/isarlink.svg') },
-    { provider: 'Isarlink', name: 'VDSL 250', connectionType: 'VDSL', downloadMbps: 250, uploadMbps: 40, termMonths: 12, monthlyPrice: 47.99, setupFee: 29.99, image: img('providers/isarlink.svg') },
-    { provider: 'Alpenfunk', name: 'LTE Home 50', connectionType: 'LTE', downloadMbps: 50, uploadMbps: 10, termMonths: 1, monthlyPrice: 39.99, setupFee: 0, image: img('providers/alpenfunk.svg') },
+    { externalId: 'elbstrom-gf500', providerSlug: 'elbstrom', name: 'Glasfaser 500', connectionType: 'Fiber', downloadMbps: 500, uploadMbps: 250, termMonths: 24, monthlyPrice: 29.99, promoMonths: 12, regularPrice: 49.99, coverage: { nationwide: false, postcodePrefixes: FIBER_AREAS } },
+    { externalId: 'elbstrom-gf1000', providerSlug: 'elbstrom', name: 'Glasfaser 1000', connectionType: 'Fiber', downloadMbps: 1000, uploadMbps: 500, termMonths: 24, monthlyPrice: 44.99, promoMonths: 12, regularPrice: 69.99, coverage: { nationwide: false, postcodePrefixes: FIBER_AREAS } },
+    { externalId: 'kranich-k250', providerSlug: 'kranich', name: 'Kabel 250', connectionType: 'Cable', downloadMbps: 250, uploadMbps: 25, termMonths: 24, monthlyPrice: 19.99, promoMonths: 6, regularPrice: 39.99, setupFee: 49.99, bonus: 100, coverage: { nationwide: false, postcodePrefixes: CABLE_AREAS } },
+    { externalId: 'kranich-k1000', providerSlug: 'kranich', name: 'Kabel 1000', connectionType: 'Cable', downloadMbps: 1000, uploadMbps: 50, termMonths: 24, monthlyPrice: 39.99, promoMonths: 6, regularPrice: 59.99, setupFee: 49.99, bonus: 100, coverage: { nationwide: false, postcodePrefixes: CABLE_AREAS } },
+    { externalId: 'spreewelle-vdsl100', providerSlug: 'spreewelle', name: 'VDSL 100', connectionType: 'VDSL', downloadMbps: 100, uploadMbps: 40, termMonths: 24, monthlyPrice: 39.99, setupFee: 69.99, coverage: NATIONWIDE },
+    { externalId: 'spreewelle-dsl16', providerSlug: 'spreewelle', name: 'DSL 16 Flex', connectionType: 'DSL', downloadMbps: 16, uploadMbps: 2.4, termMonths: 1, monthlyPrice: 29.99, setupFee: 69.99, coverage: NATIONWIDE },
+    { externalId: 'isarlink-vdsl50', providerSlug: 'isarlink', name: 'VDSL 50 Flex', connectionType: 'VDSL', downloadMbps: 50, uploadMbps: 10, termMonths: 1, monthlyPrice: 36.99, hardwareFee: 99, coverage: NATIONWIDE },
+    { externalId: 'isarlink-vdsl250', providerSlug: 'isarlink', name: 'VDSL 250', connectionType: 'VDSL', downloadMbps: 250, uploadMbps: 40, termMonths: 12, monthlyPrice: 47.99, setupFee: 29.99, coverage: NATIONWIDE },
+    { externalId: 'alpenfunk-lte50', providerSlug: 'alpenfunk', name: 'LTE Home 50', connectionType: 'LTE', downloadMbps: 50, uploadMbps: 10, termMonths: 1, monthlyPrice: 39.99, hardwareFee: 49.99, coverage: NATIONWIDE },
 ];
 
 const mobileTariffs = [
-    { provider: 'Möwe Mobil', name: 'Prepaid S', contractType: 'prepaid', network: '4G', dataGB: 5, minutes: null, termMonths: 1, monthlyPrice: 7.99, setupFee: 9.99, image: img('providers/moewe.svg') },
-    { provider: 'Möwe Mobil', name: 'Prepaid L', contractType: 'prepaid', network: '4G', dataGB: 25, minutes: null, termMonths: 1, monthlyPrice: 14.99, setupFee: 9.99, image: img('providers/moewe.svg') },
-    { provider: 'Fuchs Mobile', name: 'Allnet 20', contractType: 'contract', network: '5G', dataGB: 20, minutes: null, termMonths: 24, monthlyPrice: 12.99, setupFee: 39.99, image: img('providers/fuchs.svg') },
-    { provider: 'Fuchs Mobile', name: 'Allnet 50', contractType: 'contract', network: '5G', dataGB: 50, minutes: null, termMonths: 24, monthlyPrice: 19.99, setupFee: 39.99, image: img('providers/fuchs.svg') },
-    { provider: 'Fuchs Mobile', name: 'Unlimited', contractType: 'contract', network: '5G', dataGB: null, minutes: null, termMonths: 24, monthlyPrice: 49.99, setupFee: 39.99, image: img('providers/fuchs.svg') },
-    { provider: 'Igel Mobil', name: 'Flex 10', contractType: 'contract', network: '4G', dataGB: 10, minutes: null, termMonths: 1, monthlyPrice: 9.99, setupFee: 19.99, image: img('providers/igel.svg') },
-    { provider: 'Igel Mobil', name: 'Basic 300', contractType: 'prepaid', network: '4G', dataGB: 3, minutes: 300, termMonths: 1, monthlyPrice: 4.99, setupFee: 9.99, image: img('providers/igel.svg') },
-    { provider: 'Biber Mobile', name: '5G Max 100', contractType: 'contract', network: '5G', dataGB: 100, minutes: null, termMonths: 12, monthlyPrice: 29.99, setupFee: 0, image: img('providers/biber.svg') },
+    { externalId: 'moewe-prepaid-s', providerSlug: 'moewe', name: 'Prepaid S', contractType: 'prepaid', network: '4G', dataGB: 5, minutes: null, termMonths: 1, monthlyPrice: 7.99, setupFee: 9.99 },
+    { externalId: 'moewe-prepaid-l', providerSlug: 'moewe', name: 'Prepaid L', contractType: 'prepaid', network: '4G', dataGB: 25, minutes: null, termMonths: 1, monthlyPrice: 14.99, setupFee: 9.99 },
+    { externalId: 'fuchs-allnet20', providerSlug: 'fuchs', name: 'Allnet 20', contractType: 'contract', network: '5G', dataGB: 20, minutes: null, termMonths: 24, monthlyPrice: 12.99, setupFee: 39.99 },
+    { externalId: 'fuchs-allnet50', providerSlug: 'fuchs', name: 'Allnet 50', contractType: 'contract', network: '5G', dataGB: 50, minutes: null, termMonths: 24, monthlyPrice: 9.99, promoMonths: 6, regularPrice: 19.99, setupFee: 39.99 },
+    { externalId: 'fuchs-unlimited', providerSlug: 'fuchs', name: 'Unlimited', contractType: 'contract', network: '5G', dataGB: null, minutes: null, termMonths: 24, monthlyPrice: 49.99, setupFee: 39.99, bonus: 120 },
+    { externalId: 'igel-flex10', providerSlug: 'igel', name: 'Flex 10', contractType: 'contract', network: '4G', dataGB: 10, minutes: null, termMonths: 1, monthlyPrice: 9.99, setupFee: 19.99 },
+    { externalId: 'igel-basic300', providerSlug: 'igel', name: 'Basic 300', contractType: 'prepaid', network: '4G', dataGB: 3, minutes: 300, termMonths: 1, monthlyPrice: 4.99, setupFee: 9.99 },
+    { externalId: 'biber-max100', providerSlug: 'biber', name: '5G Max 100', contractType: 'contract', network: '5G', dataGB: 100, minutes: null, termMonths: 12, monthlyPrice: 29.99 },
 ];
 
 module.exports = {
     STATES,
+    providers,
     data: {
         AutoRepair: autoRepairs,
         MotorcycleRepair: motorcycleRepairs,

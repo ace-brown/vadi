@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "seed": "node scripts/seed.js"
+    "seed": "node scripts/seed.js",
+    "import": "node scripts/import-offers.js",
+    "test": "jest --runInBand"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +17,9 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
+    "express-rate-limit": "^7.5.1",
     "express-validator": "^7.2.0",
+    "helmet": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.2",
     "multer": "^1.4.5-lts.2",
@@ -23,6 +27,13 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.4.3",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.3.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 60000
   }
 }

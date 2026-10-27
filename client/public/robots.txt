@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin
+Disallow: /account
+Disallow: /partner-redirect
+Disallow: /compare/
+
+Sitemap: https://www.vadi.click/sitemap.xml

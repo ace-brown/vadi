@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import StateCitySelect from "@/components/common/StateCitySelect";
-import Search from "@/components/search/Search";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   title?: string;
@@ -37,9 +37,9 @@ export default function CustomDetailsSelect({
   onSubmit,
   children,
 }: Props) {
+  const { t } = useTranslation();
   return (
-    <div className="max-w-5xl mx-auto">
-      <Search />
+    <div className="max-w-5xl mx-auto mt-10">
       <Card className="max-w-md mx-auto min-h-[420px] grid grid-rows-[1fr_auto]">
         <CardContent className="space-y-4 p-6">
           {!isSingleRoute && (
@@ -47,7 +47,7 @@ export default function CustomDetailsSelect({
               <label className="block font-medium">{title}</label>
               <Select value={xType} onValueChange={onSetXType}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose" />
+                  <SelectValue placeholder={t("common.any")} />
                 </SelectTrigger>
                 <SelectContent
                   className="bg-white"
