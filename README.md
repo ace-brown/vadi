@@ -6,6 +6,8 @@ Other categories (salons, repairs, dentists, education, agriculture) still exist
 
 The bundled data (`npm run seed`) is fictional sample data: business and provider names are made up, addresses use real German street names, and prices are in euros.
 
+![Vadi home page: questionnaire for home internet and mobile plans, "How it works" and "Why Vadi" sections](docs/screenshots/home.png)
+
 # You can visit the website online
 
 https://vadi-gamma.vercel.app/
