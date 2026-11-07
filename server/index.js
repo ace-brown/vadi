@@ -38,7 +38,6 @@ app.use(express.json({ limit: '100kb' }));
 // Middleware to handle CORS (Cross-Origin Resource Sharing)
 // Extra origins can be added as a comma-separated CORS_ORIGINS variable
 const allowedOrigins = [
-    'https://www.vadi.click',
     'https://vadi-gamma.vercel.app',
     'http://localhost:3000',
     'http://localhost:5173',

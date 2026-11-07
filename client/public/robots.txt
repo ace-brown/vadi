@@ -4,4 +4,4 @@ Disallow: /account
 Disallow: /partner-redirect
 Disallow: /compare/
 
-Sitemap: https://www.vadi.click/sitemap.xml
+Sitemap: https://vadi-gamma.vercel.app/sitemap.xml

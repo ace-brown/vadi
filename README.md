@@ -127,9 +127,9 @@ Optional:
 
 ```
 CORS_ORIGINS=https://my-frontend.example   # extra allowed origins, comma-separated
-CLIENT_URL=https://www.vadi.click          # links in emails; redirect target for offers without a partner link
+CLIENT_URL=https://vadi-gamma.vercel.app   # links in emails; redirect target for offers without a partner link
 SMTP_URL=smtps://user:pass@smtp.example.com:465  # for price alert emails (logged to the console if unset)
-MAIL_FROM="Vadi <no-reply@vadi.click>"
+MAIL_FROM="Vadi <no-reply@example.com>"
 CRON_SECRET=a_long_random_string           # lets a scheduler call /api/jobs/price-alerts
 AVAILABILITY_SAMPLE=true                   # simulate address checks for the sample data; false = postcode estimate
 ADMIN_EMAIL=you@example.com                # used by npm run seed to create an admin

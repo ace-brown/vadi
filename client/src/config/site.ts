@@ -2,7 +2,7 @@
 // TODO before launch: replace the placeholders with your real details.
 export const SITE = {
   name: "Vadi",
-  url: "https://www.vadi.click",
+  url: "https://vadi-gamma.vercel.app",
   operator: {
     name: "[Vor- und Nachname / Firmenname]",
     street: "[Straße und Hausnummer]",
