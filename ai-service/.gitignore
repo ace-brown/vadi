@@ -1,0 +1,15 @@
+# virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# secrets
+.env
+
+# tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
