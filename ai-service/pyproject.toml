@@ -1,7 +1,7 @@
 [project]
 name = "ai-service"
 version = "0.1.0"
-description = "Add your description here"
+description = "Vadi's AI service: FastAPI backend for the AI features, called by the Express API"
 readme = "README.md"
 authors = [
     { name = "ace-brown", email = "kazem_abdi@yahoo.com" }
@@ -14,16 +14,12 @@ dependencies = [
     "uvicorn>=0.54.0",
 ]
 
-[project.scripts]
-ai-service = "ai_service:main"
-
 [build-system]
 requires = ["uv_build>=0.12.21,<0.13.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
-    "mypy>=2.4.1",
     "pytest>=9.2.0",
     "ruff>=0.17.4",
 ]

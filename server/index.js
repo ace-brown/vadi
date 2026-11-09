@@ -1,166 +1,216 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const express = require('express');
-const helmet = require('helmet');
-const compression = require('compression');
-const swaggerUi = require('swagger-ui-express');
-const rateLimit = require('express-rate-limit');
-const mongoose = require('mongoose');
-const multer = require('multer');
-const path = require('path');
+const express = require("express");
+const helmet = require("helmet");
+const compression = require("compression");
+const swaggerUi = require("swagger-ui-express");
+const rateLimit = require("express-rate-limit");
+const mongoose = require("mongoose");
+const multer = require("multer");
+const path = require("path");
 
-const usersRoutes = require('./src/routes/users-routes')
-const goRoutes = require('./src/routes/go-routes')
-const reviewsRoutes = require('./src/routes/reviews-routes')
-const meRoutes = require('./src/routes/me-routes')
-const toolsRoutes = require('./src/routes/tools-routes')
-const jobsRoutes = require('./src/routes/jobs-routes')
-const openapi = require('./src/openapi')
-const createResourceRouter = require('./src/routes/resource-routes')
-const resources = require('./src/resources')
-const HttpError = require('./src/models/http-error')
-const { getMongoUri } = require('./src/db')
+const usersRoutes = require("./src/routes/users-routes");
+const goRoutes = require("./src/routes/go-routes");
+const reviewsRoutes = require("./src/routes/reviews-routes");
+const meRoutes = require("./src/routes/me-routes");
+const toolsRoutes = require("./src/routes/tools-routes");
+const jobsRoutes = require("./src/routes/jobs-routes");
+const openapi = require("./src/openapi");
+const createResourceRouter = require("./src/routes/resource-routes");
+const resources = require("./src/resources");
+const HttpError = require("./src/models/http-error");
+const { getMongoUri } = require("./src/db");
 
 const app = express();
 const port = process.env.PORT || 5000;
+const aiServiceURL = process.env.AI_SRV_URL;
 
 // Behind Vercel's proxy: use the real client IP for rate limiting
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 
 // Security headers. Images are loaded by the frontend from another origin.
-app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 
 app.use(compression());
 
 // Middleware to parse JSON requests
-app.use(express.json({ limit: '100kb' }));
+app.use(express.json({ limit: "100kb" }));
 
 // Middleware to handle CORS (Cross-Origin Resource Sharing)
 // Extra origins can be added as a comma-separated CORS_ORIGINS variable
 const allowedOrigins = [
-    'https://vadi-gamma.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:5173',
-    ...(process.env.CORS_ORIGINS || '').split(',').map((origin) => origin.trim()).filter(Boolean),
+  "https://vadi-gamma.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:5173",
+  ...(process.env.CORS_ORIGINS || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
 ];
 
 app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-        res.setHeader('Vary', 'Origin');
-    }
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    );
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-    if (req.method === 'OPTIONS') {
-        return res.sendStatus(204); // Preflight response
-    }
-    next();
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  }
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+  );
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204); // Preflight response
+  }
+  next();
 });
 
-app.use('/uploads/images', express.static(path.join(__dirname, 'uploads', 'images')));
+app.use(
+  "/uploads/images",
+  express.static(path.join(__dirname, "uploads", "images")),
+);
 
 // HTTP caching: anonymous reads of public data may be cached briefly by browsers and
 // CDNs (Express adds ETags, so unchanged responses come back as 304). Anything
 // personal is never cached.
-const PRIVATE_PATHS = /^\/(me|users|jobs|go|health)(\/|$)/;
-app.use('/api', (req, res, next) => {
-    if (req.method === 'GET' && !req.headers.authorization && !PRIVATE_PATHS.test(req.path)) {
-        res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
-    } else {
-        res.set('Cache-Control', 'private, no-store');
-    }
-    res.vary('Authorization');
-    next();
+const PRIVATE_PATHS = /^\/(me|users|jobs|go|health|ai)(\/|$)/;
+app.use("/api", (req, res, next) => {
+  if (
+    req.method === "GET" &&
+    !req.headers.authorization &&
+    !PRIVATE_PATHS.test(req.path)
+  ) {
+    res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+  } else {
+    res.set("Cache-Control", "private, no-store");
+  }
+  res.vary("Authorization");
+  next();
 });
 
 // API documentation
-app.get('/api/openapi.json', (req, res) => res.json(openapi));
-app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openapi, { customSiteTitle: 'Vadi API' }));
+app.get("/api/openapi.json", (req, res) => res.json(openapi));
+app.use(
+  "/api/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(openapi, { customSiteTitle: "Vadi API" }),
+);
 
 // Health check
-app.get('/api/health', (req, res) => {
-    const dbConnected = mongoose.connection.readyState === 1;
-    res.status(dbConnected ? 200 : 503).json({ status: dbConnected ? 'ok' : 'degraded', db: dbConnected });
+app.get("/api/health", (req, res) => {
+  const dbConnected = mongoose.connection.readyState === 1;
+  res
+    .status(dbConnected ? 200 : 503)
+    .json({ status: dbConnected ? "ok" : "degraded", db: dbConnected });
 });
 
 // Slow down password guessing and spam sign-ups / reviews
 const strictLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    limit: process.env.NODE_ENV === 'test' ? 1000 : 20,
-    standardHeaders: 'draft-7',
-    legacyHeaders: false,
-    message: { message: 'Too many attempts, please try again in a few minutes.' },
+  windowMs: 15 * 60 * 1000,
+  limit: process.env.NODE_ENV === "test" ? 1000 : 20,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { message: "Too many attempts, please try again in a few minutes." },
 });
-app.use(['/api/users/login', '/api/users/signup'], strictLimiter);
-app.post('/api/reviews', strictLimiter);
+app.use(["/api/users/login", "/api/users/signup"], strictLimiter);
+app.post("/api/reviews", strictLimiter);
 
 // Address checks and the advisor are heavier than normal reads
 const toolsLimiter = rateLimit({
-    windowMs: 60 * 1000,
-    limit: process.env.NODE_ENV === 'test' ? 1000 : 30,
-    standardHeaders: 'draft-7',
-    legacyHeaders: false,
-    message: { message: 'Too many requests, please slow down.' },
+  windowMs: 60 * 1000,
+  limit: process.env.NODE_ENV === "test" ? 1000 : 30,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { message: "Too many requests, please slow down." },
 });
-app.use(['/api/availability', '/api/advisor'], toolsLimiter);
+app.use(["/api/availability", "/api/advisor"], toolsLimiter);
 
 // Advisor, address availability, price history
-app.use('/api', toolsRoutes);
+app.use("/api", toolsRoutes);
 
 // Scheduled jobs (price alerts)
-app.use('/api/jobs', jobsRoutes);
+app.use("/api/jobs", jobsRoutes);
 
 // "Go to offer" redirects and click statistics
-app.use('/api/go', goRoutes);
+app.use("/api/go", goRoutes);
 
 // Provider reviews
-app.use('/api/reviews', reviewsRoutes);
+app.use("/api/reviews", reviewsRoutes);
 
 // The logged-in user's watchlist, saved comparisons and reviews
-app.use('/api/me', meRoutes);
+app.use("/api/me", meRoutes);
 
 // Listing routes (mobile/home tariffs, salons, repairs, ...), see src/resources.js
 resources.forEach(({ path: routePath, model, options }) => {
-    app.use(routePath, createResourceRouter(model, options));
+  app.use(routePath, createResourceRouter(model, options));
 });
 
 // Users routes
-app.use('/api/users', usersRoutes);
+app.use("/api/users", usersRoutes);
+
+// AI Routes
+app.get("/api/ai", async (req, res) => {
+  try {
+    const aiRes = await fetch(`${aiServiceURL}/stream`);
+  } catch (err) {
+    console.error("Server is not responding", err);
+  }
+
+  const decoder = new TextDecoder();
+
+  res.setHeader("Content-Type", "text/plain; charset=utf-8");
+
+  for await (const chunk of aiRes.body) {
+    const decodedChunk = decoder.decode(chunk, { stream: true });
+    console.log("got chunk:", decodedChunk);
+    res.write(decodedChunk);
+  }
+
+  res.end();
+});
 
 // Middleware to handle wrong routes
 app.use(function (req, res, next) {
-    throw new HttpError('Could not find this route.', 404)
-})
+  throw new HttpError("Could not find this route.", 404);
+});
 
 // Middleware to handle errors after they have been sent
 app.use(function (error, req, res, next) {
-    if (res.headersSent) {
-        return next(error);
-    }
+  if (res.headersSent) {
+    return next(error);
+  }
 
-    if (error instanceof mongoose.Error.ValidationError) {
-        const errors = Object.values(error.errors).map((err) => ({ field: err.path, message: err.message }));
-        return res.status(422).json({ message: 'Invalid input, please check your data.', errors });
-    }
-    if (error instanceof mongoose.Error.CastError) {
-        return res.status(400).json({ message: `Invalid value for "${error.path}"` });
-    }
-    if (error instanceof multer.MulterError) {
-        return res.status(400).json({ message: error.message });
-    }
-    if (error.type === 'entity.parse.failed') {
-        return res.status(400).json({ message: 'Malformed JSON body' });
-    }
+  if (error instanceof mongoose.Error.ValidationError) {
+    const errors = Object.values(error.errors).map((err) => ({
+      field: err.path,
+      message: err.message,
+    }));
+    return res
+      .status(422)
+      .json({ message: "Invalid input, please check your data.", errors });
+  }
+  if (error instanceof mongoose.Error.CastError) {
+    return res
+      .status(400)
+      .json({ message: `Invalid value for "${error.path}"` });
+  }
+  if (error instanceof multer.MulterError) {
+    return res.status(400).json({ message: error.message });
+  }
+  if (error.type === "entity.parse.failed") {
+    return res.status(400).json({ message: "Malformed JSON body" });
+  }
 
-    const status = error.code >= 400 && error.code < 600 ? error.code : 500;
-    if (status === 500) {
-        console.error(error);
-    }
-    res.status(status).json({ message: status === 500 ? 'An unknown error occurred!' : error.message });
+  const status = error.code >= 400 && error.code < 600 ? error.code : 500;
+  if (status === 500) {
+    console.error(error);
+  }
+  res.status(status).json({
+    message: status === 500 ? "An unknown error occurred!" : error.message,
+  });
 });
 
 // Connect to MongoDB. Queries made before the connection is ready are queued.
@@ -169,13 +219,17 @@ const connection = mongoose.connect(getMongoUri());
 // Run a server when started directly (node index.js); on Vercel and in tests the
 // exported app is used instead
 if (require.main === module) {
-    connection
-        .then(function () {
-            app.listen(port, () => console.log(`Server is running at port ${port}`))
-        })
-        .catch((err) => { console.log(err) })
+  connection
+    .then(function () {
+      app.listen(port, () => console.log(`Server is running at port ${port}`));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 } else {
-    connection.catch((err) => { console.error(err) })
+  connection.catch((err) => {
+    console.error(err);
+  });
 }
 
 module.exports = app;
