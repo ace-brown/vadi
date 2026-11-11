@@ -1,0 +1,21 @@
+{
+  // Type-checking only: tsx runs the code (npm run dev/start/seed...), ts-jest runs
+  // the tests and Vercel compiles index.ts itself. Run `npm run typecheck`.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    // package.json has no "type": "module", so the .ts files are CommonJS modules
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "esModuleInterop": true,
+    "strict": true,
+    "noEmit": true,
+    // Each file must compile on its own (tsx and ts-jest translate file by file)
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node", "jest"]
+  },
+  "include": ["index.ts", "src", "scripts", "seed", "tests"]
+}

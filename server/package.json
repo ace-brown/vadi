@@ -2,14 +2,15 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "seed": "node scripts/seed.js",
-    "import": "node scripts/import-offers.js",
+    "start": "tsx index.ts",
+    "dev": "tsx watch index.ts",
+    "typecheck": "tsc",
+    "seed": "tsx scripts/seed.ts",
+    "import": "tsx scripts/import-offers.ts",
     "test": "jest --runInBand",
-    "alerts": "node scripts/check-price-alerts.js"
+    "alerts": "tsx scripts/check-price-alerts.ts"
   },
   "keywords": [],
   "author": "",
@@ -28,15 +29,28 @@
     "nanoid": "^5.0.9",
     "nodemailer": "^6.10.1",
     "swagger-ui-express": "^5.0.1",
+    "tsx": "^4.23.15",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/compression": "^1.8.1",
+    "@types/express": "^4.17.25",
+    "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^1.4.13",
+    "@types/node": "^22.20.5",
+    "@types/nodemailer": "^6.4.24",
+    "@types/supertest": "^7.2.1",
+    "@types/swagger-ui-express": "^4.1.8",
     "jest": "^29.7.0",
     "mongodb-memory-server": "^10.4.3",
-    "nodemon": "^3.1.9",
-    "supertest": "^7.3.1"
+    "supertest": "^7.3.1",
+    "ts-jest": "^29.4.15",
+    "typescript": "~6.0.3"
   },
   "jest": {
+    "preset": "ts-jest",
     "testEnvironment": "node",
     "testTimeout": 60000
   }

@@ -23,7 +23,7 @@ https://vadi-gamma.vercel.app/
 
 ### Backend
 
-- **Node.js** with Express.js
+- **Node.js** with Express.js and TypeScript
 - **MongoDB** - NoSQL database
 - **JWT** - Authentication
 
@@ -44,14 +44,14 @@ vadi/
 │       └── hooks/        # Custom React hooks
 └── server/          # Node.js backend application
     └── src/
-        ├── controllers/  # Route handlers (resource-controllers.js serves every listing type)
+        ├── controllers/  # Route handlers (resource-controllers.ts serves every listing type)
         ├── models/       # Mongoose schemas with validation
         ├── routes/       # API routes
         ├── middleware/   # Auth, admin check, uploads
-        ├── resources.js  # Which listing endpoints exist and how they can be filtered
-        └── import-offers.js  # Feed import used by npm run import / seed
+        ├── resources.ts  # Which listing endpoints exist and how they can be filtered
+        └── import-offers.ts  # Feed import used by npm run import / seed
     ├── seed/             # German sample data and an example import feed
-    ├── scripts/          # seed.js, import-offers.js
+    ├── scripts/          # seed.ts, import-offers.ts
     └── tests/            # API tests (npm test)
 ```
 
@@ -138,6 +138,14 @@ ADMIN_PASSWORD=change_me
 
 In MongoDB Atlas, add your IP address under **Security → Network Access**, or the server can't connect.
 
+**Local MongoDB with Docker (alternative to Atlas):** useful offline or on networks that block port 27017.
+
+```bash
+docker run -d --name vadi-mongo -p 127.0.0.1:27017:27017 -v vadi-mongo-data:/data/db mongo:latest
+```
+
+Then add `MONGODB_URI=mongodb://127.0.0.1:27017/vadi` to `server/.env` (it takes priority over the Atlas parts; comment it out to switch back) and run `npm run seed`. Use `docker stop vadi-mongo` / `docker start vadi-mongo` afterwards; the data lives in the `vadi-mongo-data` volume. MongoDB 8.x refuses to start on Linux kernel 6.19 or newer, so use 9.x there.
+
 **Client `.env`:**
 
 ```
@@ -198,8 +206,11 @@ See `server/seed/example-feed.json` for the format. Offers are matched by `exter
 
 ### Server
 
+The server is written in TypeScript and runs through [tsx](https://tsx.is), so there is no build step. Vercel compiles `index.ts` itself.
+
 - `npm start` - Start production server
 - `npm run dev` - Start development server with auto-reload
+- `npm run typecheck` - Type-check with `tsc` (CI runs this before the tests)
 - `npm run seed` - Load the sample data (see above)
 - `npm run import` - Import offers from a feed file (see above)
 - `npm run alerts` - Email users whose price alert target was reached (run on a schedule)
@@ -221,7 +232,7 @@ Every listing endpoint supports the same operations:
 
 Categories: `internet/mobile-tariffs`, `internet/home-tariffs`, `providers`, `aesthetic/men-salon`, `aesthetic/women-salon`, `vehicle/auto-repair`, `vehicle/motorcycle-repair`, `electronics/appliance-repair`, `pc-mobile/mobile-repair`, `pc-mobile/computer-repair`, `agriculture/garden-supplies`, `agriculture/animal-based-products`, `healthcare/dental`, `education/bookstores`, `education/centers`.
 
-List query parameters (what each category allows is defined in `server/src/resources.js`):
+List query parameters (what each category allows is defined in `server/src/resources.ts`):
 
 - `q` - text search, e.g. `?q=brakes`
 - exact matches, comma-separated for several values, e.g. `?city=Berlin,Hamburg`, `?connectionType=Fiber,Cable`, `?termMonths=1,12`
