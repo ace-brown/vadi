@@ -1,25 +1,25 @@
-import 'dotenv/config';
+import "dotenv/config";
 
-import express, { type ErrorRequestHandler } from 'express';
-import helmet from 'helmet';
-import compression from 'compression';
-import swaggerUi from 'swagger-ui-express';
-import rateLimit from 'express-rate-limit';
-import mongoose from 'mongoose';
-import multer from 'multer';
-import path from 'path';
+import express, { type ErrorRequestHandler } from "express";
+import helmet from "helmet";
+import compression from "compression";
+import swaggerUi from "swagger-ui-express";
+import rateLimit from "express-rate-limit";
+import mongoose from "mongoose";
+import multer from "multer";
+import path from "path";
 
-import usersRoutes from './src/routes/users-routes';
-import goRoutes from './src/routes/go-routes';
-import reviewsRoutes from './src/routes/reviews-routes';
-import meRoutes from './src/routes/me-routes';
-import toolsRoutes from './src/routes/tools-routes';
-import jobsRoutes from './src/routes/jobs-routes';
-import openapi from './src/openapi';
-import createResourceRouter from './src/routes/resource-routes';
-import resources from './src/resources';
-import HttpError from './src/models/http-error';
-import { getMongoUri } from './src/db';
+import usersRoutes from "./src/routes/users-routes";
+import goRoutes from "./src/routes/go-routes";
+import reviewsRoutes from "./src/routes/reviews-routes";
+import meRoutes from "./src/routes/me-routes";
+import toolsRoutes from "./src/routes/tools-routes";
+import jobsRoutes from "./src/routes/jobs-routes";
+import openapi from "./src/openapi";
+import createResourceRouter from "./src/routes/resource-routes";
+import resources from "./src/resources";
+import HttpError from "./src/models/http-error";
+import { getMongoUri } from "./src/db";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -154,7 +154,17 @@ app.use("/api/users", usersRoutes);
 // AI Routes
 app.get("/api/ai", async (req, res) => {
   try {
+    if (!aiServiceURL) {
+      throw new Error("AI_SRV_URL is not set");
+    }
     const aiRes = await fetch(`${aiServiceURL}/stream`);
+
+    // fetch only throws when it can't connect; a 4xx/5xx from Python still
+    // "succeeds", so check the status before streaming anything to the client
+    if (!aiRes.ok) {
+      throw new Error(`The AI service answered with status ${aiRes.status}`);
+    }
+
     if (!aiRes.body) {
       throw new Error("The AI service sent an empty response");
     }
@@ -174,7 +184,14 @@ app.get("/api/ai", async (req, res) => {
 
     res.end();
   } catch (err) {
-    console.error("Server is not responding", err);
+    console.error("AI stream failed:", err instanceof Error ? err.message : err);
+    if (res.headersSent) {
+      // The stream already started, so the status can't change any more;
+      // just close the response so the client sees the stream end
+      res.end();
+      return;
+    }
+    res.status(503).json({ message: "Service isn't available right now" });
   }
 });
 
