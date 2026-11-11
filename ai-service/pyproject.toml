@@ -23,3 +23,6 @@ dev = [
     "pytest>=9.2.0",
     "ruff>=0.17.4",
 ]
+
+[tool.vercel]
+entrypoint = "ai_service.main:app"

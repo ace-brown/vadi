@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "src/ai_service/main.py": { "maxDuration": 300 }
+  }
+}
